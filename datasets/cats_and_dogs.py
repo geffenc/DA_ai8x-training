@@ -113,7 +113,7 @@ class CatsAndDogsDataset(Dataset):
     
     # Diaply the results of a forward pass for a random batch of 64 samples
     # if no model passed in, just display a batch with no predictions
-    def visualize_batch(self,model=None):
+    def visualize_batch(self,model=None,device=None):
         #import matplotlib
         #matplotlib.use('TkAgg')
 
@@ -123,12 +123,14 @@ class CatsAndDogsDataset(Dataset):
 
         # get the first batch
         (imgs, labels) = next(iter(data_loader))
+        imgs,labels = imgs.to(device), labels.to(device)
         preds = None
 
         # check if want to do a forward pass
         if model != None:
             preds = model(imgs)
         
+        imgs,labels = imgs.to("cpu"), labels.to("cpu")
         # display the batch in a grid with the img, label, idx
         rows = 8
         cols = 8
@@ -143,7 +145,7 @@ class CatsAndDogsDataset(Dataset):
                 # create text labels
                 text = str(labels[idx].item())
                 if model != None:
-                    text = str(labels[idx].item()) + ":" + obj_classes[labels[idx]]  + "P: ",obj_classes[preds[idx].argmax()]#", i=" +str(idxs[idx].item())
+                    text = "GT :" + obj_classes[labels[idx]]  + " P: ",obj_classes[preds[idx].argmax()]#", i=" +str(idxs[idx].item())
                 
                 # for normal forward pass use this line
                 #ax_array[i,j].imshow(imgs[idx].permute(1, 2, 0))
@@ -152,11 +154,54 @@ class CatsAndDogsDataset(Dataset):
                 #print(imgs[idx].size(),torch.min(imgs[idx]))
                 ax_array[i,j].imshow((imgs[idx].permute(1, 2, 0)+1)/2)
 
-                ax_array[i,j].title.set_text(text)
+                ax_array[i,j].set_title(text,color="white")
                 ax_array[i,j].set_xticks([])
                 ax_array[i,j].set_yticks([])
         plt.savefig('plot.png')
         #plt.show()
+
+    def viz_mispredict(self,wrong_samples,wrong_preds,actual_preds):
+        wrong_samples,wrong_preds,actual_preds = wrong_samples.to("cpu"), wrong_preds.to("cpu"),actual_preds.to("cpu")
+        # import matplotlib
+        # matplotlib.use('TkAgg')
+        obj_classes = list(self.classes)
+        num_samples = len(wrong_samples)
+        num_rows = int(np.floor(np.sqrt(num_samples)))
+
+        if num_rows > 0:
+            num_cols = num_samples // num_rows
+        else:
+            return
+
+        fig,ax_array = plt.subplots(num_rows,num_cols,figsize=(20,20))
+        fig.subplots_adjust(hspace=0.5)
+        for i in range(num_rows):
+            for j in range(num_cols):
+                idx = i*num_rows+j
+                sample = wrong_samples[idx]
+                wrong_pred = wrong_preds[idx]
+                actual_pred = actual_preds[idx]
+                # Undo normalization
+                sample = (sample.permute(1, 2, 0)+1)/2
+                text = "L: " + obj_classes[actual_pred.item()]  + " P:",obj_classes[wrong_pred.item()]#", i=" +str(idxs[idx].item())
+                
+                # for normal forward pass use this line
+                #ax_array[i,j].imshow(imgs[idx].permute(1, 2, 0))
+
+                # for quantized forward pass use this line
+                #print(imgs[idx].size(),torch.min(imgs[idx]))
+                try:
+                    if(ax_array.ndim > 1):
+                        ax_array[i,j].imshow(sample)
+                        ax_array[i,j].set_title(text,color="white")
+                        ax_array[i,j].set_xticks([])
+                        ax_array[i,j].set_yticks([])
+                except:
+                    print("exception")
+                    print(ax_array.ndim)
+                    print(sample)
+                    return
+        plt.savefig("incorrect.png")
 
 
 
