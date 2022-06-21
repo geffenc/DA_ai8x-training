@@ -214,12 +214,12 @@ def cats_and_dogs_get_datasets(data, load_train=True, load_test=True):
         train_transform = transforms.Compose([
             transforms.Resize((128,128)),
             #transforms.ToPILImage(),
-            transforms.ColorJitter(brightness=(0.85,1.15),saturation=(0.85,1.15),contrast=(0.85,1.15),hue=(-0.1,0.1)),
-            transforms.RandomGrayscale(0.25),
+            #transforms.ColorJitter(brightness=(0.85,1.15),saturation=(0.85,1.15),contrast=(0.85,1.15),hue=(-0.1,0.1)),
+            #transforms.RandomGrayscale(0.25),
             #transforms.RandomAffine(degrees=180,translate=(0.15,0.15)),
             transforms.RandomHorizontalFlip(),
-            transforms.RandomVerticalFlip(),
-            #transforms.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 5)),
+            #transforms.RandomVerticalFlip(),
+            transforms.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 5)),
             transforms.ToTensor(),
             ai8x.normalize(args=args)
         ])

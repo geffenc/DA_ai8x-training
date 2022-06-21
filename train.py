@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 ###################################################################################################
 #
-# Copyright (C) 2019-2022 Maxim Integrated Products, Inc. All Rights Reserved.
+# Copyright (C) 2019-2021 Maxim Integrated Products, Inc. All Rights Reserved.
 #
 # Maxim Integrated Products, Inc. Default Copyright Notice:
 # https://www.maximintegrated.com/en/aboutus/legal/copyrights.html
@@ -113,9 +113,7 @@ import nnplot
 import parse_qat_yaml
 import parsecmd
 import sample
-from losses.multiboxloss import MultiBoxLoss
 from nas import parse_nas_yaml
-from utils import object_detection_utils, parse_obj_detection_yaml
 
 # from range_linear_ai84 import PostTrainLinearQuantizerAI84
 
@@ -253,11 +251,6 @@ def main():
     selected_source = next((item for item in supported_sources if item['name'] == args.dataset))
     args.labels = selected_source['output']
     args.num_classes = len(args.labels)
-
-    # Add background class explicitly for the object detection models
-    if args.obj_detection:
-        args.num_classes += 1
-
     if args.num_classes == 1 \
        or ('regression' in selected_source and selected_source['regression']):
         args.regression = True
@@ -267,8 +260,6 @@ def main():
     args.dimensions = dimensions
 
     args.datasets_fn = selected_source['loader']
-    args.collate_fn = selected_source.get('collate')  # .get returns None if key does not exist
-
     args.visualize_fn = selected_source['visualize'] \
         if 'visualize' in selected_source else datasets.visualize_data
 
@@ -320,10 +311,6 @@ def main():
     nas_policy = parse_nas_yaml.parse(args.nas_policy) \
         if args.nas and args.nas_policy.lower() != '' else None
 
-    # Get object detection params
-    obj_detection_params = parse_obj_detection_yaml.parse(args.obj_detection_params) \
-        if args.obj_detection_params.lower() != "none" else None
-
     # We can optionally resume from a checkpoint
     optimizer = None
     if args.resumed_checkpoint_path:
@@ -362,27 +349,15 @@ def main():
                            'resetting epoch count to 0')
 
     # Define loss function (criterion)
-    if args.obj_detection:
-
-        # .module is added to model for access in multi GPU environments
-        # as https://github.com/pytorch/pytorch/issues/16885 has not been merged yet
-        if isinstance(model, nn.DataParallel):
-            model = model.module
-
-        criterion = MultiBoxLoss(priors_cxcy=model.priors_cxcy,
-                                 alpha=obj_detection_params['multi_box_loss']['alpha'],
-                                 neg_pos_ratio=obj_detection_params['multi_box_loss']
-                                 ['neg_pos_ratio'], device=args.device).to(args.device)
-    else:
-        if not args.regression:
-            if 'weight' in selected_source:
-                criterion = nn.CrossEntropyLoss(
-                    torch.Tensor(selected_source['weight'])
-                ).to(args.device)
-            else:
-                criterion = nn.CrossEntropyLoss().to(args.device)
+    if not args.regression:
+        if 'weight' in selected_source:
+            criterion = nn.CrossEntropyLoss(
+                torch.Tensor(selected_source['weight'])
+            ).to(args.device)
         else:
-            criterion = nn.MSELoss().to(args.device)
+            criterion = nn.CrossEntropyLoss().to(args.device)
+    else:
+        criterion = nn.MSELoss().to(args.device)
 
     if optimizer is None:
         optimizer = create_optimizer(model, args)
@@ -415,8 +390,7 @@ def main():
     train_loader, val_loader, test_loader, _ = apputils.get_data_loaders(
         args.datasets_fn, (os.path.expanduser(args.data), args), args.batch_size,
         args.workers, args.validation_split, args.deterministic,
-        args.effective_train_size, args.effective_valid_size, args.effective_test_size,
-        collate_fn=args.collate_fn)
+        args.effective_train_size, args.effective_valid_size, args.effective_test_size)
     msglogger.info('Dataset sizes:\n\ttraining=%d\n\tvalidation=%d\n\ttest=%d',
                    len(train_loader.sampler), len(val_loader.sampler), len(test_loader.sampler))
 
@@ -556,43 +530,34 @@ def main():
                     checkpoint_name = f'nas_stg{stage}_lev{level}'
 
             with collectors_context(activations_collectors["valid"]) as collectors:
-                top1, top5, vloss, _, mAP = validate(val_loader, model, criterion, [pylogger],
-                                                     args, epoch, tflogger)
+                top1, top5, vloss = validate(val_loader, model, criterion, [pylogger], args, epoch,
+                                             tflogger)
                 distiller.log_activation_statistics(epoch, "valid", loggers=all_tbloggers,
                                                     collector=collectors["sparsity"])
                 save_collectors_data(collectors, msglogger.logdir)
 
-            if args.obj_detection:
-                stats = ('Performance/Validation/', OrderedDict([('Loss', vloss), ('mAP', mAP)]))
+            if not args.regression:
+                stats = ('Performance/Validation/', OrderedDict([('Loss', vloss), ('Top1', top1)]))
+                if args.num_classes > 5:
+                    stats[1]['Top5'] = top5
             else:
-                if not args.regression:
-                    stats = ('Performance/Validation/', OrderedDict([('Loss', vloss),
-                                                                     ('Top1', top1)]))
-                    if args.num_classes > 5:
-                        stats[1]['Top5'] = top5
-                else:
-                    stats = ('Performance/Validation/', OrderedDict([('Loss', vloss),
-                                                                     ('MSE', top1)]))
+                stats = ('Performance/Validation/', OrderedDict([('Loss', vloss), ('MSE', top1)]))
 
             distiller.log_training_progress(stats, None, epoch, steps_completed=0, total_steps=1,
                                             log_freq=1, loggers=all_tbloggers)
 
             # Update the list of top scores achieved so far
-            update_training_scores_history(perf_scores_history, model, top1, top5, mAP, vloss,
-                                           epoch, args)
+            update_training_scores_history(perf_scores_history, model, top1, top5, epoch, args)
 
             # Save the checkpoint
             if run_validation:
                 is_best = epoch == perf_scores_history[0].epoch
                 checkpoint_extras = {'current_top1': top1,
                                      'best_top1': perf_scores_history[0].top1,
-                                     'current_mAP': mAP,
-                                     'best_mAP': perf_scores_history[0].mAP,
                                      'best_epoch': perf_scores_history[0].epoch}
             else:
                 is_best = False
-                checkpoint_extras = {'current_top1': top1,
-                                     'current_mAP': mAP}
+                checkpoint_extras = {'current_top1': top1}
 
             apputils.save_checkpoint(epoch, args.cnn, model, optimizer=optimizer,
                                      scheduler=compression_scheduler, extras=checkpoint_extras,
@@ -643,8 +608,7 @@ def create_model(supported_models, dimensions, args):
                       bias=args.use_bias,
                       weight_bits=weight_bits,
                       bias_bits=bias_bits,
-                      quantize_activation=quantize_activation,
-                      device=args.device).to(args.device)
+                      quantize_activation=quantize_activation).to(args.device)
     else:
         model = Model(pretrained=False, num_classes=args.num_classes,
                       num_channels=dimensions[0],
@@ -652,8 +616,7 @@ def create_model(supported_models, dimensions, args):
                       bias=args.use_bias,
                       weight_bits=weight_bits,
                       bias_bits=bias_bits,
-                      quantize_activation=quantize_activation,
-                      device=args.device).to(args.device)
+                      quantize_activation=quantize_activation).to(args.device)
 
     return model
 
@@ -664,8 +627,7 @@ def create_optimizer(model, args):
         optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum,
                                     weight_decay=args.weight_decay)
     elif args.optimizer.lower() == 'adam':
-        optimizer = torch.optim.Adam(model.parameters(), lr=args.lr,
-                                     weight_decay=args.weight_decay)
+        optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
     else:
         msglogger.info('Unknown optimizer type: %s. SGD is set as optimizer!!!', args.optimizer)
         optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum,
@@ -747,18 +709,7 @@ def train(train_loader, model, criterion, optimizer, epoch,
     for train_step, (inputs, target) in enumerate(train_loader):
         # Measure data loading time
         data_time.add(time.time() - end)
-
-        if args.obj_detection:
-            boxes_list = [elem[0] for elem in target]
-            labels_list = [elem[1] for elem in target]
-
-            inputs = inputs.to(args.device)
-            boxes_list = [boxes.to(args.device) for boxes in boxes_list]
-            labels_list = [labels.to(args.device) for labels in labels_list]
-
-            target = (boxes_list, labels_list)
-        else:
-            inputs, target = inputs.to(args.device), target.to(args.device)
+        inputs, target = inputs.to(args.device), target.to(args.device)
 
         # Set nas parameters if necessary
         if args.nas:
@@ -781,31 +732,25 @@ def train(train_loader, model, criterion, optimizer, epoch,
         else:
             output = args.kd_policy.forward(inputs)
 
-        loss = criterion(output, target)
-        # TODO Early exit mechanism for Object Detection case is NOT implemented yet
-        if not args.obj_detection:
-            if not args.earlyexit_lossweights:
-                # Measure accuracy if the conditions are set. For `Last Batch` only accuracy
-                # calculation last two batches are used as the last batch might include just a few
-                # samples.
-                if args.show_train_accuracy == 'full' or \
-                       (args.show_train_accuracy == 'last_batch'
-                        and train_step >= len(train_loader)-2):
-                    if len(output.data.shape) <= 2:
-                        classerr.add(output.data, target)
-                    else:
-                        classerr.add(output.data.permute(0, 2, 3, 1).flatten(start_dim=0,
-                                                                             end_dim=2),
-                                     target.flatten())
-                    if not args.regression:
-                        acc_stats.append([classerr.value(1),
-                                          classerr.value(min(args.num_classes, 5))])
-                    else:
-                        acc_stats.append([classerr.value()])
-            else:
-                # Measure accuracy and record loss
-                loss = earlyexit_loss(output, target, criterion, args)
-
+        if not args.earlyexit_lossweights:
+            loss = criterion(output, target)
+            # Measure accuracy if the conditions are set. For `Last Batch` only accuracy
+            # calculateion last two batches are used as the last batch might include just a few
+            # samples.
+            if args.show_train_accuracy == 'full' or \
+               (args.show_train_accuracy == 'last_batch' and train_step >= len(train_loader)-2):
+                if len(output.data.shape) <= 2:
+                    classerr.add(output.data, target)
+                else:
+                    classerr.add(output.data.permute(0, 2, 3, 1).flatten(start_dim=0, end_dim=2),
+                                 target.flatten())
+                if not args.regression:
+                    acc_stats.append([classerr.value(1), classerr.value(min(args.num_classes, 5))])
+                else:
+                    acc_stats.append([classerr.value()])
+        else:
+            # Measure accuracy and record loss
+            loss = earlyexit_loss(output, target, criterion, args)
         # Record loss
         losses[OBJECTIVE_LOSS_KEY].add(loss.item())
 
@@ -921,7 +866,7 @@ def test(test_loader, model, criterion, loggers, activations_collectors, args):
     if activations_collectors is None:
         activations_collectors = create_activation_stats_collectors(model, None)
     with collectors_context(activations_collectors["test"]) as collectors:
-        top1, top5, vloss, APs, mAP = _validate(test_loader, model, criterion, loggers, args)
+        top1, top5, losses = _validate(test_loader, model, criterion, loggers, args)
         distiller.log_activation_statistics(-1, "test", loggers, collector=collectors['sparsity'])
 
         if args.kernel_stats:
@@ -974,7 +919,7 @@ def test(test_loader, model, criterion, loggers, activations_collectors, args):
                       f"max: {weight_max}, stddev: {weight_stddev}")
 
         save_collectors_data(collectors, msglogger.logdir)
-    return top1, top5, vloss, APs, mAP
+    return top1, top5, losses
 
 
 def _validate(data_loader, model, criterion, loggers, args, epoch=-1, tflogger=None):
@@ -1036,80 +981,22 @@ def _validate(data_loader, model, criterion, loggers, args, epoch=-1, tflogger=N
     end = time.time()
     class_probs = []
     class_preds = []
-
-    # Get object detection params
-    obj_detection_params = parse_obj_detection_yaml.parse(args.obj_detection_params) \
-        if args.obj_detection_params.lower() != "none" else None
-
     for validation_step, (inputs, target) in enumerate(data_loader):
-
-        APs = 0
-        mAP = 0
-
         with torch.no_grad():
-
-            if args.obj_detection:
-
-                boxes_list = [elem[0] for elem in target]
-                labels_list = [elem[1] for elem in target]
-
-                difficulties = []
-                for label_objects in labels_list:
-                    difficulties.append(torch.zeros_like(label_objects))
-
-                inputs = inputs.to(args.device)
-                boxes_list = [boxes.to(args.device) for boxes in boxes_list]
-                labels_list = [labels.to(args.device) for labels in labels_list]
-                difficulties = [d.to(args.device) for d in difficulties]
-
-                target = (boxes_list, labels_list)
-
-                # compute output from model
-                output_boxes, output_conf = model(inputs)
-
-                # correct output for accurate loss calculation
-                if args.act_mode_8bit:
-                    output_boxes /= 128.
-                    for key in model.__dict__['_modules'].keys():
-                        if (hasattr(model.__dict__['_modules'][key], 'wide')
-                                and model.__dict__['_modules'][key].wide):
-                            output_boxes /= 256.
-
-                output = (output_boxes, output_conf)
-
-                # .module is added to model for access in multi GPU environments
-                # as https://github.com/pytorch/pytorch/issues/16885 has not been merged yet
-                if isinstance(model, nn.DataParallel):
-                    model = model.module
-
-                det_boxes_batch, det_labels_batch, det_scores_batch = \
-                    model.detect_objects(output_boxes, output_conf,
-                                         min_score=obj_detection_params['nms']['min_score'],
-                                         max_overlap=obj_detection_params['nms']['max_overlap'],
-                                         top_k=obj_detection_params['nms']['top_k'])
-                # Calculate mAP per batch
-                if boxes_list:
-                    APs, mAP = object_detection_utils.calculate_mAP(det_boxes_batch,
-                                                                    det_labels_batch,
-                                                                    det_scores_batch, boxes_list,
-                                                                    labels_list, difficulties)
-
-            else:
-                inputs, target = inputs.to(args.device), target.to(args.device)
-                # compute output from model
-                output = model(inputs)
-
-                # correct output for accurate loss calculation
-                if args.act_mode_8bit:
-                    output /= 128.
-                    for key in model.__dict__['_modules'].keys():
-                        if (hasattr(model.__dict__['_modules'][key], 'wide')
-                                and model.__dict__['_modules'][key].wide):
-                            output /= 256.
+            inputs, target = inputs.to(args.device), target.to(args.device)
+            # compute output from model
+            output = model(inputs)
+            # correct output for accurate loss calculation
+            if args.act_mode_8bit:
+                output /= 128.
+                for key in model.__dict__['_modules'].keys():
+                    if (hasattr(model.__dict__['_modules'][key], 'wide')
+                            and model.__dict__['_modules'][key].wide):
+                        output /= 256.
 
             if args.generate_sample is not None:
                 sample.generate(args.generate_sample, inputs, target, output, args.dataset, False)
-                return .0, .0, .0, .0, .0
+                return .0, .0, .0
 
             if args.csv_prefix is not None:
                 save_tensor(inputs, f_x)
@@ -1121,16 +1008,13 @@ def _validate(data_loader, model, criterion, loggers, args, epoch=-1, tflogger=N
                 loss = criterion(output, target)
                 # measure accuracy and record loss
                 losses['objective_loss'].add(loss.item())
-
-                if not args.obj_detection:
-                    if len(output.data.shape) <= 2:
-                        classerr.add(output.data, target)
-                    else:
-                        classerr.add(output.data.permute(0, 2, 3, 1).flatten(start_dim=0,
-                                                                             end_dim=2),
-                                     target.flatten())
-                    if args.display_confusion:
-                        confusion.add(output.data, target)
+                if len(output.data.shape) <= 2:
+                    classerr.add(output.data, target)
+                else:
+                    classerr.add(output.data.permute(0, 2, 3, 1).flatten(start_dim=0, end_dim=2),
+                                 target.flatten())
+                if args.display_confusion:
+                    confusion.add(output.data, target)
             else:
                 earlyexit_validate_loss(output, target, criterion, args)
 
@@ -1147,28 +1031,20 @@ def _validate(data_loader, model, criterion, loggers, args, epoch=-1, tflogger=N
                     class_preds.append(class_preds_batch)
 
                 if not args.earlyexit_thresholds:
-
-                    if args.obj_detection:
+                    if not args.regression:
                         stats = (
                             '',
                             OrderedDict([('Loss', losses['objective_loss'].mean),
-                                         ('mAP', mAP)])
+                                         ('Top1', classerr.value(1))])
                         )
+                        if args.num_classes > 5:
+                            stats[1]['Top5'] = classerr.value(5)
                     else:
-                        if not args.regression:
-                            stats = (
-                                '',
-                                OrderedDict([('Loss', losses['objective_loss'].mean),
-                                            ('Top1', classerr.value(1))])
-                            )
-                            if args.num_classes > 5:
-                                stats[1]['Top5'] = classerr.value(5)
-                        else:
-                            stats = (
-                                '',
-                                OrderedDict([('Loss', losses['objective_loss'].mean),
-                                            ('MSE', classerr.value())])
-                            )
+                        stats = (
+                            '',
+                            OrderedDict([('Loss', losses['objective_loss'].mean),
+                                         ('MSE', classerr.value())])
+                        )
                 else:
                     stats_dict = OrderedDict()
                     stats_dict['Test'] = validation_step
@@ -1233,14 +1109,6 @@ def _validate(data_loader, model, criterion, loggers, args, epoch=-1, tflogger=N
         f_x.close()
 
     if not args.earlyexit_thresholds:
-
-        if args.obj_detection:
-
-            msglogger.info('==> mAP: %.5f    Loss: %.3f\n',
-                           mAP, losses['objective_loss'].mean)
-
-            return 0, 0, losses['objective_loss'].mean, APs, mAP
-
         if not args.regression:
             if args.num_classes > 5:
                 msglogger.info('==> Top1: %.3f    Top5: %.3f    Loss: %.3f\n',
@@ -1261,83 +1129,64 @@ def _validate(data_loader, model, criterion, loggers, args, epoch=-1, tflogger=N
                                                    dataformats='HWC')
         if not args.regression:
             return classerr.value(1), classerr.value(min(args.num_classes, 5)), \
-                losses['objective_loss'].mean, 0, 0
+                losses['objective_loss'].mean
         # else:
         return classerr.value(), .0, \
-            losses['objective_loss'].mean, 0, 0
+            losses['objective_loss'].mean
     # else:
     total_top1, total_top5, losses_exits_stats = earlyexit_validate_stats(args)
-    return total_top1, total_top5, losses_exits_stats[args.num_exits-1], APs, mAP
+    return total_top1, total_top5, losses_exits_stats[args.num_exits-1]
 
 
-def update_training_scores_history(perf_scores_history, model, top1, top5, mAP, vloss, epoch,
-                                   args):
+def update_training_scores_history(perf_scores_history, model, top1, top5, epoch, args):
     """ Update the list of top training scores achieved so far, and log the best scores so far"""
 
     model_sparsity, _, params_nnz_cnt = distiller.model_params_stats(model)
 
-    perf_scores_history.append(
-        distiller.MutableNamedTuple({'params_nnz_cnt': -params_nnz_cnt, 'sparsity': model_sparsity,
-                                     'top1': top1, 'top5': top5, 'mAP': mAP, 'vloss': -vloss,
-                                     'epoch': epoch}))
-
-    if args.obj_detection:
-
+    if not args.regression:
+        perf_scores_history.append(distiller.MutableNamedTuple({'params_nnz_cnt': -params_nnz_cnt,
+                                                                'sparsity': model_sparsity,
+                                                                'top1': top1, 'top5': top5,
+                                                                'epoch': epoch}))
         # Keep perf_scores_history sorted from best to worst
         if not args.sparsity_perf:
-            # Sort by mAP as main sort key, then sort by vloss and epoch
-            perf_scores_history.sort(key=operator.attrgetter('mAP', 'vloss', 'epoch'),
+            # Sort by top1 as main sort key, then sort by top5 and epoch
+            perf_scores_history.sort(key=operator.attrgetter('top1', 'top5', 'epoch'),
                                      reverse=True)
         else:
-            perf_scores_history.sort(key=operator.attrgetter('params_nnz_cnt', 'mAP',
-                                                             'vloss', 'epoch'),
+            # Sort by sparsity as main sort key, then sort by top1, top5 and epoch
+            perf_scores_history.sort(key=operator.attrgetter('params_nnz_cnt', 'top1',
+                                                             'top5', 'epoch'),
                                      reverse=True)
         for score in perf_scores_history[:args.num_best_scores]:
-
-            msglogger.info('==> Best [mAP: %f   vloss: %f   Sparsity:%.2f   '
-                           'Params: %d on epoch: %d]',
-                           score.mAP, -score.vloss, score.sparsity, -score.params_nnz_cnt,
-                           score.epoch)
-    else:
-
-        if not args.regression:
-
-            # Keep perf_scores_history sorted from best to worst
-            if not args.sparsity_perf:
-                # Sort by top1 as main sort key, then sort by top5 and epoch
-                perf_scores_history.sort(key=operator.attrgetter('top1', 'top5', 'epoch'),
-                                         reverse=True)
-            else:
-                # Sort by sparsity as main sort key, then sort by top1, top5 and epoch
-                perf_scores_history.sort(key=operator.attrgetter('params_nnz_cnt', 'top1',
-                                                                 'top5', 'epoch'),
-                                         reverse=True)
-            for score in perf_scores_history[:args.num_best_scores]:
-                if args.num_classes > 5:
-                    msglogger.info('==> Best [Top1: %.3f   Top5: %.3f   Sparsity:%.2f   '
-                                   'Params: %d on epoch: %d]',
-                                   score.top1, score.top5, score.sparsity, -score.params_nnz_cnt,
-                                   score.epoch)
-                else:
-                    msglogger.info('==> Best [Top1: %.3f   Sparsity:%.2f   '
-                                   'Params: %d on epoch: %d]',
-                                   score.top1, score.sparsity, -score.params_nnz_cnt,
-                                   score.epoch)
-        else:
-
-            # Keep perf_scores_history sorted from best to worst
-            if not args.sparsity_perf:
-                # Sort by mse as main sort key, then sort by epoch
-                perf_scores_history.sort(key=operator.attrgetter('top1', 'epoch'), reverse=True)
-            else:
-                # Sort by sparsity as main sort key, then sort by mse, and epoch
-                perf_scores_history.sort(key=operator.attrgetter('params_nnz_cnt', 'top1',
-                                         'epoch'), reverse=True)
-            for score in perf_scores_history[:args.num_best_scores]:
-                msglogger.info('==> Best [MSE: %.5f   Sparsity:%.2f   '
+            if args.num_classes > 5:
+                msglogger.info('==> Best [Top1: %.3f   Top5: %.3f   Sparsity:%.2f   '
                                'Params: %d on epoch: %d]',
-                               1. - score.top1, score.sparsity, -score.params_nnz_cnt,
+                               score.top1, score.top5, score.sparsity, -score.params_nnz_cnt,
                                score.epoch)
+            else:
+                msglogger.info('==> Best [Top1: %.3f   Sparsity:%.2f   '
+                               'Params: %d on epoch: %d]',
+                               score.top1, score.sparsity, -score.params_nnz_cnt,
+                               score.epoch)
+    else:
+        perf_scores_history.append(distiller.MutableNamedTuple({'params_nnz_cnt': -params_nnz_cnt,
+                                                                'sparsity': model_sparsity,
+                                                                'top1': 1. - top1,
+                                                                'epoch': epoch}))
+        # Keep perf_scores_history sorted from best to worst
+        if not args.sparsity_perf:
+            # Sort by mse as main sort key, then sort by epoch
+            perf_scores_history.sort(key=operator.attrgetter('top1', 'epoch'), reverse=True)
+        else:
+            # Sort by sparsity as main sort key, then sort by mse, and epoch
+            perf_scores_history.sort(key=operator.attrgetter('params_nnz_cnt', 'top1', 'epoch'),
+                                     reverse=True)
+        for score in perf_scores_history[:args.num_best_scores]:
+            msglogger.info('==> Best [MSE: %.5f   Sparsity:%.2f   '
+                           'Params: %d on epoch: %d]',
+                           1. - score.top1, score.sparsity, -score.params_nnz_cnt,
+                           score.epoch)
 
 
 def earlyexit_loss(output, target, criterion, args):
@@ -1458,8 +1307,7 @@ def evaluate_model(model, criterion, test_loader, loggers, activations_collector
         quantizer.prepare_model()
         model.to(args.device)
 
-    top1, _, _, _, mAP = test(test_loader, model, criterion, loggers, activations_collectors,
-                              args=args)
+    top1, _, _ = test(test_loader, model, criterion, loggers, activations_collectors, args=args)
 
     if args.shap > 0:
         matplotlib.use('TkAgg')
@@ -1489,15 +1337,10 @@ def evaluate_model(model, criterion, test_loader, loggers, activations_collector
 
     if args.quantize_eval:
         checkpoint_name = 'quantized'
-
-        if args.obj_detection:
-            extras = {'quantized_mAP': mAP}
-        else:
-            extras = {'quantized_top1': top1}
         apputils.save_checkpoint(0, args.cnn, model, optimizer=None, scheduler=scheduler,
                                  name='_'.join([args.name, checkpoint_name])
                                  if args.name else checkpoint_name,
-                                 dir=msglogger.logdir, extras=extras)
+                                 dir=msglogger.logdir, extras={'quantized_top1': top1})
 
 
 def summarize_model(model, dataset, which_summary, filename='model'):
@@ -1544,8 +1387,7 @@ def automated_deep_compression(model, criterion, _optimizer, loggers, args):
     train_loader, _val_loader, test_loader, _ = apputils.get_data_loaders(
         args.datasets_fn, (os.path.expanduser(args.data), args), args.batch_size,
         args.workers, args.validation_split, args.deterministic,
-        args.effective_train_size, args.effective_valid_size, args.effective_test_size,
-        collate_fn=args.collate_fn)
+        args.effective_train_size, args.effective_valid_size, args.effective_test_size)
 
     args.display_confusion = True
     validate_fn = partial(test, test_loader=test_loader, criterion=criterion,
@@ -1564,8 +1406,7 @@ def greedy(model, criterion, _optimizer, loggers, args):
     train_loader, _val_loader, test_loader, _ = apputils.get_data_loaders(
         args.datasets_fn, (os.path.expanduser(args.data), args), args.batch_size,
         args.workers, args.validation_split, args.deterministic,
-        args.effective_train_size, args.effective_valid_size, args.effective_test_size,
-        collate_fn=args.collate_fn)
+        args.effective_train_size, args.effective_valid_size, args.effective_test_size)
 
     test_fn = partial(test, test_loader=test_loader, criterion=criterion,
                       loggers=loggers, args=args, activations_collectors=None)
