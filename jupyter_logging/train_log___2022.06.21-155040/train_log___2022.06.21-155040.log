@@ -1,0 +1,35 @@
+2022-06-21 15:50:40,091 - Log file for this run: /home/geffencooper/Model_Development/ai8x-training/jupyter_logging/train_log___2022.06.21-155040/train_log___2022.06.21-155040.log
+2022-06-21 15:50:42,136 - Dataset sizes:
+	training=18000
+	validation=2000
+	test=5000
+2022-06-21 15:50:46,679 - Optimizer Type: <class 'torch.optim.adam.Adam'>
+2022-06-21 15:50:49,881 - Training epoch: 18000 samples (64 per mini-batch)
+2022-06-21 15:50:54,332 - Epoch: [0][  100/  282]    objective_loss 0.632911                                        LR 0.001000    Time 0.044475    
+2022-06-21 15:50:58,507 - Epoch: [0][  200/  282]    objective_loss 0.596877                                        LR 0.001000    Time 0.043093    
+2022-06-21 15:51:01,913 - Epoch: [0][  282/  282]    objective_loss 0.569078    Top1 87.500000    LR 0.001000    Time 0.042629    
+2022-06-21 15:51:01,954 - --- validate (epoch=0)-----------
+2022-06-21 15:51:01,954 - 2000 samples (64 per mini-batch)
+2022-06-21 15:51:02,362 - ==> Top1: 67.188    Loss: 0.529
+
+2022-06-21 15:51:02,363 - ==> Confusion:
+[[13 19]
+ [ 2 30]]
+
+2022-06-21 15:51:02,585 - ==> Best [Top1: 67.188 on epoch: 0]
+2022-06-21 15:51:02,586 - Saving checkpoint to: jupyter_logging/train_log___2022.06.21-155040/cat-dog_net_checkpoint.pth.tar
+2022-06-21 15:51:02,600 - Training epoch: 18000 samples (64 per mini-batch)
+2022-06-21 15:51:07,039 - Epoch: [1][  100/  282]    objective_loss 0.466794                                        LR 0.001000    Time 0.044351    
+2022-06-21 15:51:11,203 - Epoch: [1][  200/  282]    objective_loss 0.448285                                        LR 0.001000    Time 0.042979    
+2022-06-21 15:51:14,603 - Epoch: [1][  282/  282]    objective_loss 0.442824    Top1 80.000000    LR 0.001000    Time 0.042526    
+2022-06-21 15:51:14,644 - --- validate (epoch=1)-----------
+2022-06-21 15:51:14,644 - 2000 samples (64 per mini-batch)
+2022-06-21 15:51:14,953 - ==> Top1: 81.250    Loss: 0.423
+
+2022-06-21 15:51:14,955 - ==> Confusion:
+[[24  7]
+ [ 5 28]]
+
+2022-06-21 15:51:15,188 - ==> Best [Top1: 81.250 on epoch: 1]
+2022-06-21 15:51:15,189 - Saving checkpoint to: jupyter_logging/train_log___2022.06.21-155040/cat-dog_net_checkpoint.pth.tar
+2022-06-21 15:51:15,216 - Training epoch: 18000 samples (64 per mini-batch)
