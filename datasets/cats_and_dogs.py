@@ -250,7 +250,7 @@ datasets = [
     {
         'name': 'cats_and_dogs',
         'input': (3, 128, 128),
-        'output': ('cat', 'dog'),
+        'output': ('dog', 'cat'),
         'loader': cats_and_dogs_get_datasets,
     },
 ]
