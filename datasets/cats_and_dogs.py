@@ -103,7 +103,7 @@ class CatsAndDogsDataset(Dataset):
             label = self.labels[idx]
             
             # return the sample (img (tensor)), object class (int), and the path optionally
-            return img, label#, self.imgs[idx]
+            return img, label, self.imgs[idx]
 
         # if the image is invalid, show the exception
         except (ValueError, RuntimeWarning,UserWarning) as e:
@@ -122,8 +122,8 @@ class CatsAndDogsDataset(Dataset):
         data_loader = DataLoader(self,batch_size,shuffle=True)
 
         # get the first batch
-        #(imgs, labels,urls) = next(iter(data_loader))
-        (imgs, labels) = next(iter(data_loader))
+        (imgs, labels,urls) = next(iter(data_loader))
+        #(imgs, labels) = next(iter(data_loader))
         imgs,labels = imgs.to(device), labels.to(device)
         preds = None
 
@@ -138,7 +138,8 @@ class CatsAndDogsDataset(Dataset):
         obj_classes = list(self.classes)
         
         fig,ax_array = plt.subplots(rows,cols,figsize=(20,20))
-        fig.subplots_adjust(hspace=0.5)
+        #fig.subplots_adjust(hspace=0.5)
+        plt.subplots_adjust(wspace=0, hspace=0)
         for i in range(rows):
             for j in range(cols):
                 idx = i*rows+j
@@ -155,11 +156,11 @@ class CatsAndDogsDataset(Dataset):
                 #print(imgs[idx].size(),torch.min(imgs[idx]))
                 ax_array[i,j].imshow((imgs[idx].permute(1, 2, 0)+1)/2)
 
-                ax_array[i,j].set_title(text,color="white")
+                #ax_array[i,j].set_title(text,color="white")
                 ax_array[i,j].set_xticks([])
                 ax_array[i,j].set_yticks([])
         plt.savefig('plot.png')
-        #print(urls)
+        print(urls)
         #plt.show()
 
     def viz_mispredict(self,wrong_samples,wrong_preds,actual_preds):
