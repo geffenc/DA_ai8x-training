@@ -8,6 +8,7 @@
 /latest_log_dir
 /latest_log_file
 /logs/
+/jupyter_logging/
 /ninja-python-distributions
 /pip-selfcheck.json
 /sensitivity.csv

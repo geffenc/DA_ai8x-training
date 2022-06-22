@@ -46,26 +46,26 @@ class CatsAndDogsClassifier(nn.Module):
                                                    bias=True,batchnorm='Affine', **kwargs)
         
         # 32x32x32 --> 32x16x16 --> 64x16x16 (padding by 1 so same dimension)
-        self.conv7 = ai8x.FusedMaxPoolConv2dBNReLU(32, 64, 3, stride=1, padding=1, pool_size=2, pool_stride=2,
+        self.conv7 = ai8x.FusedMaxPoolConv2dBNReLU(32, 32, 3, stride=1, padding=1, pool_size=2, pool_stride=2,
                                                    bias=True,batchnorm='Affine',**kwargs)
         
         # 64x16x16 --> 64x16x16 (padding by 1 so same dimension)
-        self.conv8 = ai8x.FusedConv2dBNReLU(64, 64, 3, stride=1, padding=1,
+        self.conv8 = ai8x.FusedConv2dBNReLU(32, 32, 3, stride=1, padding=1,
                                                    bias=True,batchnorm='Affine', **kwargs)
         
         # 64x16x16 --> 64x8x8 (padding by 1 so same dimension)
-        self.conv9 = ai8x.FusedMaxPoolConv2dBNReLU(64, 64, 3, stride=1, padding=1, pool_size=2, pool_stride=2,
+        self.conv9 = ai8x.FusedMaxPoolConv2dBNReLU(32, 32, 3, stride=1, padding=1, pool_size=2, pool_stride=2,
                                                    bias=True,batchnorm='Affine',**kwargs)
                                                    
         
         # 64x8x8 --> 64x4x4 (padding by 1 so same dimension)
-        self.conv10 = ai8x.FusedMaxPoolConv2dBNReLU(64, 64, 3, stride=1, padding=1, pool_size=2, pool_stride=2,
+        self.conv10 = ai8x.FusedMaxPoolConv2dBNReLU(32, 32, 3, stride=1, padding=1, pool_size=2, pool_stride=2,
                                                    bias=True,batchnorm='Affine',**kwargs)
         
         # flatten to fully connected layer
-        self.fc1 = ai8x.FusedLinearReLU(64*4*4, 128, bias=True, **kwargs)
+        self.fc1 = ai8x.FusedLinearReLU(32*4*4, 64, bias=True, **kwargs)
         self.do1 = torch.nn.Dropout(p=0.5)
-        self.fc2 = ai8x.Linear(128, 2, bias=True, wide=True, **kwargs)
+        self.fc2 = ai8x.Linear(64, 2, bias=True, wide=True, **kwargs)
 
         # initialize weights
         for m in self.modules():
@@ -89,7 +89,7 @@ class CatsAndDogsClassifier(nn.Module):
         x = self.conv10(x)
         x = x.view(x.size(0), -1)
         x = self.fc1(x)
-        #x = self.do1(x)
+        x = self.do1(x)
         x = self.fc2(x)
 
         return x

@@ -102,8 +102,8 @@ class CatsAndDogsDataset(Dataset):
             # get the label
             label = self.labels[idx]
             
-            # return the sample (img (tensor)), object class (int)
-            return img, label
+            # return the sample (img (tensor)), object class (int), and the path optionally
+            return img, label#, self.imgs[idx]
 
         # if the image is invalid, show the exception
         except (ValueError, RuntimeWarning,UserWarning) as e:
@@ -122,6 +122,7 @@ class CatsAndDogsDataset(Dataset):
         data_loader = DataLoader(self,batch_size,shuffle=True)
 
         # get the first batch
+        #(imgs, labels,urls) = next(iter(data_loader))
         (imgs, labels) = next(iter(data_loader))
         imgs,labels = imgs.to(device), labels.to(device)
         preds = None
@@ -158,6 +159,7 @@ class CatsAndDogsDataset(Dataset):
                 ax_array[i,j].set_xticks([])
                 ax_array[i,j].set_yticks([])
         plt.savefig('plot.png')
+        #print(urls)
         #plt.show()
 
     def viz_mispredict(self,wrong_samples,wrong_preds,actual_preds):
@@ -214,12 +216,12 @@ def cats_and_dogs_get_datasets(data, load_train=True, load_test=True):
         train_transform = transforms.Compose([
             transforms.Resize((128,128)),
             #transforms.ToPILImage(),
-            #transforms.ColorJitter(brightness=(0.85,1.15),saturation=(0.85,1.15),contrast=(0.85,1.15),hue=(-0.1,0.1)),
+            transforms.ColorJitter(brightness=(0.5,1.5),saturation=(0.5,1.5),contrast=(0.5,1.5)),#,hue=(-0.1,0.1)),
             #transforms.RandomGrayscale(0.25),
             #transforms.RandomAffine(degrees=180,translate=(0.15,0.15)),
             transforms.RandomHorizontalFlip(),
             #transforms.RandomVerticalFlip(),
-            transforms.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 5)),
+            transforms.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 3)),
             transforms.ToTensor(),
             ai8x.normalize(args=args)
         ])
