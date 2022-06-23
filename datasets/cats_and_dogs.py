@@ -59,6 +59,8 @@ class CatsAndDogsDataset(Dataset):
         self.img_dir_path = img_dir_path
         self.transform = transform
         self.normalize = normalize
+
+        print(self.img_dir_path)
         
         # collect img classes from dir names
         img_classes = next(os.walk(img_dir_path))[1]
@@ -103,7 +105,7 @@ class CatsAndDogsDataset(Dataset):
             label = self.labels[idx]
             
             # return the sample (img (tensor)), object class (int), and the path optionally
-            return img, label, self.imgs[idx]
+            return img, label#, os.path.basename(self.imgs[idx])
 
         # if the image is invalid, show the exception
         except (ValueError, RuntimeWarning,UserWarning) as e:
@@ -122,8 +124,8 @@ class CatsAndDogsDataset(Dataset):
         data_loader = DataLoader(self,batch_size,shuffle=True)
 
         # get the first batch
-        (imgs, labels,urls) = next(iter(data_loader))
-        #(imgs, labels) = next(iter(data_loader))
+        #(imgs, labels,urls) = next(iter(data_loader))
+        (imgs, labels) = next(iter(data_loader))
         imgs,labels = imgs.to(device), labels.to(device)
         preds = None
 
@@ -156,11 +158,11 @@ class CatsAndDogsDataset(Dataset):
                 #print(imgs[idx].size(),torch.min(imgs[idx]))
                 ax_array[i,j].imshow((imgs[idx].permute(1, 2, 0)+1)/2)
 
-                #ax_array[i,j].set_title(text,color="white")
+                ax_array[i,j].set_title(text,color="white")
                 ax_array[i,j].set_xticks([])
                 ax_array[i,j].set_yticks([])
         plt.savefig('plot.png')
-        print(urls)
+        #print(urls)
         #plt.show()
 
     def viz_mispredict(self,wrong_samples,wrong_preds,actual_preds):
@@ -212,6 +214,9 @@ class CatsAndDogsDataset(Dataset):
 def cats_and_dogs_get_datasets(data, load_train=True, load_test=True):
     (data_dir, args) = data
 
+    train_dataset = None
+    test_dataset = None
+
     # transforms for training
     if load_train:
         train_transform = transforms.Compose([
@@ -226,6 +231,7 @@ def cats_and_dogs_get_datasets(data, load_train=True, load_test=True):
             transforms.ToTensor(),
             ai8x.normalize(args=args)
         ])
+        train_dataset = CatsAndDogsDataset(os.path.join(data_dir,"train"),train_transform,normalize=False)
 
     else:
         train_dataset = None
@@ -238,13 +244,10 @@ def cats_and_dogs_get_datasets(data, load_train=True, load_test=True):
             transforms.ToTensor(),
             ai8x.normalize(args=args)
         ])
+        test_dataset = CatsAndDogsDataset(os.path.join(data_dir,"test"),test_transform,normalize=False)
 
     else:
         test_dataset = None
-        
-    # create the datasets
-    train_dataset = CatsAndDogsDataset(os.path.join(data_dir,"train"),train_transform,normalize=False)
-    test_dataset = CatsAndDogsDataset(os.path.join(data_dir,"test"),test_transform,normalize=False)
     
     return train_dataset, test_dataset
 

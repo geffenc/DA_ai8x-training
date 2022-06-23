@@ -94,56 +94,6 @@ class CatsAndDogsClassifier(nn.Module):
 
         return x
 
-    #     # 3x128x128 --> 8x128x128 (padding by 1 so same dimension)
-    #     self.conv1 = ai8x.FusedConv2dReLU(3,8,3,stride=1,padding=1,bias=True, **kwargs)
-
-    #     # 8x128x128 --> 8x64x64 --> 16x64x64 (padding by 1 so same dimension)
-    #     self.conv2 = ai8x.FusedMaxPoolConv2dReLU(8, 16, 3, stride=1, padding=1, pool_size=2, pool_stride=2,
-    #                                                bias=True, **kwargs)
-
-    #     # 16x64x64 --> 16x32x32 --> 32x32x32 (padding by 1 so same dimension)
-    #     self.conv3 = ai8x.FusedMaxPoolConv2dBNReLU(16, 32, 3, stride=1, padding=1, pool_size=2, pool_stride=2,
-    #                                                bias=True,batchnorm='Affine', **kwargs)
-
-    #     # 32x32x32 --> 32x16x16 --> 32x16x16 (padding by 1 so same dimension)
-    #     self.conv4 = ai8x.FusedMaxPoolConv2dBNReLU(32, 32, 3, stride=1, padding=1, pool_size=2, pool_stride=2,
-    #                                                bias=True,batchnorm='Affine', **kwargs)
-
-    #     # 32x16x16 --> 32x8x8 --> 32x8x8 (padding by 1 so same dimension)
-    #     self.conv5 = ai8x.FusedMaxPoolConv2dBNReLU(32, 32, 3, stride=1, padding=1, pool_size=2, pool_stride=2,
-    #                                                bias=True,batchnorm='Affine', **kwargs)
-
-    #     # 32x8x8 --> 32x4x4 --> 32x4x4 (padding by 1 so same dimension)
-    #     self.conv6 = ai8x.FusedMaxPoolConv2dBNReLU(32, 32, 3, stride=1, padding=1, pool_size=2, pool_stride=2,
-    #                                                bias=True,batchnorm='Affine', **kwargs)
-
-
-    #     #self.fc1 = ai8x.FusedLinearReLU(32*5*5, 128, bias=True, **kwargs)
-    #     self.fc1 = ai8x.Linear(32*4*4,num_classes,bias=True,wide=True,**kwargs)
-
-
-    #      # initialize weights
-    #     for m in self.modules():
-    #         if isinstance(m, nn.Conv2d):
-    #             nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
-    #     for m in self.modules():
-    #         if isinstance(m, nn.Linear):
-    #             nn.init.xavier_normal_(m.weight)
-
-    # def forward(self,x):  # pylint: disable=arguments-differ
-    #     """Forward prop"""
-    #     x = self.conv1(x)
-    #     x = self.conv2(x)
-    #     x = self.conv3(x)
-    #     x = self.conv4(x)
-    #     x = self.conv5(x)
-    #     x = self.conv6(x)
-
-    #     x = x.view(x.size(0),-1)
-    #     x = self.fc1(x)
-
-    #     return x
-
 
 def catdognet(pretrained=False, **kwargs):
     """
