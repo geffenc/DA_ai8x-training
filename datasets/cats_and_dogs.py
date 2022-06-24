@@ -105,7 +105,7 @@ class CatsAndDogsDataset(Dataset):
             label = self.labels[idx]
             
             # return the sample (img (tensor)), object class (int), and the path optionally
-            return img, label#, os.path.basename(self.imgs[idx])
+            return img, label, os.path.basename(self.imgs[idx])
 
         # if the image is invalid, show the exception
         except (ValueError, RuntimeWarning,UserWarning) as e:
@@ -124,8 +124,8 @@ class CatsAndDogsDataset(Dataset):
         data_loader = DataLoader(self,batch_size,shuffle=True)
 
         # get the first batch
-        #(imgs, labels,urls) = next(iter(data_loader))
-        (imgs, labels) = next(iter(data_loader))
+        (imgs, labels, paths) = next(iter(data_loader))
+        #(imgs, labels) = next(iter(data_loader))
         imgs,labels = imgs.to(device), labels.to(device)
         preds = None
 
@@ -162,11 +162,12 @@ class CatsAndDogsDataset(Dataset):
                 ax_array[i,j].set_xticks([])
                 ax_array[i,j].set_yticks([])
         plt.savefig('plot.png')
-        #print(urls)
+        #print(paths)
         #plt.show()
 
-    def viz_mispredict(self,wrong_samples,wrong_preds,actual_preds):
+    def viz_mispredict(self,wrong_samples,wrong_preds,actual_preds,img_names):
         wrong_samples,wrong_preds,actual_preds = wrong_samples.to("cpu"), wrong_preds.to("cpu"),actual_preds.to("cpu")
+        
         # import matplotlib
         # matplotlib.use('TkAgg')
         obj_classes = list(self.classes)
@@ -177,9 +178,10 @@ class CatsAndDogsDataset(Dataset):
             num_cols = num_samples // num_rows
         else:
             return
+        print("num wrong:",num_samples, " num rows:",num_rows, " num cols:",num_cols)
 
-        fig,ax_array = plt.subplots(num_rows,num_cols,figsize=(20,20))
-        fig.subplots_adjust(hspace=0.5)
+        fig,ax_array = plt.subplots(num_rows,num_cols,figsize=(30,30))
+        fig.subplots_adjust(hspace=1.5)
         for i in range(num_rows):
             for j in range(num_cols):
                 idx = i*num_rows+j
@@ -188,7 +190,8 @@ class CatsAndDogsDataset(Dataset):
                 actual_pred = actual_preds[idx]
                 # Undo normalization
                 sample = (sample.permute(1, 2, 0)+1)/2
-                text = "L: " + obj_classes[actual_pred.item()]  + " P:",obj_classes[wrong_pred.item()]#", i=" +str(idxs[idx].item())
+                #text = "L: " + obj_classes[actual_pred.item()]  + " P:",obj_classes[wrong_pred.item()]#", i=" +str(idxs[idx].item())
+                text = img_names[idx]
                 
                 # for normal forward pass use this line
                 #ax_array[i,j].imshow(imgs[idx].permute(1, 2, 0))
@@ -222,12 +225,12 @@ def cats_and_dogs_get_datasets(data, load_train=True, load_test=True):
         train_transform = transforms.Compose([
             transforms.Resize((128,128)),
             #transforms.ToPILImage(),
-            transforms.ColorJitter(brightness=(0.5,1.5),saturation=(0.5,1.5),contrast=(0.5,1.5)),#,hue=(-0.1,0.1)),
-            #transforms.RandomGrayscale(0.25),
-            #transforms.RandomAffine(degrees=180,translate=(0.15,0.15)),
+            transforms.ColorJitter(brightness=(0.65,1.35),saturation=(0.65,1.35),contrast=(0.65,1.35)),#,hue=(-0.1,0.1)),
+            #transforms.RandomGrayscale(0.15),
+            transforms.RandomAffine(degrees=20,translate=(0.25,0.25)),
             transforms.RandomHorizontalFlip(),
-            #transforms.RandomVerticalFlip(),
-            transforms.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 3)),
+            transforms.RandomVerticalFlip(),
+            #transforms.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 3)),
             transforms.ToTensor(),
             ai8x.normalize(args=args)
         ])
