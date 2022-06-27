@@ -103,6 +103,39 @@ def catdognet(pretrained=False, **kwargs):
     return CatsAndDogsClassifier(**kwargs)
 
 
+
+
+class CatsAndDogsDCD(nn.Module):
+    def __init__(self, num_classes=2,num_channels=3,dimensions=(128,128),bias=True,**kwargs):
+        super().__init__()
+        
+        # flatten to fully connected layer
+        self.fc1 = ai8x.FusedLinearReLU(128,64, bias=True, **kwargs)
+        self.fc2 = ai8x.Linear(64, 4, bias=True, wide=True, **kwargs)
+
+        # initialize weights
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
+        for m in self.modules():
+            if isinstance(m, nn.Linear):
+                nn.init.xavier_normal_(m.weight)
+                
+    def forward(self, x):  # pylint: disable=arguments-differ
+        """Forward prop"""
+        x = self.fc1(x)
+        x = self.fc2(x)
+
+        return x
+
+
+def catdogdcdnet(pretrained=False, **kwargs):
+    """
+    Constructs a small CNN model for binary classification.
+    """
+    assert not pretrained
+    return CatsAndDogsDCD(**kwargs)
+
 models = [
     {
         'name': 'catdognet',

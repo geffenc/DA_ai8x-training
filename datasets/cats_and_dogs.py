@@ -212,16 +212,130 @@ class CatsAndDogsDataset(Dataset):
         plt.savefig("incorrect.png")
 
 
+# ================================= Helper functions for domain adaptation ===========================
+# code derived from https://github.com/HX-idiot/FADA-Pytorch/blob/master/dataloader.py
+# ====================================================================================================
+
+# gets source samples/labels from source dataset as separate lists
+def create_source_samples(source_data_path,args):
+    train_set, test_set = cats_and_dogs_get_datasets((source_data_path, args), load_train=True, load_test=False,apply_transforms=False)
+    n = len(train_set)
+    X=torch.Tensor(n,3,128,128)
+    Y=torch.LongTensor(n)
+
+    inds=torch.randperm(len(train_set))
+    for i,index in enumerate(inds):
+        x,y,name=train_set[index]
+        X[i]=x
+        Y[i]=y
+    return X,Y
+
+
+# gets target samples/labels from target dataset where
+# shot is the number of samples to get for each class. 
+def create_target_samples(shot,target_data_path,args):
+    # get the target dataset
+    train_set, test_set = cats_and_dogs_get_datasets((target_data_path, args), load_train=True, load_test=False,apply_transforms=False)
+    num_classes = 2
+
+    X,Y=[],[]
+
+    # list of counts to get equal amount per class, e.g. [2,2] --> 2 dog samples and 2 cat samples
+    class_counts=num_classes*[shot]
+
+    # keep getting items from the dataset until we have equal amount per class
+    i=0
+    while True:
+        if len(X)==shot*num_classes:
+            break
+        x,y,name=train_set[i]
+        if class_counts[y]>0:
+            X.append(x)
+            Y.append(y)
+            class_counts[y]-=1
+        i+=1
+
+    assert (len(X)==shot*num_classes)
+    return torch.stack(X,dim=0),torch.from_numpy(np.array(Y))
+
+
+"""
+G1: a pair of pic comes from same domain ,same class
+G3: a pair of pic comes from same domain, different classes
+G2: a pair of pic comes from different domain,same class
+G4: a pair of pic comes from different domain, different classes
+"""
+def create_groups(X_s,Y_s,X_t,Y_t,shot,seed=1):
+    C = 2
+    # shuffle order
+    classes = torch.unique(Y_t)
+    classes=classes[torch.randperm(len(classes))]
+
+    # change seed so every epoch to randomize the source data while keeping target data the same
+    torch.manual_seed(1 + seed)
+    torch.cuda.manual_seed(1 + seed)
+
+    # mapping function: given a class this function will return a list
+    # of indices for the corresponding class e.g. 0 --> [1,3]
+    def s_idxs(c):
+        # get a list of indices for the elements of class c
+        idx=torch.nonzero(Y_s.eq(int(c)))
+        # shuffle the list and flatten it, twice as many source samples
+        return idx[torch.randperm(len(idx))][:shot*2].squeeze()
+    def t_idxs(c):
+        return torch.nonzero(Y_t.eq(int(c)))[:shot].squeeze()
+
+    # the result is a lists of lists: [0,1,2] --> [[1,3],[0,2],[4,5]]
+    source_idxs = list(map(s_idxs, classes))
+    target_idxs = list(map(t_idxs, classes))
+
+    # stack the sublists into a matrix, i.e. each row is a class
+    # [
+    # C0  [1,3],
+    # C1  [0,2],
+    # C2  [4,5]
+    # ]
+    source_matrix=torch.stack(source_idxs)
+    target_matrix=torch.stack(target_idxs)
+
+    # now sample from matrices to get the four groupings
+    G1, G2, G3, G4 = [], [] , [] , []
+    Y1, Y2 , Y3 , Y4 = [], [] ,[] ,[]
+
+
+    for i in range(C):
+        for j in range(shot):
+            G1.append((X_s[source_matrix[i][j*2]],X_s[source_matrix[i][j*2+1]]))
+            Y1.append((Y_s[source_matrix[i][j*2]],Y_s[source_matrix[i][j*2+1]]))
+            G2.append((X_s[source_matrix[i][j]],X_t[target_matrix[i][j]]))
+            Y2.append((Y_s[source_matrix[i][j]],Y_t[target_matrix[i][j]]))
+            G3.append((X_s[source_matrix[i%C][j]],X_s[source_matrix[(i+1)%C][j]]))
+            Y3.append((Y_s[source_matrix[i % C][j]], Y_s[source_matrix[(i + 1) % C][j]]))
+            G4.append((X_s[source_matrix[i%C][j]],X_t[target_matrix[(i+1)%C][j]]))
+            Y4.append((Y_s[source_matrix[i % C][j]], Y_t[target_matrix[(i + 1) % C][j]]))
+
+    groups=[G1,G2,G3,G4]
+    groups_y=[Y1,Y2,Y3,Y4]
+
+    # make sure we sampled enough samples
+    for g in groups:
+        assert(len(g)==shot*C)
+    return groups,groups_y
+
+
+def sample_groups(X_s,Y_s,X_t,Y_t,shot,seed=1):
+    print("Sampling groups")
+    return create_groups(X_s,Y_s,X_t,Y_t,shot,seed=seed)
 
 '''Function to get the datasets'''
-def cats_and_dogs_get_datasets(data, load_train=True, load_test=True):
+def cats_and_dogs_get_datasets(data, load_train=True, load_test=True,apply_transforms=True):
     (data_dir, args) = data
 
     train_dataset = None
     test_dataset = None
 
     # transforms for training
-    if load_train:
+    if load_train and apply_transforms:
         train_transform = transforms.Compose([
             transforms.Resize((128,128)),
             #transforms.ToPILImage(),
@@ -231,6 +345,14 @@ def cats_and_dogs_get_datasets(data, load_train=True, load_test=True):
             transforms.RandomHorizontalFlip(),
             transforms.RandomVerticalFlip(),
             #transforms.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 3)),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        train_dataset = CatsAndDogsDataset(os.path.join(data_dir,"train"),train_transform,normalize=False)
+
+    elif load_train and not apply_transforms:
+        train_transform = transforms.Compose([
+            transforms.Resize((128,128)),
             transforms.ToTensor(),
             ai8x.normalize(args=args)
         ])
