@@ -110,7 +110,7 @@ class ClassificationDataset(Dataset):
             label = self.labels[idx]
             
             # return the sample (img (tensor)), object class (int), and the path optionally
-            return img, label, os.path.basename(self.imgs[idx])
+            return img, label#, os.path.basename(self.imgs[idx])
 
         # if the image is invalid, show the exception
         except (ValueError, RuntimeWarning,UserWarning) as e:
@@ -129,8 +129,8 @@ class ClassificationDataset(Dataset):
         data_loader = DataLoader(self,batch_size,shuffle=True)
 
         # get the first batch
-        (imgs, labels, paths) = next(iter(data_loader))
-        #(imgs, labels) = next(iter(data_loader))
+        #(imgs, labels, paths) = next(iter(data_loader))
+        (imgs, labels) = next(iter(data_loader))
         imgs,labels = imgs.to(device), labels.to(device)
         preds = None
 
@@ -407,7 +407,7 @@ class DomainAdaptationPairDataset(Dataset):
 
         # check if want to do a forward pass
         if model != None:
-            preds = model(imgs)
+            preds = model((imgs1, imgs2))
         
         imgs1, imgs2, labels = imgs1.to("cpu"), imgs2.to("cpu"), labels.to("cpu")
         # display the batch in a grid with the img, label, idx
@@ -659,7 +659,7 @@ def cats_and_dogs_get_datasets(data, load_train=True, load_test=True,apply_trans
 
 
 
-def pairs_datasets(data, load_train=True, load_test=True,apply_transforms=True):
+def pairs_get_datasets(data, load_train=True, load_test=True,apply_transforms=True):
     (data_dir, args) = data
 
     train_dataset = None
