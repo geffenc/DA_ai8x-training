@@ -334,38 +334,54 @@ class DomainAdaptationPairDataset(Dataset):
                 if ((j-i) % self.s_sampler.num_classes != 0):
                     x1_idx,x2_idx = self.t_sampler_idxs[i], self.s_sampler_idxs[j]
                     self.G4_img_paths.append((self.target_dataset.imgs[x1_idx],self.source_dataset.imgs[x2_idx]))
-                    self.G4_labels.append(2) # class 2
+                    self.G4_labels.append(3) # class 3
                     pair_cnt += 1
                 if pair_cnt >= self.num_G4_pairs:
                     break
             if pair_cnt >= self.num_G4_pairs:
                 break
 
+        self.group_imgs = [self.G1_img_paths,self.G2_img_paths,self.G3_img_paths,self.G4_img_paths]
+        self.group_labels = [self.G1_labels,self.G2_labels,self.G3_labels,self.G4_labels]
 
-    # dataset size is number of images
+    # dataset size is number of G2 samples times 4 because we sample from the other groups
     def __len__(self):
-        return 0
+        return 4*len(self.G2_labels)
     
     # how to get one sample from the dataset
     def __getitem__(self, idx):
-        # attempt to load the image at the specified index
+        # map the index into a subindex to a particular group
+        group = idx // len(self.G2_labels)
+        sub_idx = idx % len(self.G2_labels)
+
+        # attempt to load the images at the specified index
         try:
-            img = Image.open(self.imgs[idx])
+            # get paths
+            img1_path,img2_path = self.group_imgs[group][sub_idx]
+            label = self.group_labels[group][sub_idx]
+
+            # open the imgs
+            img1 = Image.open(img1_path)
+            img2 = Image.open(img2_path)
+
+            # extend dimensions if grayscale
             tt = torchvision.transforms.ToTensor()
             tp = torchvision.transforms.ToPILImage()
-            tt_img = tt(img)
+            tt_img = tt(img1)
             if(tt_img.size()[0] != 3):
-                img = tp(tt_img.repeat(3, 1, 1))
+                img1 = tp(tt_img.repeat(3, 1, 1))
+
+            tt_img = tt(img2)
+            if(tt_img.size()[0] != 3):
+                img2 = tp(tt_img.repeat(3, 1, 1))
             
             # apply any transformation
             if self.transform:
-                img = self.transform(img)
+                img1 = self.transform(img1)
+                img2 = self.transform(img2)
             
-            # get the label
-            label = self.labels[idx]
-            
-            # return the sample (img (tensor)), object class (int), and the path optionally
-            return img, label, os.path.basename(self.imgs[idx])
+            # return the samples (img (tensor)), object class (int), and the path optionally
+            return img1, img2, label#, os.path.basename(self.imgs[idx])
 
         # if the image is invalid, show the exception
         except (ValueError, RuntimeWarning,UserWarning) as e:
@@ -380,24 +396,24 @@ class DomainAdaptationPairDataset(Dataset):
         #matplotlib.use('TkAgg')
 
         # create the dataloader
-        batch_size = 64
+        batch_size = 8
         data_loader = DataLoader(self,batch_size,shuffle=True)
 
         # get the first batch
-        (imgs, labels, paths) = next(iter(data_loader))
+        (imgs1, imgs2, labels) = next(iter(data_loader))
         #(imgs, labels) = next(iter(data_loader))
-        imgs,labels = imgs.to(device), labels.to(device)
+        imgs1, imgs2, labels = imgs1.to(device), imgs2.to(device), labels.to(device)
         preds = None
 
         # check if want to do a forward pass
         if model != None:
             preds = model(imgs)
         
-        imgs,labels = imgs.to("cpu"), labels.to("cpu")
+        imgs1, imgs2, labels = imgs1.to("cpu"), imgs2.to("cpu"), labels.to("cpu")
         # display the batch in a grid with the img, label, idx
-        rows = 8
-        cols = 8
-        obj_classes = list(self.classes)
+        rows = 4
+        cols = 4
+        #obj_classes = list(self.classes)
         
         fig,ax_array = plt.subplots(rows,cols,figsize=(20,20))
         #fig.subplots_adjust(hspace=0.5)
@@ -407,7 +423,7 @@ class DomainAdaptationPairDataset(Dataset):
                 idx = i*rows+j
 
                 # create text labels
-                text = str(labels[idx].item())
+                text = str(labels[idx // 2].item())
                 if model != None:
                     text = "GT :" + obj_classes[labels[idx]]  + " P: ",obj_classes[preds[idx].argmax()]#", i=" +str(idxs[idx].item())
                 
@@ -416,7 +432,10 @@ class DomainAdaptationPairDataset(Dataset):
 
                 # for quantized forward pass use this line
                 #print(imgs[idx].size(),torch.min(imgs[idx]))
-                ax_array[i,j].imshow((imgs[idx].permute(1, 2, 0)+1)/2)
+                if idx % 2 == 0:
+                    ax_array[i,j].imshow((imgs1[idx // 2].permute(1, 2, 0)+1)/2)
+                else:
+                    ax_array[i,j].imshow((imgs2[idx // 2].permute(1, 2, 0)+1)/2)
 
                 ax_array[i,j].set_title(text,color="white")
                 ax_array[i,j].set_xticks([])
@@ -587,6 +606,8 @@ def sample_groups(X_s,Y_s,X_t,Y_t,shot,seed=1):
     print("Sampling groups")
     return create_groups(X_s,Y_s,X_t,Y_t,shot,seed=seed)
 
+
+
 '''Function to get the datasets'''
 def cats_and_dogs_get_datasets(data, load_train=True, load_test=True,apply_transforms=True):
     (data_dir, args) = data
@@ -635,6 +656,60 @@ def cats_and_dogs_get_datasets(data, load_train=True, load_test=True,apply_trans
         test_dataset = None
     
     return train_dataset, test_dataset
+
+
+
+def pairs_datasets(data, load_train=True, load_test=True,apply_transforms=True):
+    (data_dir, args) = data
+
+    train_dataset = None
+    test_dataset = None
+
+    # transforms for training
+    if load_train and apply_transforms:
+        train_transform = transforms.Compose([
+            transforms.Resize((128,128)),
+            #transforms.ToPILImage(),
+            #transforms.ColorJitter(brightness=(0.65,1.35),saturation=(0.65,1.35),contrast=(0.65,1.35)),#,hue=(-0.1,0.1)),
+            #transforms.RandomGrayscale(0.15),
+            #transforms.RandomAffine(degrees=20,translate=(0.25,0.25)),
+            #transforms.RandomHorizontalFlip(),
+            #transforms.RandomVerticalFlip(),
+            #transforms.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 3)),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,4)
+        #train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
+
+    elif load_train and not apply_transforms:
+        train_transform = transforms.Compose([
+            transforms.Resize((128,128)),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        #train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
+        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,4)
+
+    else:
+        train_dataset = None
+
+    # transforms for test, validatio --> convert to a valid tensor
+    if load_test:
+        test_transform = transforms.Compose([
+            #transforms.ToPILImage(),
+            transforms.Resize((128,128)),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        #test_dataset = ClassificationDataset(os.path.join(data_dir,"test"),test_transform)
+        test_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),test_transform,4)
+
+    else:
+        test_dataset = None
+    
+    return train_dataset, test_dataset
+
 
 
 def imagenet10_get_datasets(data, load_train=True, load_test=True,apply_transforms=True):
