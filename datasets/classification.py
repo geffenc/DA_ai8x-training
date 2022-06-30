@@ -303,15 +303,42 @@ class DomainAdaptationPairDataset(Dataset):
         # add G2 pairs
         pair_cnt = 0
         for i in range(0,len(self.t_sampler_idxs)): # iterate 1 by 1
-            for j in range(self.s_sampler.num_classes+i,len(self.s_sampler_idxs),self.s_sampler.num_classes): # iterate by n to get pairs
-                if i != j:
-                    x1_idx,x2_idx = self.t_sampler_idxs[i], self.s_sampler_idxs[j]
-                    self.G2_img_paths.append((self.target_dataset.imgs[x1_idx],self.source_dataset.imgs[x2_idx]))
-                    self.G2_labels.append(1) # class 1
-                    pair_cnt += 1
+            for j in range(i%self.s_sampler.num_classes,len(self.s_sampler_idxs),self.s_sampler.num_classes): # iterate by n to get pairs
+                x1_idx,x2_idx = self.t_sampler_idxs[i], self.s_sampler_idxs[j]
+                self.G2_img_paths.append((self.target_dataset.imgs[x1_idx],self.source_dataset.imgs[x2_idx]))
+                self.G2_labels.append(1) # class 1
+                pair_cnt += 1
                 if pair_cnt >= self.num_G2_pairs:
                     break
             if pair_cnt >= self.num_G2_pairs:
+                break
+
+        # add G3 pairs
+        pair_cnt = 0
+        for i in range(0,len(self.s_sampler_idxs)): # iterate 1 by 1
+            for j in range(i,len(self.s_sampler_idxs)): # iterate 1 by 1
+                if i != j and ((j-i) % self.s_sampler.num_classes != 0):
+                    x1_idx,x2_idx = self.s_sampler_idxs[i], self.s_sampler_idxs[j]
+                    self.G3_img_paths.append((self.source_dataset.imgs[x1_idx],self.source_dataset.imgs[x2_idx]))
+                    self.G3_labels.append(2) # class 2
+                    pair_cnt += 1
+                if pair_cnt >= self.num_G3_pairs:
+                    break
+            if pair_cnt >= self.num_G3_pairs:
+                break
+
+        # add G4 pairs
+        pair_cnt = 0
+        for i in range(0,len(self.t_sampler_idxs)): # iterate 1 by 1
+            for j in range(0,len(self.s_sampler_idxs)): # iterate 1 by 1
+                if ((j-i) % self.s_sampler.num_classes != 0):
+                    x1_idx,x2_idx = self.t_sampler_idxs[i], self.s_sampler_idxs[j]
+                    self.G4_img_paths.append((self.target_dataset.imgs[x1_idx],self.source_dataset.imgs[x2_idx]))
+                    self.G4_labels.append(2) # class 2
+                    pair_cnt += 1
+                if pair_cnt >= self.num_G4_pairs:
+                    break
+            if pair_cnt >= self.num_G4_pairs:
                 break
 
 
