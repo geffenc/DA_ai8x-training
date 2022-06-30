@@ -300,15 +300,20 @@ class DomainAdaptationPairDataset(Dataset):
             if pair_cnt >= self.num_G1_pairs:
                 break
 
-        # for i in range(self.num_G1_pairs)[0:10]:
-        #     x1_idx,x2_idx = s_sampler_idxs[i], s_sampler_idxs[i+self.s_sampler.num_classes]
-        #     self.G1_img_paths.append((self.source_dataset.imgs[x1_idx],self.source_dataset.imgs[x2_idx]))
-        #     self.G1_labels.append(0) # class 0
+        # add G2 pairs
+        pair_cnt = 0
+        for i in range(0,len(self.t_sampler_idxs)): # iterate 1 by 1
+            for j in range(self.s_sampler.num_classes+i,len(self.s_sampler_idxs),self.s_sampler.num_classes): # iterate by n to get pairs
+                if i != j:
+                    x1_idx,x2_idx = self.t_sampler_idxs[i], self.s_sampler_idxs[j]
+                    self.G2_img_paths.append((self.target_dataset.imgs[x1_idx],self.source_dataset.imgs[x2_idx]))
+                    self.G2_labels.append(1) # class 1
+                    pair_cnt += 1
+                if pair_cnt >= self.num_G2_pairs:
+                    break
+            if pair_cnt >= self.num_G2_pairs:
+                break
 
-        # for i in range(self.num_G2_pairs)[0:10]:
-        #     x1_idx,x2_idx = s_sampler_idxs[i], t_sampler_idxs[i+self.s_sampler.num_classes]
-        #     self.G1_img_paths.append((self.source_dataset.imgs[x1_idx],self.source_dataset.imgs[x2_idx]))
-        #     self.G1_labels.append(0) # class 0
 
     # dataset size is number of images
     def __len__(self):
