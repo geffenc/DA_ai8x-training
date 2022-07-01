@@ -231,11 +231,12 @@ Parameters:
   normalize -           Specifies whether to make the image zero mean, unit variance
 '''
 class DomainAdaptationPairDataset(Dataset):
-    def __init__(self,source_img_dir_path,target_img_dir_path,transform,shot):
+    def __init__(self,source_img_dir_path,target_img_dir_path,transform,shot,adv_stage=False):
         self.source_img_dir_path = source_img_dir_path
         self.target_img_dir_path = target_img_dir_path
         self.transform = transform
         self.shot = shot
+        self.adv_stage = adv_stage
 
         print(self.source_img_dir_path)
         print(self.target_img_dir_path)
@@ -282,6 +283,7 @@ class DomainAdaptationPairDataset(Dataset):
         self.G3_labels = []
         self.G4_img_paths = []
         self.G4_labels = []
+        
 
         self.s_sampler_idxs = [i for i in self.s_sampler] # [c0_idx, c1_idx, c2_idx, c0_idx, c2_idx, ...]
         self.t_sampler_idxs = [i for i in self.t_sampler] # [c0_idx, c1_idx, c2_idx, c0_idx, c2_idx, ...]
@@ -293,7 +295,7 @@ class DomainAdaptationPairDataset(Dataset):
                 if i != j:
                     x1_idx,x2_idx = self.s_sampler_idxs[i], self.s_sampler_idxs[j]
                     self.G1_img_paths.append((self.source_dataset.imgs[x1_idx],self.source_dataset.imgs[x2_idx]))
-                    self.G1_labels.append(0) # class 0
+                    self.G1_labels.append((0,(self.source_dataset.labels[x1_idx],self.source_dataset.labels[x2_idx]))) # class 0, original labels
                     pair_cnt += 1
                 if pair_cnt >= self.num_G1_pairs:
                     break
@@ -306,7 +308,10 @@ class DomainAdaptationPairDataset(Dataset):
             for j in range(i%self.s_sampler.num_classes,len(self.s_sampler_idxs),self.s_sampler.num_classes): # iterate by n to get pairs
                 x1_idx,x2_idx = self.t_sampler_idxs[i], self.s_sampler_idxs[j]
                 self.G2_img_paths.append((self.target_dataset.imgs[x1_idx],self.source_dataset.imgs[x2_idx]))
-                self.G2_labels.append(1) # class 1
+                if self.adv_stage:
+                    self.G2_labels.append((0,(self.target_dataset.labels[x1_idx],self.source_dataset.labels[x2_idx]))) # class 0, original labels
+                else:
+                    self.G2_labels.append((1,(self.target_dataset.labels[x1_idx],self.source_dataset.labels[x2_idx]))) # class 1, original labels
                 pair_cnt += 1
                 if pair_cnt >= self.num_G2_pairs:
                     break
@@ -320,7 +325,7 @@ class DomainAdaptationPairDataset(Dataset):
                 if i != j and ((j-i) % self.s_sampler.num_classes != 0):
                     x1_idx,x2_idx = self.s_sampler_idxs[i], self.s_sampler_idxs[j]
                     self.G3_img_paths.append((self.source_dataset.imgs[x1_idx],self.source_dataset.imgs[x2_idx]))
-                    self.G3_labels.append(2) # class 2
+                    self.G3_labels.append((2,(self.source_dataset.labels[x1_idx],self.source_dataset.labels[x2_idx]))) # class 2, original labels
                     pair_cnt += 1
                 if pair_cnt >= self.num_G3_pairs:
                     break
@@ -334,25 +339,43 @@ class DomainAdaptationPairDataset(Dataset):
                 if ((j-i) % self.s_sampler.num_classes != 0):
                     x1_idx,x2_idx = self.t_sampler_idxs[i], self.s_sampler_idxs[j]
                     self.G4_img_paths.append((self.target_dataset.imgs[x1_idx],self.source_dataset.imgs[x2_idx]))
-                    self.G4_labels.append(3) # class 3
+                    if self.adv_stage:
+                        self.G4_labels.append((2,(self.target_dataset.labels[x1_idx],self.source_dataset.labels[x2_idx]))) # class 2, original labels
+                    else:
+                        self.G4_labels.append((3,(self.target_dataset.labels[x1_idx],self.source_dataset.labels[x2_idx]))) # class 3, original labels
                     pair_cnt += 1
                 if pair_cnt >= self.num_G4_pairs:
                     break
             if pair_cnt >= self.num_G4_pairs:
                 break
 
-        self.group_imgs = [self.G1_img_paths,self.G2_img_paths,self.G3_img_paths,self.G4_img_paths]
-        self.group_labels = [self.G1_labels,self.G2_labels,self.G3_labels,self.G4_labels]
+        # during adversarial training, only feed in G2 and G4 and try to trick into G1 and G3
+        if self.adv_stage:
+            self.group_imgs = [self.G2_img_paths,self.G4_img_paths]
+            self.group_labels = [self.G2_labels,self.G4_labels]
+        else:
+            self.group_imgs = [self.G1_img_paths,self.G2_img_paths,self.G3_img_paths,self.G4_img_paths]
+            self.group_labels = [self.G1_labels,self.G2_labels,self.G3_labels,self.G4_labels]
 
     # dataset size is number of G2 samples times 4 because we sample from the other groups
     def __len__(self):
-        return 4*len(self.G2_labels)
+        if self.adv_stage:
+            return 2*len(self.G2_labels)//10
+        else:
+            return 4*len(self.G2_labels)//10
     
     # how to get one sample from the dataset
     def __getitem__(self, idx):
-        # map the index into a subindex to a particular group
-        group = idx // len(self.G2_labels)
-        sub_idx = idx % len(self.G2_labels)
+        if self.adv_stage:
+            # map the index into a subindex to a particular group
+            group = idx // (len(self)//2)
+            #sub_idx = idx % (len(self)//2)
+            sub_idx = random.randint(0,len(self)//2)
+        else:
+            # map the index into a subindex to a particular group
+            group = idx // (len(self)//4)
+            #sub_idx = idx % (len(self)//4)
+            sub_idx = random.randint(0,len(self)//4)
 
         # attempt to load the images at the specified index
         try:
@@ -381,7 +404,7 @@ class DomainAdaptationPairDataset(Dataset):
                 img2 = self.transform(img2)
             
             # return the samples (img (tensor)), object class (int), and the path optionally
-            return img1, img2, label#, os.path.basename(self.imgs[idx])
+            return img1, img2, label[0], label[1][0], label[1][1]#, os.path.basename(self.imgs[idx])
 
         # if the image is invalid, show the exception
         except (ValueError, RuntimeWarning,UserWarning) as e:
@@ -400,16 +423,17 @@ class DomainAdaptationPairDataset(Dataset):
         data_loader = DataLoader(self,batch_size,shuffle=True)
 
         # get the first batch
-        (imgs1, imgs2, labels) = next(iter(data_loader))
+        (imgs1, imgs2, pair_labels, imgs1_labels, imgs2_labels) = next(iter(data_loader))
         #(imgs, labels) = next(iter(data_loader))
-        imgs1, imgs2, labels = imgs1.to(device), imgs2.to(device), labels.to(device)
+        
+        imgs1, imgs2, pair_labels = imgs1.to(device), imgs2.to(device), pair_labels.to(device)
         preds = None
 
         # check if want to do a forward pass
         if model != None:
             preds = model((imgs1, imgs2))
         
-        imgs1, imgs2, labels = imgs1.to("cpu"), imgs2.to("cpu"), labels.to("cpu")
+        imgs1, imgs2, pair_labels, imgs1_labels, imgs2_labels, = imgs1.to("cpu"), imgs2.to("cpu"), pair_labels.to("cpu"), imgs1_labels.to("cpu"), imgs2_labels.to("cpu")
         # display the batch in a grid with the img, label, idx
         rows = 4
         cols = 4
@@ -418,12 +442,18 @@ class DomainAdaptationPairDataset(Dataset):
         fig,ax_array = plt.subplots(rows,cols,figsize=(20,20))
         #fig.subplots_adjust(hspace=0.5)
         plt.subplots_adjust(wspace=0, hspace=0)
+        
         for i in range(rows):
             for j in range(cols):
                 idx = i*rows+j
 
                 # create text labels
-                text = str(labels[idx // 2].item())
+                if idx % 2 == 0:
+                    text = str(pair_labels[idx // 2].item()) + " " + str(imgs1_labels[idx//2])
+                else:
+                    text = str(pair_labels[idx // 2].item()) + " " + str(imgs2_labels[idx//2])
+
+
                 if model != None:
                     text = "GT :" + obj_classes[labels[idx]]  + " P: ",obj_classes[preds[idx].argmax()]#", i=" +str(idxs[idx].item())
                 
@@ -703,7 +733,59 @@ def pairs_get_datasets(data, load_train=True, load_test=True,apply_transforms=Tr
             ai8x.normalize(args=args)
         ])
         #test_dataset = ClassificationDataset(os.path.join(data_dir,"test"),test_transform)
-        test_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),test_transform,4)
+        test_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"test"),os.path.join(data_dir[1],"test"),test_transform,4)
+
+    else:
+        test_dataset = None
+    
+    return train_dataset, test_dataset
+
+
+def pairs_get_datasets_c(data, load_train=True, load_test=True,apply_transforms=True):
+    (data_dir, args) = data
+
+    train_dataset = None
+    test_dataset = None
+
+    # transforms for training
+    if load_train and apply_transforms:
+        train_transform = transforms.Compose([
+            transforms.Resize((128,128)),
+            #transforms.ToPILImage(),
+            #transforms.ColorJitter(brightness=(0.65,1.35),saturation=(0.65,1.35),contrast=(0.65,1.35)),#,hue=(-0.1,0.1)),
+            #transforms.RandomGrayscale(0.15),
+            #transforms.RandomAffine(degrees=20,translate=(0.25,0.25)),
+            #transforms.RandomHorizontalFlip(),
+            #transforms.RandomVerticalFlip(),
+            #transforms.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 3)),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,4,adv_stage=True)
+        #train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
+
+    elif load_train and not apply_transforms:
+        train_transform = transforms.Compose([
+            transforms.Resize((128,128)),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        #train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
+        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,4,adv_stage=True)
+
+    else:
+        train_dataset = None
+
+    # transforms for test, validatio --> convert to a valid tensor
+    if load_test:
+        test_transform = transforms.Compose([
+            #transforms.ToPILImage(),
+            transforms.Resize((128,128)),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        #test_dataset = ClassificationDataset(os.path.join(data_dir,"test"),test_transform)
+        test_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"test"),os.path.join(data_dir[1],"test"),test_transform,4,adv_stage=True)
 
     else:
         test_dataset = None

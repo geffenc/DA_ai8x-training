@@ -11,6 +11,7 @@ import torch
 import torch.nn as nn
 import ai8x
 import distiller.apputils as apputils
+import copy
 
 '''
 Simple model for Cats and Dogs
@@ -191,70 +192,160 @@ def imagenet10(pretrained=False, **kwargs):
 
 
 class CatsAndDogsDCD(nn.Module):
-    def __init__(self, num_classes=2,num_channels=3,dimensions=(128,128),bias=True,device='cpu',**kwargs):
+    def __init__(self, num_classes=2,num_channels=3,dimensions=(128,128),bias=True,**kwargs):
         super().__init__()
         
-        load_model_path = "jupyter_logging/high_acc_b32_long_train___2022.06.24-175831/catdognet_qat_best.pth.tar"
+        # flatten to fully connected layer
+        self.fc1 = ai8x.FusedLinearReLU(128,64, bias=True, **kwargs)
+        self.fc2 = ai8x.Linear(64, 4, bias=True, wide=True, **kwargs)
 
-        self.feature_extractor = CatsAndDogsClassifier()                       
-        checkpoint = torch.load(load_model_path, map_location=lambda storage, loc: storage)
-        ai8x.fuse_bn_layers(self.feature_extractor)
-        self.feature_extractor = apputils.load_lean_checkpoint(self.feature_extractor, load_model_path, model_device=device)
-        ai8x.update_model(self.feature_extractor)
-        
-        # freeze the encoder weights conv[1-10] and fc1
-        ct = 0
-        for child in self.feature_extractor.children():
-            ct += 1
-            if ct < 12:
-                for param in child.parameters():
-                    param.requires_grad = False
-            
-        # add the DCD Layers
-        self.feature_extractor.fc2 = ai8x.FusedLinearReLU(128, 64, bias=True, **kwargs)
-        self.feature_extractor.fc3 = ai8x.Linear(64, 4, bias=True, wide=True, **kwargs)
-
-        self.do1 = torch.nn.Dropout(p=0.5)
-          
+        # initialize weights
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
         for m in self.modules():
             if isinstance(m, nn.Linear):
-                nn.init.xavier_uniform(m.weight)
+                nn.init.xavier_normal_(m.weight)
                 
-    def forward(self, x1, x2):  # pylint: disable=arguments-differ
-
+    def forward(self, x):  # pylint: disable=arguments-differ
         """Forward prop"""
-        x1 = self.feature_extractor.conv1(x1)
-        x1 = self.feature_extractor.conv2(x1)
-        x1 = self.feature_extractor.conv3(x1)
-        x1 = self.feature_extractor.conv4(x1)
-        x1 = self.feature_extractor.conv5(x1)
-        x1 = self.feature_extractor.conv6(x1)
-        x1 = self.feature_extractor.conv7(x1)
-        x1 = self.feature_extractor.conv8(x1)
-        x1 = self.feature_extractor.conv9(x1)
-        x1 = self.feature_extractor.conv10(x1)
-        x1 = x1.view(x1.size(0), -1)
-        x1 = self.feature_extractor.fc1(x1)
+        x = self.fc1(x)
+        x = self.fc2(x)
 
-        x2 = self.feature_extractor.conv1(x2)
-        x2 = self.feature_extractor.conv2(x2)
-        x2 = self.feature_extractor.conv3(x2)
-        x2 = self.feature_extractor.conv4(x2)
-        x2 = self.feature_extractor.conv5(x2)
-        x2 = self.feature_extractor.conv6(x2)
-        x2 = self.feature_extractor.conv7(x2)
-        x2 = self.feature_extractor.conv8(x2)
-        x2 = self.feature_extractor.conv9(x2)
-        x2 = self.feature_extractor.conv10(x2)
-        x2 = x2.view(x2.size(0), -1)
-        x2 = self.feature_extractor.fc1(x2)
+        return x
+
+# class CatsAndDogsDCD(nn.Module):
+#     def __init__(self, num_classes=2,num_channels=3,dimensions=(128,128),bias=True,device='cpu',**kwargs):
+#         super().__init__()
+        
+#         load_model_path = "jupyter_logging/high_acc_b32_long_train___2022.06.24-175831/catdognet_qat_best.pth.tar"
+
+#         self.feature_extractor = CatsAndDogsClassifier()                       
+#         checkpoint = torch.load(load_model_path, map_location=lambda storage, loc: storage)
+#         ai8x.fuse_bn_layers(self.feature_extractor)
+#         self.feature_extractor = apputils.load_lean_checkpoint(self.feature_extractor, load_model_path, model_device=device)
+#         ai8x.update_model(self.feature_extractor)
+        
+#         # freeze the encoder weights conv[1-10] and fc1
+#         ct = 0
+#         for child in self.feature_extractor.children():
+#             ct += 1
+#             if ct < 12:
+#                 for param in child.parameters():
+#                     param.requires_grad = False
+            
+#         # add the DCD Layers
+#         self.feature_extractor.fc2 = ai8x.FusedLinearReLU(128, 64, bias=True, **kwargs)
+#         self.feature_extractor.fc3 = ai8x.Linear(64, 4, bias=True, wide=True, **kwargs)
+
+#         self.do1 = torch.nn.Dropout(p=0.5)
+          
+#         for m in self.modules():
+#             if isinstance(m, nn.Linear):
+#                 nn.init.xavier_uniform(m.weight)
+                
+#     def forward(self, x1, x2):  # pylint: disable=arguments-differ
+
+#         """Forward prop"""
+#         x1 = self.feature_extractor.conv1(x1)
+#         x1 = self.feature_extractor.conv2(x1)
+#         x1 = self.feature_extractor.conv3(x1)
+#         x1 = self.feature_extractor.conv4(x1)
+#         x1 = self.feature_extractor.conv5(x1)
+#         x1 = self.feature_extractor.conv6(x1)
+#         x1 = self.feature_extractor.conv7(x1)
+#         x1 = self.feature_extractor.conv8(x1)
+#         x1 = self.feature_extractor.conv9(x1)
+#         x1 = self.feature_extractor.conv10(x1)
+#         x1 = x1.view(x1.size(0), -1)
+#         x1 = self.feature_extractor.fc1(x1)
+
+#         x2 = self.feature_extractor.conv1(x2)
+#         x2 = self.feature_extractor.conv2(x2)
+#         x2 = self.feature_extractor.conv3(x2)
+#         x2 = self.feature_extractor.conv4(x2)
+#         x2 = self.feature_extractor.conv5(x2)
+#         x2 = self.feature_extractor.conv6(x2)
+#         x2 = self.feature_extractor.conv7(x2)
+#         x2 = self.feature_extractor.conv8(x2)
+#         x2 = self.feature_extractor.conv9(x2)
+#         x2 = self.feature_extractor.conv10(x2)
+#         x2 = x2.view(x2.size(0), -1)
+#         x2 = self.feature_extractor.fc1(x2)
 
         
-        x_cat = torch.cat([x1,x2],1)
-        disc = self.feature_extractor.fc2(x_cat.detach())
-        disc = self.feature_extractor.fc3(disc)
+#         x_cat = torch.cat([x1,x2],1)
+#         disc = self.feature_extractor.fc2(x_cat.detach())
+#         disc = self.feature_extractor.fc3(disc)
 
-        return disc
+#         return disc
+
+
+# class CatsAndDogsDCDHead(nn.Module):
+#     def __init__(self, num_classes=2,num_channels=3,dimensions=(128,128),bias=True,device='cpu',**kwargs):
+#         super().__init__()
+        
+#         load_model_path = "jupyter_logging/dcd_train___2022.07.01-100458/catdogdcdnet_best.pth.tar"
+
+#         self.feature_extractor = CatsAndDogsDCD()                       
+#         checkpoint = torch.load(load_model_path, map_location=lambda storage, loc: storage)
+#         ai8x.fuse_bn_layers(self.feature_extractor)
+#         self.feature_extractor = apputils.load_lean_checkpoint(self.feature_extractor, load_model_path, model_device=device)
+#         ai8x.update_model(self.feature_extractor)
+        
+#         # freeze the encoder weights conv[1-10] and fc1
+#         ct = 0
+#         for child in self.feature_extractor.children():
+#             ct += 1
+#             if ct < 12:
+#                 for param in child.parameters():
+#                     param.requires_grad = False
+            
+#         # add the DCD Layers
+#         self.fc2 = copy.dee
+#         self.fc3 = ai8x.Linear(64, 4, bias=True, wide=True, **kwargs)
+
+#         self.do1 = torch.nn.Dropout(p=0.5)
+          
+#         for m in self.modules():
+#             if isinstance(m, nn.Linear):
+#                 nn.init.xavier_uniform(m.weight)
+                
+#     def forward(self, x1, x2):  # pylint: disable=arguments-differ
+
+#         """Forward prop"""
+#         x1 = self.feature_extractor.conv1(x1)
+#         x1 = self.feature_extractor.conv2(x1)
+#         x1 = self.feature_extractor.conv3(x1)
+#         x1 = self.feature_extractor.conv4(x1)
+#         x1 = self.feature_extractor.conv5(x1)
+#         x1 = self.feature_extractor.conv6(x1)
+#         x1 = self.feature_extractor.conv7(x1)
+#         x1 = self.feature_extractor.conv8(x1)
+#         x1 = self.feature_extractor.conv9(x1)
+#         x1 = self.feature_extractor.conv10(x1)
+#         x1 = x1.view(x1.size(0), -1)
+#         x1 = self.feature_extractor.fc1(x1)
+
+#         x2 = self.feature_extractor.conv1(x2)
+#         x2 = self.feature_extractor.conv2(x2)
+#         x2 = self.feature_extractor.conv3(x2)
+#         x2 = self.feature_extractor.conv4(x2)
+#         x2 = self.feature_extractor.conv5(x2)
+#         x2 = self.feature_extractor.conv6(x2)
+#         x2 = self.feature_extractor.conv7(x2)
+#         x2 = self.feature_extractor.conv8(x2)
+#         x2 = self.feature_extractor.conv9(x2)
+#         x2 = self.feature_extractor.conv10(x2)
+#         x2 = x2.view(x2.size(0), -1)
+#         x2 = self.feature_extractor.fc1(x2)
+
+        
+#         x_cat = torch.cat([x1,x2],1)
+#         disc = self.feature_extractor.fc2(x_cat.detach())
+#         disc = self.feature_extractor.fc3(disc)
+
+#         return disc
 
 
 
