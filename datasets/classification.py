@@ -284,70 +284,69 @@ class DomainAdaptationPairDataset(Dataset):
         self.G4_img_paths = []
         self.G4_labels = []
         
-
+        # these are the indices of the samples in the dataset that we will use to generate the groups
         self.s_sampler_idxs = [i for i in self.s_sampler] # [c0_idx, c1_idx, c2_idx, c0_idx, c2_idx, ...]
         self.t_sampler_idxs = [i for i in self.t_sampler] # [c0_idx, c1_idx, c2_idx, c0_idx, c2_idx, ...]
 
+        # since we can't generate all possible pairs (too many), we must generate a subset of the pairs. To
+        # ensure each sample has equal probability of being selected into a pair we split the above indices into
+        # partitions and randomly sample from two partitions where a partition is a sequence of items from each class
+        # i.e. [c0_idx, c1_idx, c2_idx] is one partition if there are three classes.
+        self.num_s_partitions = len(self.s_sampler_idxs)/self.s_sampler.num_classes - 1
+        self.num_t_partitions = len(self.t_sampler_idxs)/self.t_sampler.num_classes - 1
+
         # add G1 pairs
         pair_cnt = 0
-        for i in range(0,len(self.s_sampler_idxs)): # iterate 1 by 1
-            for j in range(self.s_sampler.num_classes+i,len(self.s_sampler_idxs),self.s_sampler.num_classes): # iterate by n to get pairs
-                if i != j:
-                    x1_idx,x2_idx = self.s_sampler_idxs[i], self.s_sampler_idxs[j]
-                    self.G1_img_paths.append((self.source_dataset.imgs[x1_idx],self.source_dataset.imgs[x2_idx]))
-                    self.G1_labels.append((0,(self.source_dataset.labels[x1_idx],self.source_dataset.labels[x2_idx]))) # class 0, original labels
-                    pair_cnt += 1
-                if pair_cnt >= self.num_G1_pairs:
-                    break
-            if pair_cnt >= self.num_G1_pairs:
-                break
+        while pair_cnt < self.num_G1_pairs:
+            try:
+                p1 = random.randint(0,self.num_s_partitions)*self.s_sampler.num_classes # get partition 1 pos
+                p2 = random.randint(0,self.num_s_partitions)*self.s_sampler.num_classes # get partition 2 pos
+                c = random.randint(0, self.s_sampler.num_classes-1) # get the class to use
+                x1_idx,x2_idx = self.s_sampler_idxs[p1+c], self.s_sampler_idxs[p2+c] # using the partition and class, get the sample idxs
+                self.G1_img_paths.append((self.source_dataset.imgs[x1_idx],self.source_dataset.imgs[x2_idx]))
+                self.G1_labels.append((0,(self.source_dataset.labels[x1_idx],self.source_dataset.labels[x2_idx]))) # class 0, original labels
+                pair_cnt += 1
+            except IndexError:
+                print("p1: ", p1, " p2: ", p2, " c: ", c, " len: ", len(self.s_sampler_idxs), " num p: ", self.num_s_partitions)
 
         # add G2 pairs
         pair_cnt = 0
-        for i in range(0,len(self.t_sampler_idxs)): # iterate 1 by 1
-            for j in range(i%self.s_sampler.num_classes,len(self.s_sampler_idxs),self.s_sampler.num_classes): # iterate by n to get pairs
-                x1_idx,x2_idx = self.t_sampler_idxs[i], self.s_sampler_idxs[j]
-                self.G2_img_paths.append((self.target_dataset.imgs[x1_idx],self.source_dataset.imgs[x2_idx]))
-                if self.adv_stage:
-                    self.G2_labels.append((0,(self.target_dataset.labels[x1_idx],self.source_dataset.labels[x2_idx]))) # class 0, original labels
-                else:
-                    self.G2_labels.append((1,(self.target_dataset.labels[x1_idx],self.source_dataset.labels[x2_idx]))) # class 1, original labels
-                pair_cnt += 1
-                if pair_cnt >= self.num_G2_pairs:
-                    break
-            if pair_cnt >= self.num_G2_pairs:
-                break
-
+        while pair_cnt < self.num_G2_pairs:
+            p1 = random.randint(0,self.num_s_partitions)*self.s_sampler.num_classes # get partition 1 pos
+            p2 = random.randint(0,self.num_t_partitions)*self.s_sampler.num_classes # get partition 2 pos
+            c = random.randint(0, self.s_sampler.num_classes-1) # get the class to use
+            x1_idx,x2_idx = self.s_sampler_idxs[p1+c], self.t_sampler_idxs[p2+c] # using the partition and class, get the sample idxs
+            self.G2_img_paths.append((self.source_dataset.imgs[x1_idx],self.target_dataset.imgs[x2_idx]))
+            if self.adv_stage:
+                self.G2_labels.append((0,(self.source_dataset.labels[x1_idx],self.target_dataset.labels[x2_idx]))) # class 0, original labels
+            else:
+                self.G2_labels.append((1,(self.source_dataset.labels[x1_idx],self.target_dataset.labels[x2_idx]))) # class 1, original labels
+            pair_cnt += 1
+       
         # add G3 pairs
         pair_cnt = 0
-        for i in range(0,len(self.s_sampler_idxs)): # iterate 1 by 1
-            for j in range(i,len(self.s_sampler_idxs)): # iterate 1 by 1
-                if i != j and ((j-i) % self.s_sampler.num_classes != 0):
-                    x1_idx,x2_idx = self.s_sampler_idxs[i], self.s_sampler_idxs[j]
-                    self.G3_img_paths.append((self.source_dataset.imgs[x1_idx],self.source_dataset.imgs[x2_idx]))
-                    self.G3_labels.append((2,(self.source_dataset.labels[x1_idx],self.source_dataset.labels[x2_idx]))) # class 2, original labels
-                    pair_cnt += 1
-                if pair_cnt >= self.num_G3_pairs:
-                    break
-            if pair_cnt >= self.num_G3_pairs:
-                break
+        while pair_cnt < self.num_G3_pairs:
+            p1 = random.randint(0,self.num_s_partitions)*self.s_sampler.num_classes # get partition 1 pos
+            p2 = random.randint(0,self.num_s_partitions)*self.s_sampler.num_classes # get partition 2 pos
+            c1,c2 = random.sample(range(self.s_sampler.num_classes),2) # get the class to use
+            x1_idx,x2_idx = self.s_sampler_idxs[p1+c1], self.s_sampler_idxs[p2+c2] # using the partition and class, get the sample idxs
+            self.G3_img_paths.append((self.source_dataset.imgs[x1_idx],self.source_dataset.imgs[x2_idx]))
+            self.G3_labels.append((2,(self.source_dataset.labels[x1_idx],self.source_dataset.labels[x2_idx]))) # class 0, original labels
+            pair_cnt += 1
 
         # add G4 pairs
         pair_cnt = 0
-        for i in range(0,len(self.t_sampler_idxs)): # iterate 1 by 1
-            for j in range(0,len(self.s_sampler_idxs)): # iterate 1 by 1
-                if ((j-i) % self.s_sampler.num_classes != 0):
-                    x1_idx,x2_idx = self.t_sampler_idxs[i], self.s_sampler_idxs[j]
-                    self.G4_img_paths.append((self.target_dataset.imgs[x1_idx],self.source_dataset.imgs[x2_idx]))
-                    if self.adv_stage:
-                        self.G4_labels.append((2,(self.target_dataset.labels[x1_idx],self.source_dataset.labels[x2_idx]))) # class 2, original labels
-                    else:
-                        self.G4_labels.append((3,(self.target_dataset.labels[x1_idx],self.source_dataset.labels[x2_idx]))) # class 3, original labels
-                    pair_cnt += 1
-                if pair_cnt >= self.num_G4_pairs:
-                    break
-            if pair_cnt >= self.num_G4_pairs:
-                break
+        while pair_cnt < self.num_G2_pairs:
+            p1 = random.randint(0,self.num_s_partitions)*self.s_sampler.num_classes # get partition 1 pos
+            p2 = random.randint(0,self.num_t_partitions)*self.t_sampler.num_classes # get partition 2 pos
+            c1,c2 = random.sample(range(self.s_sampler.num_classes),2) # get the class to use
+            x1_idx,x2_idx = self.s_sampler_idxs[p1+c1], self.t_sampler_idxs[p2+c2] # using the partition and class, get the sample idxs
+            self.G4_img_paths.append((self.source_dataset.imgs[x1_idx],self.target_dataset.imgs[x2_idx]))
+            if self.adv_stage:
+                self.G4_labels.append((2,(self.source_dataset.labels[x1_idx],self.target_dataset.labels[x2_idx]))) # class 0, original labels
+            else:
+                self.G4_labels.append((3,(self.source_dataset.labels[x1_idx],self.target_dataset.labels[x2_idx]))) # class 1, original labels
+            pair_cnt += 1
 
         # during adversarial training, only feed in G2 and G4 and try to trick into G1 and G3
         if self.adv_stage:
@@ -475,6 +474,9 @@ class DomainAdaptationPairDataset(Dataset):
         #plt.show()
 
 # ========================= custom data sampler ===========================
+# this class is used to sample items of each class from the dataset equally and randomly
+# Example: let's say the dataset is listed like this [C0 (0), C0 (1), C0 (2), C1 (3), C1 (4), C1 (5), C2 (6), C2 (7), C2 (8)],
+# the sampler might return the idxs like this: [2 (C0), 3 (C1), 8 (C2), 0 (C0), 4 (C1), 7 (C2), 1 (C0), 5 (C1), 6 (C2)]
 class EvenSampler(Sampler):
     def __init__(self, dataset,shot=-1):
         # get the labels as a tensor
