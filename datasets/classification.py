@@ -40,6 +40,7 @@ from matplotlib import cm
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
 from math import comb
+import torch.nn.functional as F
 
 from torch.utils.data.sampler import Sampler
 import random
@@ -887,6 +888,131 @@ def office5_get_datasets(data, load_train=True, load_test=True,apply_transforms=
             ai8x.normalize(args=args)
         ])
         test_dataset = ClassificationDataset(os.path.join(data_dir,"test"),test_transform)
+
+    else:
+        test_dataset = None
+    
+    return train_dataset, test_dataset
+
+
+class PassDataset(Dataset):
+    def __init__(self,img_dir_path,transform):
+        self.img_dir_path = img_dir_path
+        self.transform = transform
+        
+        self.imgs = [] # absolute img paths (all images)
+
+        i = 0 # index into dataset lists
+
+        # iterate through the dataset directory tree
+        for idx, path_obj in enumerate(os.walk(img_dir_path)):
+            # each execution of this inner loop is for each subdirectory
+            for file in path_obj[2]: # path_obj[2] is list of files in the object class subdirectories
+                self.imgs.append(os.path.abspath(os.path.join(path_obj[0],file))) # want absolute path
+                i+=1
+        print(img_dir_path)
+
+    # dataset size is number of images
+    def __len__(self):
+        return len(self.imgs)
+    
+    # how to get one sample from the dataset
+    def __getitem__(self, idx):
+        # attempt to load the image at the specified index
+        try:
+            img = Image.open(self.imgs[idx])
+            tt = torchvision.transforms.ToTensor()
+            tp = torchvision.transforms.ToPILImage()
+            tt_img = tt(img)
+            if(tt_img.size()[0] != 3):
+                img = tp(tt_img.repeat(3, 1, 1))
+            
+            # apply any transformation
+            if self.transform:
+                img1 = self.transform(img)
+                img2 = self.transform(img)
+            
+            # return the sample (img (tensor)), object class (int)
+            return img1,img2
+
+        # if the image is invalid, show the exception
+        except (ValueError, RuntimeWarning,UserWarning) as e:
+            print("Exception: ", e)
+            print("Bad Image: ", self.imgs[idx])
+            exit()
+    
+    # Diaply a random batch of 64 samples
+    def visualize_batch(self,device=None):
+        batch_size = 32
+        data_loader = DataLoader(self,batch_size,shuffle=True)
+
+        # get the first batch
+        img1,img2 = next(iter(data_loader))
+
+        # display the batch in a grid with the img, label, idx
+        rows = 8
+        cols = 8
+        
+        fig,ax_array = plt.subplots(rows,cols,figsize=(20,20))
+        #fig.subplots_adjust(hspace=0.5)
+        plt.subplots_adjust(wspace=0, hspace=0)
+        for i in range(rows):
+            for j in range(cols):
+                idx = i*rows+j
+                
+                # for normal forward pass use this line
+                #ax_array[i,j].imshow(imgs[idx].permute(1, 2, 0))
+
+                # for quantized forward pass use this line
+                #print(imgs[idx].size(),torch.min(imgs[idx]))
+                if idx % 2 == 0:
+                    ax_array[i,j].imshow((img1[idx//2].permute(1, 2, 0)+1)/2)
+                else:
+                    ax_array[i,j].imshow((img2[idx//2].permute(1, 2, 0)+1)/2)
+                ax_array[i,j].set_xticks([])
+                ax_array[i,j].set_yticks([])
+        plt.savefig('plot.png')
+
+
+def pass_get_datasets(data, load_train=True, load_test=False,apply_transforms=True):
+    (data_dir, args) = data
+
+    train_dataset = None
+    test_dataset = None
+
+    # transforms for training
+    if load_train and apply_transforms:
+        train_transform = transforms.Compose([
+            transforms.RandomResizedCrop(128),
+            transforms.ColorJitter(brightness=(0.85,1.15),saturation=(0.85,1.15),contrast=(0.85,1.15),hue=(-0.1,0.1)),
+            transforms.RandomGrayscale(0.25),
+            #transforms.RandomAffine(degrees=180,translate=(0.15,0.15)),
+            transforms.RandomHorizontalFlip(),
+            #transforms.RandomVerticalFlip(),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        train_dataset = PassDataset(os.path.join(data_dir,"train"),train_transform)
+
+    elif load_train and not apply_transforms:
+        train_transform = transforms.Compose([
+            transforms.Resize((128,128)),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        train_dataset = PassDataset(os.path.join(data_dir,"train"),train_transform)
+
+    else:
+        train_dataset = None
+
+    # transforms for test, validatio --> convert to a valid tensor
+    if load_test:
+        test_transform = transforms.Compose([
+            transforms.Resize((128,128)),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        test_dataset = PassDataset(os.path.join(data_dir,"test"),test_transform)
 
     else:
         test_dataset = None
