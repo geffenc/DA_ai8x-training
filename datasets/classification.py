@@ -265,6 +265,7 @@ class DomainAdaptationPairDataset(Dataset):
         self.num_G4_pairs = sum([sum(
                                     [self.s_sampler.class_idx_lens[j]*self.t_sampler.class_idx_lens[i] for j in range(self.s_sampler.num_classes) if i != j]
                                         ) for i in range(self.t_sampler.num_classes)])
+        print("Max possible pairs: G1 = ", self.num_G1_pairs, " G2 = ", self.num_G2_pairs, " G3 = ", self.num_G3_pairs, " G4 = ", self.num_G4_pairs)
 
         # this will always be the min, use as a reference
         self.min_pairs = self.num_G2_pairs
