@@ -49,7 +49,7 @@ import ai8x
 
 
 '''
-Dataset Class
+Generic Dataset Class
 Parameters:
   img_dir_path - Full path to directory with the images for this dataset.
                  This assumes that the subdirectories contain each class, 
@@ -483,427 +483,17 @@ class DomainAdaptationPairDataset(Dataset):
         #print(paths)
         #plt.show()
 
-# ========================= custom data sampler ===========================
-# this class is used to sample items of each class from the dataset equally and randomly
-# Example: let's say the dataset is listed like this [C0 (0), C0 (1), C0 (2), C1 (3), C1 (4), C1 (5), C2 (6), C2 (7), C2 (8)],
-# the sampler might return the idxs like this: [2 (C0), 3 (C1), 8 (C2), 0 (C0), 4 (C1), 7 (C2), 1 (C0), 5 (C1), 6 (C2)]
-class EvenSampler(Sampler):
-    def __init__(self, dataset,shot=-1):
-        # get the labels as a tensor
-        self.labels = torch.Tensor(dataset.labels)
 
-        # how many samples from each class to use
-        self.shot = shot
-
-        # count the number of classes
-        self.num_classes = len(torch.unique(self.labels))
-
-        # get the idxs of each class as a nested list --> [[0,1,2,3],[4,5,6]]
-        self.class_idxs = []
-        self.class_idx_lens = []
-        for c in range(self.num_classes):
-            # if we specify a shot then only use a subset of the samples per class
-            if self.shot != -1:
-                idxs = torch.flatten((self.labels == c).nonzero())[0:self.shot]
-            else:
-                idxs = torch.flatten((self.labels == c).nonzero())
-            self.class_idxs.append(idxs)
-            self.class_idx_lens.append(idxs.size(0))
-        self.max_len = max(self.class_idx_lens)
-        
-    def __iter__(self):
-        # shuffle the idxs for each class idx list --> [[1,0,2,3],[5,3,4]]
-        # also periodically extend the shorter lists --> [[1,0,2,3],[5,3,4,5]]
-        for i,c in enumerate(self.class_idxs):
-            rand_idx = torch.randperm(c.size(0))
-            shuffled = c[rand_idx]
-            self.class_idxs[i] = shuffled
-            added_len = self.max_len-shuffled.size(0)
-            self.class_idxs[i] = torch.cat((shuffled,shuffled[0:added_len]))
-
-        # interleave the shuffled lists so that every successive idx is a new class,
-        # to get even batches the batch size needs to be a multiple of the number of classes
-        # and we need an equal amount per class
-        zipped_idxs = torch.stack([t for t in self.class_idxs],dim=1)
-        return iter(zipped_idxs.view(zipped_idxs.numel()).tolist())
-    
-    def __len__(self):
-        return len(self.labels)
-
-
-
-
-# ================================= Helper functions for domain adaptation ===========================
-# code derived from https://github.com/HX-idiot/FADA-Pytorch/blob/master/dataloader.py
-# ====================================================================================================
-
-# gets source samples/labels from source dataset as separate lists
-def create_source_samples(source_data_path,args):
-    train_set, test_set = cats_and_dogs_get_datasets((source_data_path, args), load_train=True, load_test=False,apply_transforms=False)
-    n = len(train_set)
-    X=torch.Tensor(n,3,128,128)
-    Y=torch.LongTensor(n)
-
-    inds=torch.randperm(len(train_set))
-    for i,index in enumerate(inds):
-        x,y,name=train_set[index]
-        X[i]=x
-        Y[i]=y
-    return X,Y
-
-
-# gets target samples/labels from target dataset where
-# shot is the number of samples to get for each class. 
-def create_target_samples(shot,target_data_path,args):
-    # get the target dataset
-    train_set, test_set = cats_and_dogs_get_datasets((target_data_path, args), load_train=True, load_test=False,apply_transforms=False)
-    num_classes = 2
-
-    X,Y=[],[]
-
-    # list of counts to get equal amount per class, e.g. [2,2] --> 2 dog samples and 2 cat samples
-    class_counts=num_classes*[shot]
-
-    # keep getting items from the dataset until we have equal amount per class
-    i=0
-    while True:
-        if len(X)==shot*num_classes:
-            break
-        x,y,name=train_set[i]
-        if class_counts[y]>0:
-            X.append(x)
-            Y.append(y)
-            class_counts[y]-=1
-        i+=1
-
-    assert (len(X)==shot*num_classes)
-    return torch.stack(X,dim=0),torch.from_numpy(np.array(Y))
-
-
-"""
-G1: a pair of pic comes from same domain ,same class
-G3: a pair of pic comes from same domain, different classes
-G2: a pair of pic comes from different domain,same class
-G4: a pair of pic comes from different domain, different classes
-"""
-def create_groups(X_s,Y_s,X_t,Y_t,shot,seed=1):
-    C = 2
-    # shuffle order
-    classes = torch.unique(Y_t)
-    classes=classes[torch.randperm(len(classes))]
-
-    # change seed so every epoch to randomize the source data while keeping target data the same
-    torch.manual_seed(1 + seed)
-    torch.cuda.manual_seed(1 + seed)
-
-    # mapping function: given a class this function will return a list
-    # of indices for the corresponding class e.g. 0 --> [1,3]
-    def s_idxs(c):
-        # get a list of indices for the elements of class c
-        idx=torch.nonzero(Y_s.eq(int(c)))
-        # shuffle the list and flatten it, twice as many source samples
-        return idx[torch.randperm(len(idx))][:shot*2].squeeze()
-    def t_idxs(c):
-        return torch.nonzero(Y_t.eq(int(c)))[:shot].squeeze()
-
-    # the result is a lists of lists: [0,1,2] --> [[1,3],[0,2],[4,5]]
-    source_idxs = list(map(s_idxs, classes))
-    target_idxs = list(map(t_idxs, classes))
-
-    # stack the sublists into a matrix, i.e. each row is a class
-    # [
-    # C0  [1,3],
-    # C1  [0,2],
-    # C2  [4,5]
-    # ]
-    source_matrix=torch.stack(source_idxs)
-    target_matrix=torch.stack(target_idxs)
-
-    # now sample from matrices to get the four groupings
-    G1, G2, G3, G4 = [], [] , [] , []
-    Y1, Y2 , Y3 , Y4 = [], [] ,[] ,[]
-
-
-    for i in range(C):
-        for j in range(shot):
-            G1.append((X_s[source_matrix[i][j*2]],X_s[source_matrix[i][j*2+1]]))
-            Y1.append((Y_s[source_matrix[i][j*2]],Y_s[source_matrix[i][j*2+1]]))
-            G2.append((X_s[source_matrix[i][j]],X_t[target_matrix[i][j]]))
-            Y2.append((Y_s[source_matrix[i][j]],Y_t[target_matrix[i][j]]))
-            G3.append((X_s[source_matrix[i%C][j]],X_s[source_matrix[(i+1)%C][j]]))
-            Y3.append((Y_s[source_matrix[i % C][j]], Y_s[source_matrix[(i + 1) % C][j]]))
-            G4.append((X_s[source_matrix[i%C][j]],X_t[target_matrix[(i+1)%C][j]]))
-            Y4.append((Y_s[source_matrix[i % C][j]], Y_t[target_matrix[(i + 1) % C][j]]))
-
-    groups=[G1,G2,G3,G4]
-    groups_y=[Y1,Y2,Y3,Y4]
-
-    # make sure we sampled enough samples
-    for g in groups:
-        assert(len(g)==shot*C)
-    return groups,groups_y
-
-
-def sample_groups(X_s,Y_s,X_t,Y_t,shot,seed=1):
-    print("Sampling groups")
-    return create_groups(X_s,Y_s,X_t,Y_t,shot,seed=seed)
-
-
-
-'''Function to get the datasets'''
-def cats_and_dogs_get_datasets(data, load_train=True, load_test=True,apply_transforms=True):
-    (data_dir, args) = data
-
-    train_dataset = None
-    test_dataset = None
-
-    # transforms for training
-    if load_train and apply_transforms:
-        train_transform = transforms.Compose([
-            transforms.Resize((128,128)),
-            #transforms.ToPILImage(),
-            transforms.ColorJitter(brightness=(0.65,1.35),saturation=(0.65,1.35),contrast=(0.65,1.35)),#,hue=(-0.1,0.1)),
-            #transforms.RandomGrayscale(0.15),
-            transforms.RandomAffine(degrees=20,translate=(0.25,0.25)),
-            transforms.RandomHorizontalFlip(),
-            transforms.RandomVerticalFlip(),
-            #transforms.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 3)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
-
-    elif load_train and not apply_transforms:
-        train_transform = transforms.Compose([
-            transforms.Resize((128,128)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
-
-    else:
-        train_dataset = None
-
-    # transforms for test, validatio --> convert to a valid tensor
-    if load_test:
-        test_transform = transforms.Compose([
-            #transforms.ToPILImage(),
-            transforms.Resize((128,128)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        test_dataset = ClassificationDataset(os.path.join(data_dir,"test"),test_transform)
-
-    else:
-        test_dataset = None
-    
-    return train_dataset, test_dataset
-
-
-
-def pairs_get_datasets(data, load_train=True, load_test=True,apply_transforms=True):
-    (data_dir, args) = data
-
-    train_dataset = None
-    test_dataset = None
-
-    # transforms for training
-    if load_train and apply_transforms:
-        train_transform = transforms.Compose([
-            transforms.Resize((128,128)),
-            #transforms.ToPILImage(),
-            #transforms.ColorJitter(brightness=(0.65,1.35),saturation=(0.65,1.35),contrast=(0.65,1.35)),#,hue=(-0.1,0.1)),
-            #transforms.RandomGrayscale(0.15),
-            transforms.RandomAffine(degrees=10,translate=(0.27,0.27)),
-            transforms.RandomHorizontalFlip(),
-            #transforms.RandomVerticalFlip(),
-            #transforms.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 3)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,4)
-        #train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
-
-    elif load_train and not apply_transforms:
-        train_transform = transforms.Compose([
-            transforms.Resize((128,128)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        #train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
-        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,4)
-
-    else:
-        train_dataset = None
-
-    # transforms for test, validatio --> convert to a valid tensor
-    if load_test:
-        test_transform = transforms.Compose([
-            #transforms.ToPILImage(),
-            transforms.Resize((128,128)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        #test_dataset = ClassificationDataset(os.path.join(data_dir,"test"),test_transform)
-        test_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"test"),os.path.join(data_dir[1],"test"),test_transform,4)
-
-    else:
-        test_dataset = None
-    
-    return train_dataset, test_dataset
-
-
-def pairs_get_datasets_c(data, load_train=True, load_test=True,apply_transforms=True):
-    (data_dir, args) = data
-
-    train_dataset = None
-    test_dataset = None
-
-    # transforms for training
-    if load_train and apply_transforms:
-        train_transform = transforms.Compose([
-            transforms.Resize((128,128)),
-            #transforms.ToPILImage(),
-            #transforms.ColorJitter(brightness=(0.65,1.35),saturation=(0.65,1.35),contrast=(0.65,1.35)),#,hue=(-0.1,0.1)),
-            #transforms.RandomGrayscale(0.15),
-            transforms.RandomAffine(degrees=10,translate=(0.27,0.27)),
-            transforms.RandomHorizontalFlip(),
-            #transforms.RandomVerticalFlip(),
-            #transforms.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 3)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,4,adv_stage=True)
-        #train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
-
-    elif load_train and not apply_transforms:
-        train_transform = transforms.Compose([
-            transforms.Resize((128,128)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        #train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
-        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,4,adv_stage=True)
-
-    else:
-        train_dataset = None
-
-    # transforms for test, validatio --> convert to a valid tensor
-    if load_test:
-        test_transform = transforms.Compose([
-            #transforms.ToPILImage(),
-            transforms.Resize((128,128)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        #test_dataset = ClassificationDataset(os.path.join(data_dir,"test"),test_transform)
-        test_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"test"),os.path.join(data_dir[1],"test"),test_transform,4,adv_stage=True)
-
-    else:
-        test_dataset = None
-    
-    return train_dataset, test_dataset
-
-
-
-def imagenet10_get_datasets(data, load_train=True, load_test=True,apply_transforms=True):
-    (data_dir, args) = data
-
-    train_dataset = None
-    test_dataset = None
-
-    # transforms for training
-    if load_train and apply_transforms:
-        train_transform = transforms.Compose([
-            transforms.Resize((128,128)),
-            #transforms.ToPILImage(),
-            transforms.ColorJitter(brightness=(0.65,1.35),saturation=(0.65,1.35),contrast=(0.65,1.35)),#,hue=(-0.1,0.1)),
-            #transforms.RandomGrayscale(0.15),
-            transforms.RandomAffine(degrees=10,translate=(0.2,0.2)),
-            transforms.RandomHorizontalFlip(),
-            transforms.RandomVerticalFlip(),
-            #transforms.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 3)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
-
-    elif load_train and not apply_transforms:
-        train_transform = transforms.Compose([
-            transforms.Resize((128,128)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
-
-    else:
-        train_dataset = None
-
-    # transforms for test, validatio --> convert to a valid tensor
-    if load_test:
-        test_transform = transforms.Compose([
-            #transforms.ToPILImage(),
-            transforms.Resize((128,128)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        test_dataset = ClassificationDataset(os.path.join(data_dir,"test"),test_transform)
-
-    else:
-        test_dataset = None
-    
-    return train_dataset, test_dataset
-
-
-def office5_get_datasets(data, load_train=True, load_test=True,apply_transforms=True):
-    (data_dir, args) = data
-
-    train_dataset = None
-    test_dataset = None
-
-    # transforms for training
-    if load_train and apply_transforms:
-        train_transform = transforms.Compose([
-            transforms.Resize((128,128)),
-            #transforms.ToPILImage(),
-            transforms.ColorJitter(brightness=(0.65,1.35),saturation=(0.65,1.35),contrast=(0.65,1.35)),#,hue=(-0.1,0.1)),
-            #transforms.RandomGrayscale(0.15),
-            transforms.RandomAffine(degrees=10,translate=(0.2,0.2)),
-            transforms.RandomHorizontalFlip(),
-            transforms.RandomVerticalFlip(),
-            #transforms.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 3)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
-
-    elif load_train and not apply_transforms:
-        train_transform = transforms.Compose([
-            transforms.Resize((128,128)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
-
-    else:
-        train_dataset = None
-
-    # transforms for test, validatio --> convert to a valid tensor
-    if load_test:
-        test_transform = transforms.Compose([
-            #transforms.ToPILImage(),
-            transforms.Resize((128,128)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        test_dataset = ClassificationDataset(os.path.join(data_dir,"test"),test_transform)
-
-    else:
-        test_dataset = None
-    
-    return train_dataset, test_dataset
-
-
+'''
+Dataset Class for self-supervised pre-training using SimCLR style training
+Parameters:
+  img_dir_path - Full path to directory with the images.
+                 This assumes that the subdirectories contain each class, 
+                 only images are in these subdirectories, and that the
+                 subdirectory basenames are the desired name of the object class.
+                 i.e. dog/dog1.png, cat/cat1.png, etc.
+  transform -    Specifies the image format (size, RGB, etc.) and augmentations to use
+'''
 class PassDataset(Dataset):
     def __init__(self,img_dir_path,transform):
         self.img_dir_path = img_dir_path
@@ -983,6 +573,311 @@ class PassDataset(Dataset):
         plt.savefig('plot.png')
 
 
+
+# ========================= custom data sampler ===========================
+
+# this class is used to sample items of each class from the dataset equally and randomly
+# Example: let's say the dataset is listed like this [C0 (0), C0 (1), C0 (2), C1 (3), C1 (4), C1 (5), C2 (6), C2 (7), C2 (8)],
+# the sampler might return the idxs like this: [2 (C0), 3 (C1), 8 (C2), 0 (C0), 4 (C1), 7 (C2), 1 (C0), 5 (C1), 6 (C2)]
+class EvenSampler(Sampler):
+    def __init__(self, dataset,shot=-1):
+        # get the labels as a tensor
+        self.labels = torch.Tensor(dataset.labels)
+
+        # how many samples from each class to use
+        self.shot = shot
+
+        # count the number of classes
+        self.num_classes = len(torch.unique(self.labels))
+
+        # get the idxs of each class as a nested list --> [[0,1,2,3],[4,5,6]]
+        self.class_idxs = []
+        self.class_idx_lens = []
+        for c in range(self.num_classes):
+            # if we specify a shot then only use a subset of the samples per class
+            if self.shot != -1:
+                idxs = torch.flatten((self.labels == c).nonzero())[0:self.shot]
+            else:
+                idxs = torch.flatten((self.labels == c).nonzero())
+            self.class_idxs.append(idxs)
+            self.class_idx_lens.append(idxs.size(0))
+        self.max_len = max(self.class_idx_lens)
+        
+    def __iter__(self):
+        # shuffle the idxs for each class idx list --> [[1,0,2,3],[5,3,4]]
+        # also periodically extend the shorter lists --> [[1,0,2,3],[5,3,4,5]]
+        for i,c in enumerate(self.class_idxs):
+            rand_idx = torch.randperm(c.size(0))
+            shuffled = c[rand_idx]
+            self.class_idxs[i] = shuffled
+            added_len = self.max_len-shuffled.size(0)
+            self.class_idxs[i] = torch.cat((shuffled,shuffled[0:added_len]))
+
+        # interleave the shuffled lists so that every successive idx is a new class,
+        # to get even batches the batch size needs to be a multiple of the number of classes
+        # and we need an equal amount per class
+        zipped_idxs = torch.stack([t for t in self.class_idxs],dim=1)
+        return iter(zipped_idxs.view(zipped_idxs.numel()).tolist())
+    
+    def __len__(self):
+        return len(self.labels)
+
+
+# =========================== functions to create the dataset ===============================
+
+''' cats and dogs'''
+def cats_and_dogs_get_datasets(data, load_train=True, load_test=True,apply_transforms=True):
+    (data_dir, args) = data
+
+    train_dataset = None
+    test_dataset = None
+
+    # transforms for training
+    if load_train and apply_transforms:
+        train_transform = transforms.Compose([
+            transforms.Resize((128,128)),
+            transforms.ColorJitter(brightness=(0.65,1.35),saturation=(0.65,1.35),contrast=(0.65,1.35)),
+            transforms.RandomAffine(degrees=20,translate=(0.25,0.25)),
+            transforms.RandomHorizontalFlip(),
+            transforms.RandomVerticalFlip(),
+            #transforms.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 3)),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
+
+    # no data augmentation
+    elif load_train and not apply_transforms:
+        train_transform = transforms.Compose([
+            transforms.Resize((128,128)),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
+
+    else:
+        train_dataset = None
+
+    # transforms for test, validation --> convert to a valid tensor
+    if load_test:
+        test_transform = transforms.Compose([
+            #transforms.ToPILImage(),
+            transforms.Resize((128,128)),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        test_dataset = ClassificationDataset(os.path.join(data_dir,"test"),test_transform)
+
+    else:
+        test_dataset = None
+    
+    return train_dataset, test_dataset
+
+
+''' pairs for domain discriminator '''
+def pairs_get_datasets(data, load_train=True, load_test=True,apply_transforms=True):
+    (data_dir, args) = data
+
+    train_dataset = None
+    test_dataset = None
+
+    # transforms for training
+    if load_train and apply_transforms:
+        train_transform = transforms.Compose([
+            transforms.Resize((128,128)),
+            #transforms.ColorJitter(brightness=(0.65,1.35),saturation=(0.65,1.35),contrast=(0.65,1.35)),#,hue=(-0.1,0.1)),
+            #transforms.RandomGrayscale(0.15),
+            transforms.RandomAffine(degrees=10,translate=(0.27,0.27)),
+            transforms.RandomHorizontalFlip(),
+            #transforms.RandomVerticalFlip(),
+            #transforms.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 3)),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,4)
+
+    elif load_train and not apply_transforms:
+        train_transform = transforms.Compose([
+            transforms.Resize((128,128)),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,4)
+
+    else:
+        train_dataset = None
+
+    # transforms for test, validation --> convert to a valid tensor
+    if load_test:
+        test_transform = transforms.Compose([
+            #transforms.ToPILImage(),
+            transforms.Resize((128,128)),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        test_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"test"),os.path.join(data_dir[1],"test"),test_transform,4)
+
+    else:
+        test_dataset = None
+    
+    return train_dataset, test_dataset
+
+
+''' pairs for domain discriminator in the adverserial stage, need to change labels'''
+def pairs_get_datasets_c(data, load_train=True, load_test=True,apply_transforms=True):
+    (data_dir, args) = data
+
+    train_dataset = None
+    test_dataset = None
+
+    # transforms for training
+    if load_train and apply_transforms:
+        train_transform = transforms.Compose([
+            transforms.Resize((128,128)),
+            #transforms.ToPILImage(),
+            #transforms.ColorJitter(brightness=(0.65,1.35),saturation=(0.65,1.35),contrast=(0.65,1.35)),#,hue=(-0.1,0.1)),
+            #transforms.RandomGrayscale(0.15),
+            transforms.RandomAffine(degrees=10,translate=(0.27,0.27)),
+            transforms.RandomHorizontalFlip(),
+            #transforms.RandomVerticalFlip(),
+            #transforms.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 3)),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,4,adv_stage=True)
+        #train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
+
+    elif load_train and not apply_transforms:
+        train_transform = transforms.Compose([
+            transforms.Resize((128,128)),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        #train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
+        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,4,adv_stage=True)
+
+    else:
+        train_dataset = None
+
+    # transforms for test, validatio --> convert to a valid tensor
+    if load_test:
+        test_transform = transforms.Compose([
+            #transforms.ToPILImage(),
+            transforms.Resize((128,128)),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        #test_dataset = ClassificationDataset(os.path.join(data_dir,"test"),test_transform)
+        test_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"test"),os.path.join(data_dir[1],"test"),test_transform,4,adv_stage=True)
+
+    else:
+        test_dataset = None
+    
+    return train_dataset, test_dataset
+
+
+''' get the imagenet10 dataset '''
+def imagenet10_get_datasets(data, load_train=True, load_test=True,apply_transforms=True):
+    (data_dir, args) = data
+
+    train_dataset = None
+    test_dataset = None
+
+    # transforms for training
+    if load_train and apply_transforms:
+        train_transform = transforms.Compose([
+            transforms.Resize((128,128)),
+            #transforms.ToPILImage(),
+            transforms.ColorJitter(brightness=(0.65,1.35),saturation=(0.65,1.35),contrast=(0.65,1.35)),#,hue=(-0.1,0.1)),
+            #transforms.RandomGrayscale(0.15),
+            transforms.RandomAffine(degrees=10,translate=(0.2,0.2)),
+            transforms.RandomHorizontalFlip(),
+            transforms.RandomVerticalFlip(),
+            #transforms.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 3)),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
+
+    elif load_train and not apply_transforms:
+        train_transform = transforms.Compose([
+            transforms.Resize((128,128)),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
+
+    else:
+        train_dataset = None
+
+    # transforms for test, validatio --> convert to a valid tensor
+    if load_test:
+        test_transform = transforms.Compose([
+            #transforms.ToPILImage(),
+            transforms.Resize((128,128)),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        test_dataset = ClassificationDataset(os.path.join(data_dir,"test"),test_transform)
+
+    else:
+        test_dataset = None
+    
+    return train_dataset, test_dataset
+
+
+''' get the office5 dataset '''
+def office5_get_datasets(data, load_train=True, load_test=True,apply_transforms=True):
+    (data_dir, args) = data
+
+    train_dataset = None
+    test_dataset = None
+
+    # transforms for training
+    if load_train and apply_transforms:
+        train_transform = transforms.Compose([
+            transforms.Resize((128,128)),
+            #transforms.ToPILImage(),
+            transforms.ColorJitter(brightness=(0.65,1.35),saturation=(0.65,1.35),contrast=(0.65,1.35)),#,hue=(-0.1,0.1)),
+            #transforms.RandomGrayscale(0.15),
+            transforms.RandomAffine(degrees=10,translate=(0.2,0.2)),
+            transforms.RandomHorizontalFlip(),
+            transforms.RandomVerticalFlip(),
+            #transforms.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 3)),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
+
+    elif load_train and not apply_transforms:
+        train_transform = transforms.Compose([
+            transforms.Resize((128,128)),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
+
+    else:
+        train_dataset = None
+
+    # transforms for test, validation --> convert to a valid tensor
+    if load_test:
+        test_transform = transforms.Compose([
+            #transforms.ToPILImage(),
+            transforms.Resize((128,128)),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        test_dataset = ClassificationDataset(os.path.join(data_dir,"test"),test_transform)
+
+    else:
+        test_dataset = None
+    
+    return train_dataset, test_dataset
+
+
+
+''' get the PASS dataset'''
 def pass_get_datasets(data, load_train=True, load_test=False,apply_transforms=True):
     (data_dir, args) = data
 
@@ -1027,12 +922,3 @@ def pass_get_datasets(data, load_train=True, load_test=False,apply_transforms=Tr
         test_dataset = None
     
     return train_dataset, test_dataset
-
-datasets = [
-    {
-        'name': 'cats_and_dogs',
-        'input': (3, 128, 128),
-        'output': ('dog', 'cat'),
-        'loader': cats_and_dogs_get_datasets,
-    },
-]
