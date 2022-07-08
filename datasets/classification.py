@@ -361,22 +361,30 @@ class DomainAdaptationPairDataset(Dataset):
     # dataset size is number of G2 samples times 4 because we sample from the other groups
     def __len__(self):
         if self.adv_stage:
-            return 2*len(self.G2_labels)//10
+            return 2*len(self.G2_labels)#//10
         else:
-            return 4*len(self.G2_labels)//10
+            return 4*len(self.G2_labels)#//10
     
     # how to get one sample from the dataset
     def __getitem__(self, idx):
         if self.adv_stage:
             # map the index into a subindex to a particular group
             group = idx // (len(self)//2)
+            if group > 1: # in cases where don't divide evenly and exceed max group idx
+                group = 1
             #sub_idx = idx % (len(self)//2)
             sub_idx = random.randint(0,len(self)//2)
+            if sub_idx > len(self):
+                sub_idx = len(self)-1
         else:
             # map the index into a subindex to a particular group
             group = idx // (len(self)//4)
+            if group > 3: # in cases where don't divide evenly and exceed max group idx
+                group = 3
             #sub_idx = idx % (len(self)//4)
             sub_idx = random.randint(0,len(self)//4)
+            if sub_idx > len(self):
+                sub_idx = len(self)-1
 
         # attempt to load the images at the specified index
         try:
