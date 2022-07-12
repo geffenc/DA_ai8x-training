@@ -356,6 +356,7 @@ class OfficeClassifier(nn.Module):
         x1 = self.feature_extractor.fc1(x)
         #x1 = self.do1(x1)
         x1 = self.feature_extractor.fc2(x1) # output of this is the encoder, 64-D
+        #x1 = self.do1(x1)
         x1 = self.feature_extractor.fc3(x1)
 
         return x1
