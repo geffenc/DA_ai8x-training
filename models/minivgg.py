@@ -309,7 +309,8 @@ class OfficeClassifier(nn.Module):
     def __init__(self, num_classes=2,num_channels=3,dimensions=(128,128),bias=True,device='cpu',**kwargs):
         super().__init__()
         
-        load_model_path = "jupyter_logging/SSL___2022.07.06-174341/classifierbackbonenet_checkpoint.pth.tar"
+        #load_model_path = "jupyter_logging/SSL___2022.07.06-174341/classifierbackbonenet_checkpoint.pth.tar"
+        load_model_path = "jupyter_logging/SSL___2022.07.08-153522/classifierbackbonenet_qat_checkpoint.pth.tar"
 
         self.feature_extractor = ClassifierBackbone()                       
         checkpoint = torch.load(load_model_path, map_location=lambda storage, loc: storage)
@@ -370,6 +371,7 @@ class OfficeDCD(nn.Module):
         # flatten to fully connected layer
         self.fc1 = ai8x.FusedLinearReLU(128,64, bias=True, **kwargs)
         self.fc2 = ai8x.Linear(64, 4, bias=True, wide=True, **kwargs)
+        self.do = nn.Dropout(p=0.2)
 
         # initialize weights
         for m in self.modules():
@@ -382,6 +384,7 @@ class OfficeDCD(nn.Module):
     def forward(self, x):  # pylint: disable=arguments-differ
         """Forward prop"""
         x = self.fc1(x) # expects 128-D input which is two 64-D vectors concatenated from the encoder
+        #self.do(x)
         x = self.fc2(x)
 
         return x

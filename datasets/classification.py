@@ -689,16 +689,16 @@ def pairs_get_datasets(data, load_train=True, load_test=True,apply_transforms=Tr
             transforms.Resize((128,128)),
             #transforms.ColorJitter(brightness=(0.65,1.35),saturation=(0.65,1.35),contrast=(0.65,1.35)),#,hue=(-0.1,0.1)),
             #transforms.RandomGrayscale(0.15),
-            #transforms.ColorJitter(hue=(-0.4,0.4)),
+            transforms.ColorJitter(hue=(-0.4,0.4)),
             #transforms.RandomGrayscale(0.15),
-            #transforms.RandomAffine(degrees=0,translate=(0.27,0.27)),
+            transforms.RandomAffine(degrees=0,translate=(0.27,0.27)),
             transforms.RandomHorizontalFlip(),
             #transforms.RandomVerticalFlip(),
             #transforms.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 3)),
             transforms.ToTensor(),
             ai8x.normalize(args=args)
         ])
-        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,8)
+        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,shot=1)
 
     elif load_train and not apply_transforms:
         train_transform = transforms.Compose([
@@ -706,7 +706,7 @@ def pairs_get_datasets(data, load_train=True, load_test=True,apply_transforms=Tr
             transforms.ToTensor(),
             ai8x.normalize(args=args)
         ])
-        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,8)
+        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,shot=1)
 
     else:
         train_dataset = None
@@ -719,7 +719,7 @@ def pairs_get_datasets(data, load_train=True, load_test=True,apply_transforms=Tr
             transforms.ToTensor(),
             ai8x.normalize(args=args)
         ])
-        test_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"test"),os.path.join(data_dir[1],"test"),test_transform,8)
+        test_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"test"),os.path.join(data_dir[1],"test"),test_transform,shot=1)
 
     else:
         test_dataset = None
@@ -742,16 +742,16 @@ def pairs_get_datasets_c(data, load_train=True, load_test=True,apply_transforms=
             #transforms.ColorJitter(brightness=(0.65,1.35),saturation=(0.65,1.35),contrast=(0.65,1.35)),#,hue=(-0.1,0.1)),
             #transforms.RandomGrayscale(0.15),
             #transforms.ColorJitter(brightness=(0.85,1.15),saturation=(0.75,1.25),contrast=(0.75,1.25),hue=(-0.4,0.4)),
-            #transforms.ColorJitter(hue=(-0.4,0.4)),
+            transforms.ColorJitter(hue=(-0.4,0.4)),
             #transforms.RandomGrayscale(0.15),
-            #transforms.RandomAffine(degrees=0,translate=(0.27,0.27)),
+            transforms.RandomAffine(degrees=0,translate=(0.27,0.27)),
             transforms.RandomHorizontalFlip(),
             #transforms.RandomVerticalFlip(),
             #transforms.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 3)),
             transforms.ToTensor(),
             ai8x.normalize(args=args)
         ])
-        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,8,adv_stage=True)
+        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,shot=1,adv_stage=True)
         #train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
 
     elif load_train and not apply_transforms:
@@ -761,7 +761,7 @@ def pairs_get_datasets_c(data, load_train=True, load_test=True,apply_transforms=
             ai8x.normalize(args=args)
         ])
         #train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
-        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,8,adv_stage=True)
+        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,shot=1,adv_stage=True)
 
     else:
         train_dataset = None
@@ -775,7 +775,7 @@ def pairs_get_datasets_c(data, load_train=True, load_test=True,apply_transforms=
             ai8x.normalize(args=args)
         ])
         #test_dataset = ClassificationDataset(os.path.join(data_dir,"test"),test_transform)
-        test_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"test"),os.path.join(data_dir[1],"test"),test_transform,8,adv_stage=True)
+        test_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"test"),os.path.join(data_dir[1],"test"),test_transform,shot=1,adv_stage=True)
 
     else:
         test_dataset = None
@@ -847,7 +847,7 @@ def office5_get_datasets(data, load_train=True, load_test=True,apply_transforms=
             #transforms.ToPILImage(),
             transforms.ColorJitter(brightness=(0.85,1.15),saturation=(0.75,1.25),contrast=(0.75,1.25),hue=(-0.4,0.4)),
             transforms.RandomGrayscale(0.15),
-            transforms.RandomAffine(degrees=10,translate=(0.2,0.2)),
+            transforms.RandomAffine(degrees=10,translate=(0.27,0.27)),
             transforms.RandomHorizontalFlip(),
             #transforms.RandomVerticalFlip(),
             transforms.GaussianBlur(kernel_size=(3, 3), sigma=(0.1, 1.5)),
