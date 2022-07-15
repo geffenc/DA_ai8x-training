@@ -925,3 +925,53 @@ def pass_get_datasets(data, load_train=True, load_test=False,apply_transforms=Tr
         test_dataset = None
     
     return train_dataset, test_dataset
+
+
+''' get the office5 dataset '''
+def asl_subset_get_datasets(data, load_train=True, load_test=True,apply_transforms=True):
+    (data_dir, args) = data
+
+    train_dataset = None
+    test_dataset = None
+
+    # transforms for training
+    if load_train and apply_transforms:
+        train_transform = transforms.Compose([
+            transforms.Resize((128,128)),
+            #transforms.ToPILImage(),
+            transforms.ColorJitter(brightness=(0.85,1.15),saturation=(0.75,1.25),contrast=(0.75,1.25),hue=(-0.4,0.4)),
+            transforms.RandomGrayscale(0.15),
+            transforms.RandomAffine(degrees=5,translate=(0.15,0.15)),
+            #transforms.RandomHorizontalFlip(),
+            #transforms.RandomVerticalFlip(),
+            transforms.GaussianBlur(kernel_size=(3, 3), sigma=(0.1, 1.5)),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
+
+    elif load_train and not apply_transforms:
+        train_transform = transforms.Compose([
+            transforms.Resize((128,128)),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
+
+    else:
+        train_dataset = None
+
+    # transforms for test, validation --> convert to a valid tensor
+    if load_test:
+        test_transform = transforms.Compose([
+            #transforms.ToPILImage(),
+            transforms.Resize((128,128)),
+            transforms.ToTensor(),
+            ai8x.normalize(args=args)
+        ])
+        test_dataset = ClassificationDataset(os.path.join(data_dir,"test"),test_transform)
+
+    else:
+        test_dataset = None
+    
+    return train_dataset, test_dataset
