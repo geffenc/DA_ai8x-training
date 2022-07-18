@@ -59,9 +59,10 @@ Parameters:
   transform -    Specifies the image format (size, RGB, etc.) and augmentations to use
 '''
 class ClassificationDataset(Dataset):
-    def __init__(self,img_dir_path,transform):
+    def __init__(self,img_dir_path,transform,get_path=False):
         self.img_dir_path = img_dir_path
         self.transform = transform
+        self.get_path = get_path
 
         print(self.img_dir_path)
         
@@ -111,7 +112,10 @@ class ClassificationDataset(Dataset):
             label = self.labels[idx]
             
             # return the sample (img (tensor)), object class (int), and the path optionally
-            return img, label#, os.path.basename(self.imgs[idx])
+            if self.get_path:
+                return img, label, os.path.basename(self.imgs[idx])
+            else:
+                return img, label
 
         # if the image is invalid, show the exception
         except (ValueError, RuntimeWarning,UserWarning) as e:
@@ -232,7 +236,7 @@ Parameters:
   normalize -           Specifies whether to make the image zero mean, unit variance
 '''
 class DomainAdaptationPairDataset(Dataset):
-    def __init__(self,source_img_dir_path,target_img_dir_path,transform,shot,adv_stage=False):
+    def __init__(self,source_img_dir_path,target_img_dir_path,transform,shot,pair_factor=1,adv_stage=False):
         self.source_img_dir_path = source_img_dir_path
         self.target_img_dir_path = target_img_dir_path
         self.transform = transform
@@ -269,7 +273,8 @@ class DomainAdaptationPairDataset(Dataset):
 
         # this will always be the min, use as a reference
         self.min_pairs = min([self.num_G1_pairs, self.num_G2_pairs, self.num_G3_pairs, self.num_G4_pairs])
-        self.min_pairs_multiple = 10
+        self.min_pairs_multiple = pair_factor
+        self.min_pairs //= self.min_pairs_multiple
 
         # set the number of other pairs to be the max # of combos or a multiple of the number of min pairs
         self.num_G1_pairs = min(self.num_G1_pairs,self.min_pairs_multiple*self.min_pairs)
@@ -691,13 +696,13 @@ def pairs_get_datasets(data, load_train=True, load_test=True,apply_transforms=Tr
             #transforms.ColorJitter(brightness=(0.85,1.15),saturation=(0.75,1.25),contrast=(0.75,1.25),hue=(-0.4,0.4)),
             #transforms.RandomGrayscale(0.15),
             #transforms.RandomAffine(degrees=10,translate=(0.27,0.27)),
-            transforms.RandomHorizontalFlip(),
+            #transforms.RandomHorizontalFlip(),
             #transforms.RandomVerticalFlip(),
             #transforms.GaussianBlur(kernel_size=(3, 3), sigma=(0.1, 1.5)),
             transforms.ToTensor(),
             ai8x.normalize(args=args)
         ])
-        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,shot=8)
+        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,shot=8,pair_factor=40)
 
     elif load_train and not apply_transforms:
         train_transform = transforms.Compose([
@@ -705,7 +710,7 @@ def pairs_get_datasets(data, load_train=True, load_test=True,apply_transforms=Tr
             transforms.ToTensor(),
             ai8x.normalize(args=args)
         ])
-        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,shot=8)
+        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,shot=8,pair_factor=40)
 
     else:
         train_dataset = None
@@ -718,7 +723,7 @@ def pairs_get_datasets(data, load_train=True, load_test=True,apply_transforms=Tr
             transforms.ToTensor(),
             ai8x.normalize(args=args)
         ])
-        test_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"test"),os.path.join(data_dir[1],"test"),test_transform,shot=8)
+        test_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"test"),os.path.join(data_dir[1],"test"),test_transform,shot=8,pair_factor=40)
 
     else:
         test_dataset = None
@@ -741,13 +746,13 @@ def pairs_get_datasets_c(data, load_train=True, load_test=True,apply_transforms=
             #transforms.ColorJitter(brightness=(0.85,1.15),saturation=(0.75,1.25),contrast=(0.75,1.25),hue=(-0.4,0.4)),
             #transforms.RandomGrayscale(0.15),
             #transforms.RandomAffine(degrees=10,translate=(0.27,0.27)),
-            transforms.RandomHorizontalFlip(),
+            #transforms.RandomHorizontalFlip(),
             #transforms.RandomVerticalFlip(),
             #transforms.GaussianBlur(kernel_size=(3, 3), sigma=(0.1, 1.5)),
             transforms.ToTensor(),
             ai8x.normalize(args=args)
         ])
-        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,shot=8,adv_stage=True)
+        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,shot=8,pair_factor=40,adv_stage=True)
         #train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
 
     elif load_train and not apply_transforms:
@@ -757,7 +762,7 @@ def pairs_get_datasets_c(data, load_train=True, load_test=True,apply_transforms=
             ai8x.normalize(args=args)
         ])
         #train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
-        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,shot=8,adv_stage=True)
+        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,shot=8,pair_factor=40,adv_stage=True)
 
     else:
         train_dataset = None
@@ -771,7 +776,7 @@ def pairs_get_datasets_c(data, load_train=True, load_test=True,apply_transforms=
             ai8x.normalize(args=args)
         ])
         #test_dataset = ClassificationDataset(os.path.join(data_dir,"test"),test_transform)
-        test_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"test"),os.path.join(data_dir[1],"test"),test_transform,shot=8,adv_stage=True)
+        test_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"test"),os.path.join(data_dir[1],"test"),test_transform,shot=8,pair_factor=40,adv_stage=True)
 
     else:
         test_dataset = None
@@ -928,7 +933,7 @@ def pass_get_datasets(data, load_train=True, load_test=False,apply_transforms=Tr
 
 
 ''' get the office5 dataset '''
-def asl_subset_get_datasets(data, load_train=True, load_test=True,apply_transforms=True):
+def asl_get_datasets(data, load_train=True, load_test=True,apply_transforms=True):
     (data_dir, args) = data
 
     train_dataset = None

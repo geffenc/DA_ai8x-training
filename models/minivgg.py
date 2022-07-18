@@ -397,7 +397,8 @@ class ASLClassifier(nn.Module):
         super().__init__()
         
         #load_model_path = "jupyter_logging/SSL___2022.07.06-174341/classifierbackbonenet_checkpoint.pth.tar"
-        load_model_path = "jupyter_logging/SSL___2022.07.08-153522/classifierbackbonenet_qat_checkpoint.pth.tar"
+        #load_model_path = "jupyter_logging/SSL___2022.07.08-153522/classifierbackbonenet_qat_checkpoint.pth.tar"
+        load_model_path = "jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar"
 
         self.feature_extractor = ClassifierBackbone()                       
         checkpoint = torch.load(load_model_path, map_location=lambda storage, loc: storage)
