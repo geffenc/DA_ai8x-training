@@ -47,7 +47,9 @@ import random
 
 import ai8x
 
-
+# random.seed(1) 
+# torch.manual_seed(1)
+# np.random.seed(0)
 '''
 Generic Dataset Class
 Parameters:
@@ -57,11 +59,17 @@ Parameters:
                  subdirectory basenames are the desired name of the object class.
                  i.e. dog/dog1.png, cat/cat1.png, etc.
   transform -    Specifies the image format (size, RGB, etc.) and augmentations to use
+  subset -       List of indices to sample from if we have a separate validation
+                 set that is sampling from the same overall list. For example, the dataset
+                 might be [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] but the validation set might be
+                 [2, 5, 6] and the train set might be [0, 1, 3, 4, 7, 8, 9]
+  get_path -     returns the image file name in addition to the image and label
 '''
 class ClassificationDataset(Dataset):
-    def __init__(self,img_dir_path,transform,get_path=False):
+    def __init__(self,img_dir_path,transform,subset=None,get_path=False):
         self.img_dir_path = img_dir_path
         self.transform = transform
+        self.subset = subset
         self.get_path = get_path
 
         print(self.img_dir_path)
@@ -89,12 +97,19 @@ class ClassificationDataset(Dataset):
                     self.labels.append(self.classes[os.path.basename(os.path.dirname(self.imgs[i]))]) # get label from directory name
                     i+=1
 
-    # dataset size is number of images
+        # if no subset, just use the whole set
+        if subset == None:
+            self.subset = range(len(self.imgs))
+
+    # dataset size is determined by the subset size
     def __len__(self):
-        return len(self.imgs)
+        return len(self.subset)
     
     # how to get one sample from the dataset
     def __getitem__(self, idx):
+        # map the idx to whole set
+        idx = self.subset[idx]
+
         # attempt to load the image at the specified index
         try:
             img = Image.open(self.imgs[idx])
@@ -135,7 +150,7 @@ class ClassificationDataset(Dataset):
 
         # get the first batch
         #(imgs, labels, paths) = next(iter(data_loader))
-        (imgs, labels) = next(iter(data_loader))
+        (imgs, labels, paths) = next(iter(data_loader))
         imgs,labels = imgs.to(device), labels.to(device)
         preds = None
 
@@ -151,13 +166,17 @@ class ClassificationDataset(Dataset):
         
         fig,ax_array = plt.subplots(rows,cols,figsize=(20,20))
         #fig.subplots_adjust(hspace=0.5)
-        plt.subplots_adjust(wspace=0, hspace=0)
+        plt.subplots_adjust(wspace=0, hspace=0.2)
+        num_imgs = 0
         for i in range(rows):
             for j in range(cols):
+                if num_imgs == len(imgs):
+                    break
+
                 idx = i*rows+j
 
                 # create text labels
-                text = str(labels[idx].item())
+                text = str(labels[idx].item()) + " --" + paths[idx]
                 if model != None:
                     text = "GT :" + obj_classes[labels[idx]]  + " P: ",obj_classes[preds[idx].argmax()]#", i=" +str(idxs[idx].item())
                 
@@ -171,55 +190,58 @@ class ClassificationDataset(Dataset):
                 ax_array[i,j].set_title(text,color="white")
                 ax_array[i,j].set_xticks([])
                 ax_array[i,j].set_yticks([])
+                num_imgs += 1
+            if num_imgs == len(imgs):
+                    break
         plt.savefig('plot.png')
         #print(paths)
         #plt.show()
 
-    def viz_mispredict(self,wrong_samples,wrong_preds,actual_preds,img_names):
-        wrong_samples,wrong_preds,actual_preds = wrong_samples.to("cpu"), wrong_preds.to("cpu"),actual_preds.to("cpu")
+    # def viz_mispredict(self,wrong_samples,wrong_preds,actual_preds,img_names):
+    #     wrong_samples,wrong_preds,actual_preds = wrong_samples.to("cpu"), wrong_preds.to("cpu"),actual_preds.to("cpu")
         
-        # import matplotlib
-        # matplotlib.use('TkAgg')
-        obj_classes = list(self.classes)
-        num_samples = len(wrong_samples)
-        num_rows = int(np.floor(np.sqrt(num_samples)))
+    #     # import matplotlib
+    #     # matplotlib.use('TkAgg')
+    #     obj_classes = list(self.classes)
+    #     num_samples = len(wrong_samples)
+    #     num_rows = int(np.floor(np.sqrt(num_samples)))
 
-        if num_rows > 0:
-            num_cols = num_samples // num_rows
-        else:
-            return
-        print("num wrong:",num_samples, " num rows:",num_rows, " num cols:",num_cols)
+    #     if num_rows > 0:
+    #         num_cols = num_samples // num_rows
+    #     else:
+    #         return
+    #     print("num wrong:",num_samples, " num rows:",num_rows, " num cols:",num_cols)
 
-        fig,ax_array = plt.subplots(num_rows,num_cols,figsize=(30,30))
-        fig.subplots_adjust(hspace=1.5)
-        for i in range(num_rows):
-            for j in range(num_cols):
-                idx = i*num_rows+j
-                sample = wrong_samples[idx]
-                wrong_pred = wrong_preds[idx]
-                actual_pred = actual_preds[idx]
-                # Undo normalization
-                sample = (sample.permute(1, 2, 0)+1)/2
-                #text = "L: " + obj_classes[actual_pred.item()]  + " P:",obj_classes[wrong_pred.item()]#", i=" +str(idxs[idx].item())
-                text = img_names[idx]
+    #     fig,ax_array = plt.subplots(num_rows,num_cols,figsize=(30,30))
+    #     fig.subplots_adjust(hspace=1.5)
+    #     for i in range(num_rows):
+    #         for j in range(num_cols):
+    #             idx = i*num_rows+j
+    #             sample = wrong_samples[idx]
+    #             wrong_pred = wrong_preds[idx]
+    #             actual_pred = actual_preds[idx]
+    #             # Undo normalization
+    #             sample = (sample.permute(1, 2, 0)+1)/2
+    #             #text = "L: " + obj_classes[actual_pred.item()]  + " P:",obj_classes[wrong_pred.item()]#", i=" +str(idxs[idx].item())
+    #             text = img_names[idx]
                 
-                # for normal forward pass use this line
-                #ax_array[i,j].imshow(imgs[idx].permute(1, 2, 0))
+    #             # for normal forward pass use this line
+    #             #ax_array[i,j].imshow(imgs[idx].permute(1, 2, 0))
 
-                # for quantized forward pass use this line
-                #print(imgs[idx].size(),torch.min(imgs[idx]))
-                try:
-                    if(ax_array.ndim > 1):
-                        ax_array[i,j].imshow(sample)
-                        ax_array[i,j].set_title(text,color="white")
-                        ax_array[i,j].set_xticks([])
-                        ax_array[i,j].set_yticks([])
-                except:
-                    print("exception")
-                    print(ax_array.ndim)
-                    print(sample)
-                    return
-        plt.savefig("incorrect.png")
+    #             # for quantized forward pass use this line
+    #             #print(imgs[idx].size(),torch.min(imgs[idx]))
+    #             try:
+    #                 if(ax_array.ndim > 1):
+    #                     ax_array[i,j].imshow(sample)
+    #                     ax_array[i,j].set_title(text,color="white")
+    #                     ax_array[i,j].set_xticks([])
+    #                     ax_array[i,j].set_yticks([])
+    #             except:
+    #                 print("exception")
+    #                 print(ax_array.ndim)
+    #                 print(sample)
+    #                 return
+    #     plt.savefig("incorrect.png")
 
 
 '''
@@ -784,65 +806,17 @@ def pairs_get_datasets_c(data, load_train=True, load_test=True,apply_transforms=
     return train_dataset, test_dataset
 
 
-''' get the imagenet10 dataset '''
-def imagenet10_get_datasets(data, load_train=True, load_test=True,apply_transforms=True):
-    (data_dir, args) = data
-
-    train_dataset = None
-    test_dataset = None
-
-    # transforms for training
-    if load_train and apply_transforms:
-        train_transform = transforms.Compose([
-            transforms.Resize((128,128)),
-            #transforms.ToPILImage(),
-            transforms.ColorJitter(brightness=(0.65,1.35),saturation=(0.65,1.35),contrast=(0.65,1.35)),#,hue=(-0.1,0.1)),
-            #transforms.RandomGrayscale(0.15),
-            transforms.RandomAffine(degrees=10,translate=(0.2,0.2)),
-            transforms.RandomHorizontalFlip(),
-            transforms.RandomVerticalFlip(),
-            #transforms.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 3)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
-
-    elif load_train and not apply_transforms:
-        train_transform = transforms.Compose([
-            transforms.Resize((128,128)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
-
-    else:
-        train_dataset = None
-
-    # transforms for test, validatio --> convert to a valid tensor
-    if load_test:
-        test_transform = transforms.Compose([
-            #transforms.ToPILImage(),
-            transforms.Resize((128,128)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        test_dataset = ClassificationDataset(os.path.join(data_dir,"test"),test_transform)
-
-    else:
-        test_dataset = None
-    
-    return train_dataset, test_dataset
-
 
 ''' get the office5 dataset '''
-def office5_get_datasets(data, load_train=True, load_test=True,apply_transforms=True):
+def office5_get_datasets(data, load_train=True, load_val=False, load_test=True, validation_split=0.1, fix_aug=None, deterministic=None):
     (data_dir, args) = data
 
     train_dataset = None
+    val_dataset = None
     test_dataset = None
-
+    seed = fix_aug
     # transforms for training
-    if load_train and apply_transforms:
+    if load_train:
         train_transform = transforms.Compose([
             transforms.Resize((128,128)),
             #transforms.ToPILImage(),
@@ -857,18 +831,33 @@ def office5_get_datasets(data, load_train=True, load_test=True,apply_transforms=
         ])
         train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
 
-    elif load_train and not apply_transforms:
-        train_transform = transforms.Compose([
-            transforms.Resize((128,128)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
+        # create a validation set with no augmentations
+        if load_val:
+            val_transform = transforms.Compose([
+                #transforms.ToPILImage(),
+                transforms.Resize((128,128)),
+                transforms.ToTensor(),
+                ai8x.normalize(args=args)
+            ])
 
-    else:
-        train_dataset = None
+            # split the training and val sets randomly
+            indices = torch.randperm(len(train_dataset))
+            val_size = int(len(train_dataset)*validation_split)
 
-    # transforms for test, validation --> convert to a valid tensor
+            # if aug not fixed then will be different each execution
+            if not deterministic:
+                if fix_aug != None:
+                    random.seed(fix_aug) 
+                    torch.manual_seed(fix_aug)
+                else:
+                    seed = np.random.randint(2147483647)
+                    random.seed(seed) 
+                    torch.manual_seed(seed)
+
+            train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform,indices[val_size:],True)
+            val_dataset = ClassificationDataset(os.path.join(data_dir,"train"),val_transform,indices[:val_size],True)
+
+    # transforms for test --> convert to a valid tensor
     if load_test:
         test_transform = transforms.Compose([
             #transforms.ToPILImage(),
@@ -876,12 +865,9 @@ def office5_get_datasets(data, load_train=True, load_test=True,apply_transforms=
             transforms.ToTensor(),
             ai8x.normalize(args=args)
         ])
-        test_dataset = ClassificationDataset(os.path.join(data_dir,"test"),test_transform)
-
-    else:
-        test_dataset = None
+        test_dataset = ClassificationDataset(os.path.join(data_dir,"test"),test_transform,None,True)
     
-    return train_dataset, test_dataset
+    return train_dataset, val_dataset, test_dataset, seed
 
 
 
@@ -980,3 +966,21 @@ def asl_get_datasets(data, load_train=True, load_test=True,apply_transforms=True
         test_dataset = None
     
     return train_dataset, test_dataset
+
+
+def set_deterministic_settings():
+    random.seed(0)
+    np.random.seed(0)
+    torch.manual_seed(0)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+
+    def seed_worker(worker_id):
+        worker_seed = 0
+        np.random.seed(0)
+        random.seed(0)
+
+    g = torch.Generator()
+    g.manual_seed(0)
+
+    return seed_worker
