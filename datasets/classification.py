@@ -128,7 +128,7 @@ class ClassificationDataset(Dataset):
             
             # return the sample (img (tensor)), object class (int), and the path optionally
             if self.get_path:
-                return img, label, os.path.basename(self.imgs[idx])
+                return img, label, self.imgs[idx]#os.path.basename(self.imgs[idx])
             else:
                 return img, label
 
@@ -176,7 +176,7 @@ class ClassificationDataset(Dataset):
                 idx = i*rows+j
 
                 # create text labels
-                text = str(labels[idx].item()) + " --" + paths[idx]
+                text = str(labels[idx].item()) + " --" + os.path.basename(paths[idx])
                 if model != None:
                     text = "GT :" + obj_classes[labels[idx]]  + " P: ",obj_classes[preds[idx].argmax()]#", i=" +str(idxs[idx].item())
                 
@@ -808,7 +808,7 @@ def pairs_get_datasets_c(data, load_train=True, load_test=True,apply_transforms=
 
 
 ''' get the office5 dataset '''
-def office5_get_datasets(data, load_train=True, load_val=False, load_test=True, validation_split=0.1, fix_aug=None, deterministic=None):
+def office5_get_datasets(data, load_train=True, load_val=True, load_test=True, validation_split=0.1, fix_aug=None, deterministic=None):
     (data_dir, args) = data
 
     train_dataset = None
@@ -829,7 +829,7 @@ def office5_get_datasets(data, load_train=True, load_val=False, load_test=True, 
             transforms.ToTensor(),
             ai8x.normalize(args=args)
         ])
-        train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
+        train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform,get_path=True)
 
         # create a validation set with no augmentations
         if load_val:
