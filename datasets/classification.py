@@ -99,7 +99,7 @@ class ClassificationDataset(Dataset):
 
         # if no subset, just use the whole set
         if subset == None:
-            self.subset = range(len(self.imgs))
+            self.subset = [i for i in range(len(self.imgs))]
 
     # dataset size is determined by the subset size
     def __len__(self):
@@ -258,25 +258,34 @@ Parameters:
   normalize -           Specifies whether to make the image zero mean, unit variance
 '''
 class DomainAdaptationPairDataset(Dataset):
-    def __init__(self,source_img_dir_path,target_img_dir_path,transform,shot,pair_factor=1,adv_stage=False):
-        self.source_img_dir_path = source_img_dir_path
-        self.target_img_dir_path = target_img_dir_path
-        self.transform = transform
+    def __init__(self,source_img_dir_path,target_img_dir_path,transform,shot,pair_factor=1,adv_stage=False,source_dataset=None,target_dataset=None,subset=None):
         self.shot = shot
         self.adv_stage = adv_stage
-
-        print(self.source_img_dir_path)
-        print(self.target_img_dir_path)
+        self.transform = transform
         
-        # collect img classes from source  dir names
-        source_img_classes = next(os.walk(source_img_dir_path))[1]
-        target_img_classes = next(os.walk(target_img_dir_path))[1]
-        if not source_img_classes == target_img_classes:
-            raise AssertionError("source and target classes not the same")
-        
-        self.source_dataset = ClassificationDataset(source_img_dir_path,transform)
-        self.target_dataset = ClassificationDataset(target_img_dir_path,transform)
+        # either take in the source and target datasets as inputs
+        if source_dataset != None and target_dataset != None:
+            self.source_dataset = source_dataset
+            self.target_dataset = target_dataset
 
+        # or create them from the provided paths
+        else:
+            self.source_img_dir_path = source_img_dir_path
+            self.target_img_dir_path = target_img_dir_path
+
+            print(self.source_img_dir_path)
+            print(self.target_img_dir_path)
+            
+            # collect img classes from source  dir names
+            source_img_classes = next(os.walk(source_img_dir_path))[1]
+            target_img_classes = next(os.walk(target_img_dir_path))[1]
+            if not source_img_classes == target_img_classes:
+                raise AssertionError("source and target classes not the same")
+            
+            self.source_dataset = ClassificationDataset(source_img_dir_path,transform)
+            self.target_dataset = ClassificationDataset(target_img_dir_path,transform)
+
+        # generate an EvenSampler so we can sample each class with equal probability
         self.s_sampler = EvenSampler(self.source_dataset)
         self.t_sampler = EvenSampler(self.target_dataset,shot=shot) # only use a subset of the target dataset based on shot
 
@@ -284,7 +293,7 @@ class DomainAdaptationPairDataset(Dataset):
         # G1: same domain, same class --> each source sample can be paired with each source sample of the same class
         self.num_G1_pairs = sum([comb(self.s_sampler.class_idx_lens[i],2) for i in range(self.s_sampler.num_classes)])
         # G2: different domain, same class --> each target sample can be paired with each source sample of the same class
-        self.num_G2_pairs = sum([self.s_sampler.class_idx_lens[i]*self.t_sampler.class_idx_lens[i] for i in range(self.s_sampler.num_classes)])
+        self.num_G2_pairs = sum([self.s_sampler.class_idx_lens[i]*self.t_sampler.class_idx_lens[i] for i in range(self.t_sampler.num_classes)])
         # G3: same domain, different class --> each source sample can be paired with any other source sample
         self.num_G3_pairs = comb(len(self.s_sampler.labels),2)
         # G4: different domain, different class --> each target sample can be paired with each source sample of a different class
@@ -293,9 +302,9 @@ class DomainAdaptationPairDataset(Dataset):
                                         ) for i in range(self.t_sampler.num_classes)])
         print("Max possible pairs: G1 = ", self.num_G1_pairs, " G2 = ", self.num_G2_pairs, " G3 = ", self.num_G3_pairs, " G4 = ", self.num_G4_pairs)
 
-        # this will always be the min, use as a reference
+        # find class with the least possible pairs and use as a reference
         self.min_pairs = min([self.num_G1_pairs, self.num_G2_pairs, self.num_G3_pairs, self.num_G4_pairs])
-        self.min_pairs_multiple = pair_factor
+        self.min_pairs_multiple = pair_factor # use this to reduce amount of pairs for large datasets
         self.min_pairs //= self.min_pairs_multiple
 
         # set the number of other pairs to be the max # of combos or a multiple of the number of min pairs
@@ -386,33 +395,36 @@ class DomainAdaptationPairDataset(Dataset):
             self.group_imgs = [self.G1_img_paths,self.G2_img_paths,self.G3_img_paths,self.G4_img_paths]
             self.group_labels = [self.G1_labels,self.G2_labels,self.G3_labels,self.G4_labels]
 
-    # dataset size is number of G2 samples times 4 because we sample from the other groups
-    def __len__(self):
-        if self.adv_stage:
-            return 2*self.min_pairs#//10
+        # use whole set as subset if no validation split
+        if subset == None:
+            if self.adv_stage:
+                self.subset = [i for i in range(2*self.min_pairs)] # only G2 and G4
+            else:
+                self.subset = [i for i in range(4*self.min_pairs)] # G1, G2, G3, G4
         else:
-            return 4*self.min_pairs#//10
+            self.subset = subset
+
+    # when we have no validation this is just the whole set
+    def __len__(self):
+        return len(self.subset)
     
     # how to get one sample from the dataset
     def __getitem__(self, idx):
+        # map the idx to the subset
+        idx = self.subset[idx]
         if self.adv_stage:
             # map the index into a subindex to a particular group
             group = idx // (len(self)//2)
             if group > 1: # in cases where don't divide evenly and exceed max group idx
                 group = 1
-            #sub_idx = idx % (len(self)//2)
+            
             sub_idx = random.randint(0,len(self)//2-1)
-            # if sub_idx > len(self):
-            #     sub_idx = len(self)-1
         else:
             # map the index into a subindex to a particular group
             group = idx // (len(self)//4)
             if group > 3: # in cases where don't divide evenly and exceed max group idx
                 group = 3
-            #sub_idx = idx % (len(self)//4)
             sub_idx = random.randint(0,len(self)//4-1)
-            # if sub_idx > len(self):
-            #     sub_idx = len(self)-1
 
         # attempt to load the images at the specified index
         try:
@@ -611,7 +623,7 @@ class PassDataset(Dataset):
 class EvenSampler(Sampler):
     def __init__(self, dataset,shot=-1):
         # get the labels as a tensor
-        self.labels = torch.Tensor(dataset.labels)
+        self.labels = torch.Tensor([dataset.labels[idx] for idx in dataset.subset])
 
         # how many samples from each class to use
         self.shot = shot
@@ -631,16 +643,19 @@ class EvenSampler(Sampler):
             self.class_idxs.append(idxs)
             self.class_idx_lens.append(idxs.size(0))
         self.max_len = max(self.class_idx_lens)
+        self.min_len = min(self.class_idx_lens)
         
     def __iter__(self):
-        # shuffle the idxs for each class idx list --> [[1,0,2,3],[5,3,4]]
-        # also periodically extend the shorter lists --> [[1,0,2,3],[5,3,4,5]]
+        # shuffle the idxs for each class idx list --> [[1,0,2,3],[5,6,4]]
+        # also periodically extend the shorter lists --> [[1,0,2,3],[5,6,4,5]]
+        # or cuts down the longer lists --> [[1,0,2],[5,6,4]]
         for i,c in enumerate(self.class_idxs):
             rand_idx = torch.randperm(c.size(0))
             shuffled = c[rand_idx]
             self.class_idxs[i] = shuffled
-            added_len = self.max_len-shuffled.size(0)
-            self.class_idxs[i] = torch.cat((shuffled,shuffled[0:added_len]))
+            # added_len = self.max_len-shuffled.size(0)
+            # self.class_idxs[i] = torch.cat((shuffled,shuffled[0:added_len]))
+            self.class_idxs[i] = shuffled[0:self.min_len]
 
         # interleave the shuffled lists so that every successive idx is a new class,
         # to get even batches the batch size needs to be a multiple of the number of classes
@@ -704,57 +719,75 @@ def cats_and_dogs_get_datasets(data, load_train=True, load_test=True,apply_trans
 
 
 ''' pairs for domain discriminator '''
-def pairs_get_datasets(data, load_train=True, load_test=True,apply_transforms=True):
+def pairs_get_datasets(data,conf,pair_factor):
     (data_dir, args) = data
 
     train_dataset = None
+    val_dataset = None
     test_dataset = None
 
-    # transforms for training
-    if load_train and apply_transforms:
-        train_transform = transforms.Compose([
-            transforms.Resize((128,128)),
-            #transforms.ToPILImage(),
-            #transforms.ColorJitter(brightness=(0.85,1.15),saturation=(0.75,1.25),contrast=(0.75,1.25),hue=(-0.4,0.4)),
-            #transforms.RandomGrayscale(0.15),
-            #transforms.RandomAffine(degrees=10,translate=(0.27,0.27)),
-            #transforms.RandomHorizontalFlip(),
-            #transforms.RandomVerticalFlip(),
-            #transforms.GaussianBlur(kernel_size=(3, 3), sigma=(0.1, 1.5)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,shot=8,pair_factor=40)
-
-    elif load_train and not apply_transforms:
-        train_transform = transforms.Compose([
-            transforms.Resize((128,128)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,shot=8,pair_factor=40)
-
-    else:
-        train_dataset = None
-
-    # transforms for test, validation --> convert to a valid tensor
-    if load_test:
-        test_transform = transforms.Compose([
-            #transforms.ToPILImage(),
-            transforms.Resize((128,128)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        test_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"test"),os.path.join(data_dir[1],"test"),test_transform,shot=8,pair_factor=40)
-
-    else:
-        test_dataset = None
+    train_transform = transforms.Compose([
+        transforms.Resize((128,128)),
+        #transforms.ToPILImage(),
+        #transforms.ColorJitter(brightness=(0.85,1.15),saturation=(0.75,1.25),contrast=(0.75,1.25),hue=(-0.4,0.4)),
+        #transforms.RandomGrayscale(0.15),
+        #transforms.RandomAffine(degrees=10,translate=(0.27,0.27)),
+        #transforms.RandomHorizontalFlip(),
+        #transforms.RandomVerticalFlip(),
+        #transforms.GaussianBlur(kernel_size=(3, 3), sigma=(0.1, 1.5)),
+        transforms.ToTensor(),
+        ai8x.normalize(args=args)
+    ])
+    train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,shot=conf.k,pair_factor=pair_factor)
     
-    return train_dataset, test_dataset
+
+    if conf.constrained_validation:
+        # split the source training and val sets randomly
+        indices = torch.randperm(len(train_dataset))
+        val_size = int(len(train_dataset)*conf.validation_split)
+
+        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,shot=conf.k,pair_factor=pair_factor,subset=indices[val_size:])
+        val_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,shot=conf.k,pair_factor=pair_factor,subset=indices[:val_size])
+        
+    # create independent source and target train-validation sets to sample from
+    else:
+        assert conf.k >= 4, "Must have at least one sample per class in the validation set"
+        # first create the source training datasets and split into 75-25 train-val
+        source_train_dataset = ClassificationDataset(os.path.join(data_dir[0],"train"),train_transform,get_path=True)
+
+        # split the source training and val sets randomly
+        indices = torch.randperm(len(source_train_dataset))
+        val_size = int(len(source_train_dataset)*.25)
+
+        # now create the source train-val sets from the split
+        source_train_dataset = ClassificationDataset(os.path.join(data_dir[0],"train"),train_transform,indices[val_size:],True)
+        source_val_dataset = ClassificationDataset(os.path.join(data_dir[0],"train"),train_transform,indices[:val_size],True)
+
+        # repeat this process for the target but with desired k
+
+        # first create the target training datasets
+        target_train_dataset = ClassificationDataset(os.path.join(data_dir[1],"train"),train_transform,get_path=True)
+        idxs = [i for i in EvenSampler(target_train_dataset,conf.k)]
+        target_train_dataset = ClassificationDataset(os.path.join(data_dir[1],"train"),train_transform,get_path=True,subset=idxs)
+
+        # split the source training and val sets randomly but giving equal amounts of each class
+        indices = torch.randperm(len(target_train_dataset))
+        val_size = int(len(target_train_dataset)*.25)
+
+        # now create the source train-val sets from the split
+        target_train_dataset = ClassificationDataset(os.path.join(data_dir[1],"train"),train_transform,indices[val_size:],True)
+        target_val_dataset = ClassificationDataset(os.path.join(data_dir[1],"train"),train_transform,indices[:val_size],True)
+        
+
+        # finally create the pairs datasets
+        train_dataset = DomainAdaptationPairDataset(None,None,train_transform,shot=conf.k,pair_factor=pair_factor,source_dataset=source_train_dataset,target_dataset=target_train_dataset)
+        val_dataset = DomainAdaptationPairDataset(None,None,train_transform,shot=conf.k,pair_factor=pair_factor,source_dataset=source_val_dataset,target_dataset=target_val_dataset)
+    
+    return train_dataset, val_dataset
 
 
 ''' pairs for domain discriminator in the adverserial stage, need to change labels'''
-def pairs_get_datasets_c(data, load_train=True, load_test=True,apply_transforms=True):
+def pairs_get_datasets_c(data, load_train, load_test,shot,pair_factor):
     (data_dir, args) = data
 
     train_dataset = None
@@ -774,17 +807,8 @@ def pairs_get_datasets_c(data, load_train=True, load_test=True,apply_transforms=
             transforms.ToTensor(),
             ai8x.normalize(args=args)
         ])
-        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,shot=8,pair_factor=40,adv_stage=True)
+        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,shot=shot,pair_factor=pair_factor,adv_stage=True)
         #train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
-
-    elif load_train and not apply_transforms:
-        train_transform = transforms.Compose([
-            transforms.Resize((128,128)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        #train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
-        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,shot=8,pair_factor=40,adv_stage=True)
 
     else:
         train_dataset = None
@@ -798,7 +822,7 @@ def pairs_get_datasets_c(data, load_train=True, load_test=True,apply_transforms=
             ai8x.normalize(args=args)
         ])
         #test_dataset = ClassificationDataset(os.path.join(data_dir,"test"),test_transform)
-        test_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"test"),os.path.join(data_dir[1],"test"),test_transform,shot=8,pair_factor=40,adv_stage=True)
+        test_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"test"),os.path.join(data_dir[1],"test"),test_transform,shot=shot,pair_factor=pair_factor,adv_stage=True)
 
     else:
         test_dataset = None
