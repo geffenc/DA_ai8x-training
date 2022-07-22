@@ -273,8 +273,8 @@ class DomainAdaptationPairDataset(Dataset):
             self.source_img_dir_path = source_img_dir_path
             self.target_img_dir_path = target_img_dir_path
 
-            print(self.source_img_dir_path)
-            print(self.target_img_dir_path)
+            # print(self.source_img_dir_path)
+            # print(self.target_img_dir_path)
             
             # collect img classes from source  dir names
             source_img_classes = next(os.walk(source_img_dir_path))[1]
@@ -288,10 +288,10 @@ class DomainAdaptationPairDataset(Dataset):
         # generate an EvenSampler so we can sample each class with equal probability
         self.s_sampler = EvenSampler(self.source_dataset)
         self.t_sampler = EvenSampler(self.target_dataset,shot=shot) # only use a subset of the target dataset based on shot
-        print(f"source_sampler len:{len(self.s_sampler)}, idx_lens: {self.s_sampler.class_idx_lens}")
-        print(f"target_sampler len:{len(self.t_sampler)}, idx_lens: {self.t_sampler.class_idx_lens}")
-        print(f"s_num_classes: {self.s_sampler.num_classes}")
-        print(f"t_num_classes: {self.t_sampler.num_classes}")
+        # print(f"source_sampler len:{len(self.s_sampler)}, idx_lens: {self.s_sampler.class_idx_lens}")
+        # print(f"target_sampler len:{len(self.t_sampler)}, idx_lens: {self.t_sampler.class_idx_lens}")
+        # print(f"s_num_classes: {self.s_sampler.num_classes}")
+        # print(f"t_num_classes: {self.t_sampler.num_classes}")
 
         # calculate the number of possible pairs for each set
         # G1: same domain, same class --> each source sample can be paired with each source sample of the same class
@@ -643,11 +643,14 @@ class EvenSampler(Sampler):
 
         # get the idxs of each class as a nested list --> [[0,1,2,3],[4,5,6]]
         self.class_idxs = []
+        self.remain_class_idxs = []
         self.class_idx_lens = []
         for c in range(self.num_classes):
             # if we specify a shot then only use a subset of the samples per class
             if self.shot != -1:
                 idxs = torch.flatten((self.labels == c).nonzero())[0:self.shot]
+                remain = torch.flatten((self.labels == c).nonzero())[self.shot:]
+                self.remain_class_idxs.append(remain) # need to use this to index into imgs and labels for the valid set
             else:
                 idxs = torch.flatten((self.labels == c).nonzero())
             self.class_idxs.append(idxs)
@@ -803,47 +806,79 @@ def pairs_get_datasets(data,conf,pair_factor):
 
 
 ''' pairs for domain discriminator in the adverserial stage, need to change labels'''
-def pairs_get_datasets_c(data, load_train, load_test,shot,pair_factor):
+def pairs_get_datasets_c(data,conf,pair_factor):
     (data_dir, args) = data
 
     train_dataset = None
-    test_dataset = None
+    val_dataset = None
 
-    # transforms for training
-    if load_train and apply_transforms:
-        train_transform = transforms.Compose([
-            transforms.Resize((128,128)),
-            #transforms.ToPILImage(),
-            #transforms.ColorJitter(brightness=(0.85,1.15),saturation=(0.75,1.25),contrast=(0.75,1.25),hue=(-0.4,0.4)),
-            #transforms.RandomGrayscale(0.15),
-            #transforms.RandomAffine(degrees=10,translate=(0.27,0.27)),
-            #transforms.RandomHorizontalFlip(),
-            #transforms.RandomVerticalFlip(),
-            #transforms.GaussianBlur(kernel_size=(3, 3), sigma=(0.1, 1.5)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,shot=shot,pair_factor=pair_factor,adv_stage=True)
-        #train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
-
-    else:
-        train_dataset = None
-
-    # transforms for test, validatio --> convert to a valid tensor
-    if load_test:
-        test_transform = transforms.Compose([
-            #transforms.ToPILImage(),
-            transforms.Resize((128,128)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        #test_dataset = ClassificationDataset(os.path.join(data_dir,"test"),test_transform)
-        test_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"test"),os.path.join(data_dir[1],"test"),test_transform,shot=shot,pair_factor=pair_factor,adv_stage=True)
-
-    else:
-        test_dataset = None
+    train_transform = transforms.Compose([
+        transforms.Resize((128,128)),
+        #transforms.ToPILImage(),
+        #transforms.ColorJitter(brightness=(0.85,1.15),saturation=(0.75,1.25),contrast=(0.75,1.25),hue=(-0.4,0.4)),
+        #transforms.RandomGrayscale(0.15),
+        #transforms.RandomAffine(degrees=10,translate=(0.27,0.27)),
+        #transforms.RandomHorizontalFlip(),
+        #transforms.RandomVerticalFlip(),
+        #transforms.GaussianBlur(kernel_size=(3, 3), sigma=(0.1, 1.5)),
+        transforms.ToTensor(),
+        ai8x.normalize(args=args)
+    ])
+    train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,shot=conf.k,pair_factor=pair_factor,adv_stage=True)
     
-    return train_dataset, test_dataset
+
+    if conf.constrained_validation:
+        # split the source training and val sets randomly
+        indices = torch.randperm(len(train_dataset))
+        val_size = int(len(train_dataset)*conf.validation_split)
+
+        train_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,shot=conf.k,pair_factor=pair_factor,subset=indices[val_size:],adv_stage=True)
+        val_dataset = DomainAdaptationPairDataset(os.path.join(data_dir[0],"train"),os.path.join(data_dir[1],"train"),train_transform,shot=conf.k,pair_factor=pair_factor,subset=indices[:val_size],adv_stage=True)
+        
+    # create independent source and target train-validation sets to sample from
+    else:
+        assert conf.k >= 3, "k must be >= 3, must have at least one sample per class in the validation set"
+        # first create the source training datasets and split into 75-25 train-val
+        source_train_dataset = ClassificationDataset(os.path.join(data_dir[0],"train"),train_transform,get_path=True)
+
+        # split the source training and val sets randomly
+        indices = torch.randperm(len(source_train_dataset))
+        val_size = len(source_train_dataset)//3
+
+        # now create the source train-val sets from the split
+        source_train_dataset = ClassificationDataset(os.path.join(data_dir[0],"train"),train_transform,indices[val_size:],True)
+        source_val_dataset = ClassificationDataset(os.path.join(data_dir[0],"train"),train_transform,indices[:val_size],True)
+
+        # repeat this process for the target but with desired k
+
+        # first create the target training datasets
+        target_train_dataset = ClassificationDataset(os.path.join(data_dir[1],"train"),train_transform,get_path=True)
+        sampler = EvenSampler(target_train_dataset,conf.k)
+        idxs = [i for i in sampler]
+        target_train_dataset = ClassificationDataset(os.path.join(data_dir[1],"train"),train_transform,get_path=True,subset=idxs)
+
+        # split the source training and val sets randomly but giving equal amounts of each class
+        # indices = torch.randperm(len(target_train_dataset))
+        # val_size = int(len(target_train_dataset)*.25)
+        val_k = conf.k//3
+
+        # now create the source train-val sets from the split
+        target_train_dataset = ClassificationDataset(os.path.join(data_dir[1],"train"),train_transform,idxs[sampler.num_classes*val_k:],True)
+        target_val_dataset = ClassificationDataset(os.path.join(data_dir[1],"train"),train_transform,idxs[:sampler.num_classes*val_k],True)
+
+        labels = [target_val_dataset.labels[l] for l in idxs[:sampler.num_classes*val_k]]
+        # print(f"val_k: {val_k} idxs: {idxs[:sampler.num_classes*val_k]} labels: {labels}")
+        # target_val_dataset.visualize_batch()
+
+        flat_list = [x for xs in sampler.remain_class_idxs for x in xs]
+        val_dataset = ClassificationDataset(os.path.join(data_dir[1],"train"),train_transform,get_path=True,subset=flat_list)
+        
+
+        # finally create the pairs datasets
+        train_dataset = DomainAdaptationPairDataset(None,None,train_transform,shot=conf.k-val_k,pair_factor=pair_factor,source_dataset=source_train_dataset,target_dataset=target_train_dataset,adv_stage=True)
+        #val_dataset = DomainAdaptationPairDataset(None,None,train_transform,shot=val_k,pair_factor=pair_factor,source_dataset=source_val_dataset,target_dataset=target_val_dataset,adv_stage=True)
+    
+    return train_dataset, val_dataset
 
 
 
