@@ -288,6 +288,10 @@ class DomainAdaptationPairDataset(Dataset):
         # generate an EvenSampler so we can sample each class with equal probability
         self.s_sampler = EvenSampler(self.source_dataset)
         self.t_sampler = EvenSampler(self.target_dataset,shot=shot) # only use a subset of the target dataset based on shot
+        print(f"source_sampler len:{len(self.s_sampler)}, idx_lens: {self.s_sampler.class_idx_lens}")
+        print(f"target_sampler len:{len(self.t_sampler)}, idx_lens: {self.t_sampler.class_idx_lens}")
+        print(f"s_num_classes: {self.s_sampler.num_classes}")
+        print(f"t_num_classes: {self.t_sampler.num_classes}")
 
         # calculate the number of possible pairs for each set
         # G1: same domain, same class --> each source sample can be paired with each source sample of the same class
@@ -334,6 +338,10 @@ class DomainAdaptationPairDataset(Dataset):
         self.num_s_partitions = len(self.s_sampler_idxs)/self.s_sampler.num_classes - 1
         self.num_t_partitions = len(self.t_sampler_idxs)/self.t_sampler.num_classes - 1
 
+        # use the subsets for proper indexing
+        s_sub = self.source_dataset.subset
+        t_sub = self.target_dataset.subset
+
         # add G1 pairs
         pair_cnt = 0
         while pair_cnt < self.num_G1_pairs:
@@ -341,7 +349,7 @@ class DomainAdaptationPairDataset(Dataset):
                 p1 = random.randint(0,self.num_s_partitions)*self.s_sampler.num_classes # get partition 1 pos
                 p2 = random.randint(0,self.num_s_partitions)*self.s_sampler.num_classes # get partition 2 pos
                 c = random.randint(0, self.s_sampler.num_classes-1) # get the class to use
-                x1_idx,x2_idx = self.s_sampler_idxs[p1+c], self.s_sampler_idxs[p2+c] # using the partition and class, get the sample idxs
+                x1_idx,x2_idx = s_sub[self.s_sampler_idxs[p1+c]], s_sub[self.s_sampler_idxs[p2+c]] # using the partition and class, get the sample idxs
                 self.G1_img_paths.append((self.source_dataset.imgs[x1_idx],self.source_dataset.imgs[x2_idx]))
                 self.G1_labels.append((0,(self.source_dataset.labels[x1_idx],self.source_dataset.labels[x2_idx]))) # class 0, original labels
                 pair_cnt += 1
@@ -354,7 +362,7 @@ class DomainAdaptationPairDataset(Dataset):
             p1 = random.randint(0,self.num_s_partitions)*self.s_sampler.num_classes # get partition 1 pos
             p2 = random.randint(0,self.num_t_partitions)*self.s_sampler.num_classes # get partition 2 pos
             c = random.randint(0, self.s_sampler.num_classes-1) # get the class to use
-            x1_idx,x2_idx = self.s_sampler_idxs[p1+c], self.t_sampler_idxs[p2+c] # using the partition and class, get the sample idxs
+            x1_idx,x2_idx = s_sub[self.s_sampler_idxs[p1+c]], t_sub[self.t_sampler_idxs[p2+c]] # using the partition and class, get the sample idxs
             self.G2_img_paths.append((self.source_dataset.imgs[x1_idx],self.target_dataset.imgs[x2_idx]))
             if self.adv_stage:
                 self.G2_labels.append((0,(self.source_dataset.labels[x1_idx],self.target_dataset.labels[x2_idx]))) # class 0, original labels
@@ -368,7 +376,7 @@ class DomainAdaptationPairDataset(Dataset):
             p1 = random.randint(0,self.num_s_partitions)*self.s_sampler.num_classes # get partition 1 pos
             p2 = random.randint(0,self.num_s_partitions)*self.s_sampler.num_classes # get partition 2 pos
             c1,c2 = random.sample(range(self.s_sampler.num_classes),2) # get the class to use
-            x1_idx,x2_idx = self.s_sampler_idxs[p1+c1], self.s_sampler_idxs[p2+c2] # using the partition and class, get the sample idxs
+            x1_idx,x2_idx = s_sub[self.s_sampler_idxs[p1+c1]], s_sub[self.s_sampler_idxs[p2+c2]] # using the partition and class, get the sample idxs
             self.G3_img_paths.append((self.source_dataset.imgs[x1_idx],self.source_dataset.imgs[x2_idx]))
             self.G3_labels.append((2,(self.source_dataset.labels[x1_idx],self.source_dataset.labels[x2_idx]))) # class 0, original labels
             pair_cnt += 1
@@ -379,7 +387,7 @@ class DomainAdaptationPairDataset(Dataset):
             p1 = random.randint(0,self.num_s_partitions)*self.s_sampler.num_classes # get partition 1 pos
             p2 = random.randint(0,self.num_t_partitions)*self.t_sampler.num_classes # get partition 2 pos
             c1,c2 = random.sample(range(self.s_sampler.num_classes),2) # get the class to use
-            x1_idx,x2_idx = self.s_sampler_idxs[p1+c1], self.t_sampler_idxs[p2+c2] # using the partition and class, get the sample idxs
+            x1_idx,x2_idx = s_sub[self.s_sampler_idxs[p1+c1]], t_sub[self.t_sampler_idxs[p2+c2]] # using the partition and class, get the sample idxs
             self.G4_img_paths.append((self.source_dataset.imgs[x1_idx],self.target_dataset.imgs[x2_idx]))
             if self.adv_stage:
                 self.G4_labels.append((2,(self.source_dataset.labels[x1_idx],self.target_dataset.labels[x2_idx]))) # class 0, original labels
@@ -414,17 +422,19 @@ class DomainAdaptationPairDataset(Dataset):
         idx = self.subset[idx]
         if self.adv_stage:
             # map the index into a subindex to a particular group
-            group = idx // (len(self)//2)
+            group = idx // self.min_pairs
             if group > 1: # in cases where don't divide evenly and exceed max group idx
                 group = 1
             
-            sub_idx = random.randint(0,len(self)//2-1)
+            #sub_idx = random.randint(0,len(self)//2-1)
+            sub_idx = idx % self.min_pairs
         else:
             # map the index into a subindex to a particular group
-            group = idx // (len(self)//4)
+            group = idx // self.min_pairs
             if group > 3: # in cases where don't divide evenly and exceed max group idx
                 group = 3
-            sub_idx = random.randint(0,len(self)//4-1)
+            #sub_idx = random.randint(0,len(self)//4-1)
+            sub_idx = idx % self.min_pairs
 
         # attempt to load the images at the specified index
         try:
@@ -751,13 +761,13 @@ def pairs_get_datasets(data,conf,pair_factor):
         
     # create independent source and target train-validation sets to sample from
     else:
-        assert conf.k >= 4, "Must have at least one sample per class in the validation set"
+        assert conf.k >= 3, "k must be >= 3, must have at least one sample per class in the validation set"
         # first create the source training datasets and split into 75-25 train-val
         source_train_dataset = ClassificationDataset(os.path.join(data_dir[0],"train"),train_transform,get_path=True)
 
         # split the source training and val sets randomly
         indices = torch.randperm(len(source_train_dataset))
-        val_size = int(len(source_train_dataset)*.25)
+        val_size = len(source_train_dataset)//3
 
         # now create the source train-val sets from the split
         source_train_dataset = ClassificationDataset(os.path.join(data_dir[0],"train"),train_transform,indices[val_size:],True)
@@ -767,21 +777,27 @@ def pairs_get_datasets(data,conf,pair_factor):
 
         # first create the target training datasets
         target_train_dataset = ClassificationDataset(os.path.join(data_dir[1],"train"),train_transform,get_path=True)
-        idxs = [i for i in EvenSampler(target_train_dataset,conf.k)]
+        sampler = EvenSampler(target_train_dataset,conf.k)
+        idxs = [i for i in sampler]
         target_train_dataset = ClassificationDataset(os.path.join(data_dir[1],"train"),train_transform,get_path=True,subset=idxs)
 
         # split the source training and val sets randomly but giving equal amounts of each class
-        indices = torch.randperm(len(target_train_dataset))
-        val_size = int(len(target_train_dataset)*.25)
+        # indices = torch.randperm(len(target_train_dataset))
+        # val_size = int(len(target_train_dataset)*.25)
+        val_k = conf.k//3
 
         # now create the source train-val sets from the split
-        target_train_dataset = ClassificationDataset(os.path.join(data_dir[1],"train"),train_transform,indices[val_size:],True)
-        target_val_dataset = ClassificationDataset(os.path.join(data_dir[1],"train"),train_transform,indices[:val_size],True)
+        target_train_dataset = ClassificationDataset(os.path.join(data_dir[1],"train"),train_transform,idxs[sampler.num_classes*val_k:],True)
+        target_val_dataset = ClassificationDataset(os.path.join(data_dir[1],"train"),train_transform,idxs[:sampler.num_classes*val_k],True)
+
+        labels = [target_val_dataset.labels[l] for l in idxs[:sampler.num_classes*val_k]]
+        # print(f"val_k: {val_k} idxs: {idxs[:sampler.num_classes*val_k]} labels: {labels}")
+        # target_val_dataset.visualize_batch()
         
 
         # finally create the pairs datasets
-        train_dataset = DomainAdaptationPairDataset(None,None,train_transform,shot=conf.k,pair_factor=pair_factor,source_dataset=source_train_dataset,target_dataset=target_train_dataset)
-        val_dataset = DomainAdaptationPairDataset(None,None,train_transform,shot=conf.k,pair_factor=pair_factor,source_dataset=source_val_dataset,target_dataset=target_val_dataset)
+        train_dataset = DomainAdaptationPairDataset(None,None,train_transform,shot=conf.k-val_k,pair_factor=pair_factor,source_dataset=source_train_dataset,target_dataset=target_train_dataset)
+        val_dataset = DomainAdaptationPairDataset(None,None,train_transform,shot=val_k,pair_factor=pair_factor,source_dataset=source_val_dataset,target_dataset=target_val_dataset)
     
     return train_dataset, val_dataset
 
