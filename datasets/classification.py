@@ -80,7 +80,7 @@ class ClassificationDataset(Dataset):
         # generate a dictionary to map class names to integers idxs
         self.classes = {img_classes[i] : i for i in range(0, len(img_classes))}
         self.label_dict = {v: k for k, v in self.classes.items()}
-        print(self.classes)
+        print(self.classes) # use this ordering on synthesized model
         
         # get all training samples/labels by getting absolute paths of the images in each subfolder
         self.imgs = [] # absolute img paths (all images)
@@ -112,7 +112,10 @@ class ClassificationDataset(Dataset):
 
         # attempt to load the image at the specified index
         try:
+            # load the image
             img = Image.open(self.imgs[idx])
+
+            # if grayscale jsut add channels
             tt = torchvision.transforms.ToTensor()
             tp = torchvision.transforms.ToPILImage()
             tt_img = tt(img)
@@ -128,7 +131,7 @@ class ClassificationDataset(Dataset):
             
             # return the sample (img (tensor)), object class (int), and the path optionally
             if self.get_path:
-                return img, label, self.imgs[idx]#os.path.basename(self.imgs[idx])
+                return img, label, self.imgs[idx] #os.path.basename(self.imgs[idx])
             else:
                 return img, label
 
@@ -138,18 +141,14 @@ class ClassificationDataset(Dataset):
             print("Bad Image: ", self.imgs[idx])
             exit()
     
-    # Diaply the results of a forward pass for a random batch of 64 samples
+    # Display the results of a forward pass for a random batch of 64 samples
     # if no model passed in, just display a batch with no predictions
     def visualize_batch(self,model=None,device=None):
-        #import matplotlib
-        #matplotlib.use('TkAgg')
-
         # create the dataloader
         batch_size = 64
         data_loader = DataLoader(self,batch_size,shuffle=True)
 
         # get the first batch
-        #(imgs, labels, paths) = next(iter(data_loader))
         (imgs, labels, paths) = next(iter(data_loader))
         imgs,labels = imgs.to(device), labels.to(device)
         preds = None
@@ -159,6 +158,7 @@ class ClassificationDataset(Dataset):
             preds = model(imgs)
         
         imgs,labels = imgs.to("cpu"), labels.to("cpu")
+
         # display the batch in a grid with the img, label, idx
         rows = 8
         cols = 8
@@ -180,12 +180,7 @@ class ClassificationDataset(Dataset):
                 if model != None:
                     text = "GT :" + obj_classes[labels[idx]]  + " P: ",obj_classes[preds[idx].argmax()]#", i=" +str(idxs[idx].item())
                 
-                # for normal forward pass use this line
-                #ax_array[i,j].imshow(imgs[idx].permute(1, 2, 0))
-
-                # for quantized forward pass use this line
-                #print(imgs[idx].size(),torch.min(imgs[idx]))
-                ax_array[i,j].imshow((imgs[idx].permute(1, 2, 0)+1)/2)
+                ax_array[i,j].imshow((imgs[idx].permute(1, 2, 0)+1)/2) # convert [-128/128, 127/128] to [0.0,1.0]
 
                 ax_array[i,j].set_title(text,color="white")
                 ax_array[i,j].set_xticks([])
@@ -571,18 +566,20 @@ class PassDataset(Dataset):
         # attempt to load the image at the specified index
         try:
             img = Image.open(self.imgs[idx])
+
+            # if have grayscle image just add channels
             tt = torchvision.transforms.ToTensor()
             tp = torchvision.transforms.ToPILImage()
             tt_img = tt(img)
             if(tt_img.size()[0] != 3):
                 img = tp(tt_img.repeat(3, 1, 1))
             
-            # apply any transformation
+            # apply two transformations to the image
             if self.transform:
                 img1 = self.transform(img)
                 img2 = self.transform(img)
             
-            # return the sample (img (tensor)), object class (int)
+            # return two augmentations of the same image
             return img1,img2
 
         # if the image is invalid, show the exception
@@ -593,7 +590,7 @@ class PassDataset(Dataset):
     
     # Diaply a random batch of 64 samples
     def visualize_batch(self,device=None):
-        batch_size = 32
+        batch_size = 32 # --> gets multiplied by 2 since we augment each image
         data_loader = DataLoader(self,batch_size,shuffle=True)
 
         # get the first batch
@@ -610,11 +607,6 @@ class PassDataset(Dataset):
             for j in range(cols):
                 idx = i*rows+j
                 
-                # for normal forward pass use this line
-                #ax_array[i,j].imshow(imgs[idx].permute(1, 2, 0))
-
-                # for quantized forward pass use this line
-                #print(imgs[idx].size(),torch.min(imgs[idx]))
                 if idx % 2 == 0:
                     ax_array[i,j].imshow((img1[idx//2].permute(1, 2, 0)+1)/2)
                 else:
