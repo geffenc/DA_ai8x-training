@@ -986,40 +986,56 @@ def pass_get_datasets(data, load_train=True, load_test=False,apply_transforms=Tr
 
 
 ''' get the office5 dataset '''
-def asl_get_datasets(data, load_train=True, load_test=True,apply_transforms=True):
+def asl_get_datasets(data, load_train=True, load_val=True, load_test=True, validation_split=0.1, fix_aug=None, deterministic=None):
     (data_dir, args) = data
 
     train_dataset = None
+    val_dataset = None
     test_dataset = None
-
+    seed = fix_aug
     # transforms for training
-    if load_train and apply_transforms:
+    if load_train:
         train_transform = transforms.Compose([
             transforms.Resize((128,128)),
             #transforms.ToPILImage(),
             transforms.ColorJitter(brightness=(0.85,1.15),saturation=(0.75,1.25),contrast=(0.75,1.25),hue=(-0.4,0.4)),
             transforms.RandomGrayscale(0.15),
-            transforms.RandomAffine(degrees=5,translate=(0.15,0.15)),
+            transforms.RandomAffine(degrees=5,translate=(0.1,0.1)),
             #transforms.RandomHorizontalFlip(),
             #transforms.RandomVerticalFlip(),
             transforms.GaussianBlur(kernel_size=(3, 3), sigma=(0.1, 1.5)),
             transforms.ToTensor(),
             ai8x.normalize(args=args)
         ])
-        train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
+        train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform,get_path=True)
 
-    elif load_train and not apply_transforms:
-        train_transform = transforms.Compose([
-            transforms.Resize((128,128)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
+        # create a validation set with no augmentations
+        if load_val:
+            val_transform = transforms.Compose([
+                #transforms.ToPILImage(),
+                transforms.Resize((128,128)),
+                transforms.ToTensor(),
+                ai8x.normalize(args=args)
+            ])
 
-    else:
-        train_dataset = None
+            # split the training and val sets randomly
+            indices = torch.randperm(len(train_dataset))
+            val_size = int(len(train_dataset)*validation_split)
 
-    # transforms for test, validation --> convert to a valid tensor
+            # if aug not fixed then will be different each execution
+            if not deterministic:
+                if fix_aug != None:
+                    random.seed(fix_aug) 
+                    torch.manual_seed(fix_aug)
+                else:
+                    seed = np.random.randint(2147483647)
+                    random.seed(seed) 
+                    torch.manual_seed(seed)
+
+            train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform,indices[val_size:],True)
+            val_dataset = ClassificationDataset(os.path.join(data_dir,"train"),val_transform,indices[:val_size],True)
+
+    # transforms for test --> convert to a valid tensor
     if load_test:
         test_transform = transforms.Compose([
             #transforms.ToPILImage(),
@@ -1027,12 +1043,9 @@ def asl_get_datasets(data, load_train=True, load_test=True,apply_transforms=True
             transforms.ToTensor(),
             ai8x.normalize(args=args)
         ])
-        test_dataset = ClassificationDataset(os.path.join(data_dir,"test"),test_transform)
-
-    else:
-        test_dataset = None
+        test_dataset = ClassificationDataset(os.path.join(data_dir,"test"),test_transform,None,True)
     
-    return train_dataset, test_dataset
+    return train_dataset, val_dataset, test_dataset, seed
 
 
 def set_deterministic_settings():
