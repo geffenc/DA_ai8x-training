@@ -1,0 +1,416 @@
+2022-07-27 13:17:30,657 - Log file for this run: /home/geffencooper/Model_Development/DA_ai8x-training/DA_tutorial/jupyter_logging/asl_dcd_train_k8___2022.07.27-131730/asl_dcd_train_k8___2022.07.27-131730.log
+2022-07-27 13:17:30,658 - Number of CPUs: 16
+2022-07-27 13:17:30,658 - Number of GPUs: 1
+2022-07-27 13:17:30,658 - CUDA version: 10.2
+2022-07-27 13:17:30,658 - CUDNN version: 7605
+2022-07-27 13:17:30,658 - Kernel: 5.4.0-113-generic
+2022-07-27 13:17:30,658 - Python: 3.8.11 (default, Jun 14 2022, 10:01:20) 
+[GCC 9.4.0]
+2022-07-27 13:17:30,658 - pip freeze: {'absl-py': '1.2.0', 'appdirs': '1.4.4', 'argon2-cffi': '21.3.0', 'argon2-cffi-bindings': '21.2.0', 'asttokens': '2.0.5', 'atomicwrites': '1.4.1', 'attrs': '21.4.0', 'audioread': '2.1.9', 'backcall': '0.2.0', 'beautifulsoup4': '4.11.1', 'bleach': '5.0.1', 'bqplot': '0.11.5', 'cachetools': '5.2.0', 'certifi': '2022.6.15', 'cffi': '1.15.1', 'charset-normalizer': '2.1.0', 'cloudpickle': '2.1.0', 'cycler': '0.11.0', 'debugpy': '1.6.2', 'decorator': '5.1.1', 'defusedxml': '0.7.1', 'distiller': '0.4.0rc0', 'entrypoints': '0.4', 'executing': '0.9.1', 'fastjsonschema': '2.16.1', 'fonttools': '4.34.4', 'google-auth': '2.9.1', 'google-auth-oauthlib': '0.4.6', 'graphviz': '0.10.1', 'grpcio': '1.47.0', 'gym': '0.12.5', 'h5py': '3.7.0', 'idna': '3.3', 'importlib-metadata': '4.12.0', 'importlib-resources': '5.9.0', 'ipykernel': '6.15.1', 'ipython': '8.4.0', 'ipython-genutils': '0.2.0', 'ipywidgets': '7.4.2', 'jedi': '0.18.1', 'jinja2': '3.1.2', 'joblib': '1.1.0', 'jsonpatch': '1.32', 'jsonpointer': '2.3', 'jsonschema': '4.7.2', 'jupyter': '1.0.0', 'jupyter-client': '7.3.4', 'jupyter-console': '6.4.4', 'jupyter-core': '4.11.1', 'jupyterlab-pygments': '0.2.2', 'kiwisolver': '1.4.4', 'librosa': '0.9.2', 'llvmlite': '0.32.1', 'markdown': '3.4.1', 'markupsafe': '2.1.1', 'matplotlib': '3.5.2', 'matplotlib-inline': '0.1.3', 'mistune': '0.8.4', 'more-itertools': '8.13.0', 'munch': '2.5.0', 'nbclient': '0.6.6', 'nbconvert': '6.5.0', 'nbformat': '5.4.0', 'nest-asyncio': '1.5.5', 'notebook': '6.4.12', 'numba': '0.49.1', 'numpy': '1.22.4', 'oauthlib': '3.2.0', 'opencv-python': '4.6.0.66', 'packaging': '21.3', 'pandas': '1.4.3', 'pandocfilters': '1.5.0', 'parso': '0.8.3', 'pexpect': '4.8.0', 'pickleshare': '0.7.5', 'pillow': '9.2.0', 'pip': '22.2', 'pluggy': '0.13.1', 'pooch': '1.6.0', 'pretrainedmodels': '0.7.4', 'prometheus-client': '0.14.1', 'prompt-toolkit': '3.0.30', 'protobuf': '3.20.1', 'psutil': '5.9.1', 'ptyprocess': '0.7.0', 'pure-eval': '0.2.2', 'py': '1.11.0', 'pyasn1': '0.4.8', 'pyasn1-modules': '0.2.8', 'pycparser': '2.21', 'pydot': '1.4.1', 'pyglet': '1.5.26', 'pygments': '2.12.0', 'pyparsing': '3.0.9', 'pyrsistent': '0.18.1', 'pytest': '4.6.11', 'python-dateutil': '2.8.2', 'pytsmod': '0.3.5', 'pytz': '2022.1', 'pyyaml': '6.0', 'pyzmq': '23.2.0', 'qgrid': '1.1.1', 'qtconsole': '5.3.1', 'qtpy': '2.1.0', 'requests': '2.28.1', 'requests-oauthlib': '1.3.1', 'resampy': '0.3.1', 'rsa': '4.9', 'scikit-learn': '0.23.2', 'scipy': '1.8.1', 'send2trash': '1.8.0', 'setuptools': '63.2.0', 'shap': '0.41.0', 'six': '1.16.0', 'slicer': '0.0.7', 'soundfile': '0.10.3.post1', 'soupsieve': '2.3.2.post1', 'stack-data': '0.3.0', 'tabulate': '0.8.3', 'tensorboard': '2.9.0', 'tensorboard-data-server': '0.6.1', 'tensorboard-plugin-wit': '1.8.1', 'terminado': '0.15.0', 'threadpoolctl': '3.1.0', 'tinycss2': '1.1.1', 'tk': '0.1.0', 'torch': '1.8.1', 'torchfile': '0.1.0', 'torchnet': '0.0.4', 'torchvision': '0.9.1', 'tornado': '6.2', 'tqdm': '4.33.0', 'traitlets': '5.3.0', 'traittypes': '0.2.1', 'typing-extensions': '4.3.0', 'urllib3': '1.26.11', 'visdom': '0.1.8.9', 'wcwidth': '0.2.5', 'webencodings': '0.5.1', 'websocket-client': '1.3.3', 'werkzeug': '2.2.0', 'wheel': '0.37.1', 'widgetsnbextension': '3.4.2', 'xlsxwriter': '3.0.3', 'zipp': '3.8.1'}
+2022-07-27 13:17:30,658 - Command line: /home/geffencooper/Model_Development/DA_ai8x-training/venv/lib/python3.8/site-packages/ipykernel_launcher.py --ip=127.0.0.1 --stdin=9008 --control=9006 --hb=9005 --Session.signature_scheme="hmac-sha256" --Session.key=b"45c013f0-79b8-466b-950a-b2b587bb6266" --shell=9007 --transport="tcp" --iopub=9009 --f=/home/geffencooper/.local/share/jupyter/runtime/kernel-v2-3782366aY0tBYt3GEba.json
+2022-07-27 13:17:30,659 - dataset_name:pairs
+dataset_fn=<function pairs_get_datasets at 0x7fe8dc600670>
+num_classes=4
+model_name=asldcdnet
+dimensions=(1, 128)
+batch_size=64
+validation_split=0.1
+lr=0.002000
+num_epochs=10
+qat_policy={'start_epoch': 4, 'weight_bits': 8}
+2022-07-27 13:17:57,099 - Dataset sizes:
+	training=83520
+	validation=13920
+2022-07-27 13:17:57,100 - Augmentations:Compose(
+    Resize(size=(128, 128), interpolation=bilinear)
+    ToTensor()
+    <ai8x.normalize object at 0x7fe900878dc0>
+)
+
+2022-07-27 13:19:13,226 - model: ASLDCD(
+  (fc1): FusedLinearReLU(
+    (activate): ReLU(inplace=True)
+    (op): Linear(in_features=128, out_features=64, bias=True)
+    (calc_out_shift): OutputShiftSqueeze()
+    (calc_weight_scale): One()
+    (scale): Scaler()
+    (calc_out_scale): OutputScale()
+    (quantize_weight): Empty()
+    (quantize_bias): Empty()
+    (clamp_weight): Empty()
+    (clamp_bias): Empty()
+    (quantize): Empty()
+    (clamp): Clamp()
+    (quantize_pool): Empty()
+    (clamp_pool): Empty()
+  )
+  (fc2): Linear(
+    (activate): Empty()
+    (op): Linear(in_features=64, out_features=4, bias=True)
+    (calc_out_shift): OutputShiftSqueeze()
+    (calc_weight_scale): One()
+    (scale): Scaler()
+    (calc_out_scale): OutputScale()
+    (quantize_weight): Empty()
+    (quantize_bias): Empty()
+    (clamp_weight): Empty()
+    (clamp_bias): Empty()
+    (quantize): Empty()
+    (clamp): Clamp()
+    (quantize_pool): Empty()
+    (clamp_pool): Empty()
+  )
+  (do): Dropout(p=0.2, inplace=False)
+)
+2022-07-27 13:19:13,264 - Number of Model Params: 8516
+2022-07-27 13:19:34,646 - Optimizer Type: <class 'torch.optim.adam.Adam'>
+2022-07-27 13:19:34,646 - lr_schedule:base: [0.002] milestones: Counter({4: 1, 8: 1, 35: 1, 100: 1}) gamma: 0.2
+2022-07-27 13:20:26,916 - => loading checkpoint jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-27 13:20:26,921 - => Checkpoint contents:
++----------------------+-------------+---------------------------+
+| Key                  | Type        | Value                     |
+|----------------------+-------------+---------------------------|
+| arch                 | str         | classifierbackbonenet_qat |
+| compression_sched    | dict        |                           |
+| epoch                | int         | 99                        |
+| extras               | dict        |                           |
+| optimizer_state_dict | dict        |                           |
+| optimizer_type       | type        | Adam                      |
+| state_dict           | OrderedDict |                           |
++----------------------+-------------+---------------------------+
+
+2022-07-27 13:20:26,922 - => Checkpoint['extras'] contents:
++-------+--------+---------+
+| Key   | Type   |   Value |
+|-------+--------+---------|
+| epoch | int    |      99 |
++-------+--------+---------+
+
+2022-07-27 13:20:26,923 - Loaded compression schedule from checkpoint (epoch 99)
+2022-07-27 13:20:26,927 - => loaded 'state_dict' from checkpoint 'jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar'
+2022-07-27 13:20:26,949 - => loading checkpoint jupyter_logging/finetune_asl_base_ev1___2022.07.27-124454/aslclassifier_best.pth.tar
+2022-07-27 13:20:26,954 - => Checkpoint contents:
++----------------------+-------------+---------------+
+| Key                  | Type        | Value         |
+|----------------------+-------------+---------------|
+| arch                 | str         | aslclassifier |
+| compression_sched    | dict        |               |
+| epoch                | int         | 3             |
+| extras               | dict        |               |
+| optimizer_state_dict | dict        |               |
+| optimizer_type       | type        | Adam          |
+| state_dict           | OrderedDict |               |
++----------------------+-------------+---------------+
+
+2022-07-27 13:20:26,954 - => Checkpoint['extras'] contents:
++--------------+--------+---------+
+| Key          | Type   |   Value |
+|--------------+--------+---------|
+| best_epoch   | int    |  3      |
+| best_top1    | float  | 97.6373 |
+| current_top1 | float  | 97.6373 |
++--------------+--------+---------+
+
+2022-07-27 13:20:26,956 - Loaded compression schedule from checkpoint (epoch 3)
+2022-07-27 13:20:26,991 - => loaded 'state_dict' from checkpoint 'jupyter_logging/finetune_asl_base_ev1___2022.07.27-124454/aslclassifier_best.pth.tar'
+2022-07-27 13:20:51,275 - Training epoch: 83520 samples (64 per mini-batch)
+2022-07-27 13:20:55,143 - Epoch: [0][  100/ 1305]    objective_loss 1.168390                                        LR 0.002000    
+2022-07-27 13:20:58,644 - Epoch: [0][  200/ 1305]    objective_loss 1.005922                                        LR 0.002000    
+2022-07-27 13:21:02,154 - Epoch: [0][  300/ 1305]    objective_loss 0.913565                                        LR 0.002000    
+2022-07-27 13:21:05,646 - Epoch: [0][  400/ 1305]    objective_loss 0.850618                                        LR 0.002000    
+2022-07-27 13:21:09,249 - Epoch: [0][  500/ 1305]    objective_loss 0.803017                                        LR 0.002000    
+2022-07-27 13:21:12,867 - Epoch: [0][  600/ 1305]    objective_loss 0.766618                                        LR 0.002000    
+2022-07-27 13:21:16,356 - Epoch: [0][  700/ 1305]    objective_loss 0.739676                                        LR 0.002000    
+2022-07-27 13:21:19,861 - Epoch: [0][  800/ 1305]    objective_loss 0.716993                                        LR 0.002000    
+2022-07-27 13:21:23,432 - Epoch: [0][  900/ 1305]    objective_loss 0.697960                                        LR 0.002000    
+2022-07-27 13:21:26,916 - Epoch: [0][ 1000/ 1305]    objective_loss 0.682183                                        LR 0.002000    
+2022-07-27 13:21:30,398 - Epoch: [0][ 1100/ 1305]    objective_loss 0.668212                                        LR 0.002000    
+2022-07-27 13:21:33,857 - Epoch: [0][ 1200/ 1305]    objective_loss 0.657460                                        LR 0.002000    
+2022-07-27 13:21:37,339 - Epoch: [0][ 1300/ 1305]    objective_loss 0.646658                                        LR 0.002000    
+2022-07-27 13:21:37,483 - Epoch: [0][ 1305/ 1305]    objective_loss 0.645966    Top1 85.937500    LR 0.002000    
+2022-07-27 13:21:37,556 - --- validate (epoch=0)-----------
+2022-07-27 13:21:37,557 - 13920 samples (64 per mini-batch)
+2022-07-27 13:21:41,387 - Epoch: [0][  100/  218]    Loss 0.631168    Top1 72.156250    
+2022-07-27 13:21:44,959 - Epoch: [0][  200/  218]    Loss 0.629733    Top1 72.406250    
+2022-07-27 13:21:45,563 - Epoch: [0][  218/  218]    Loss 0.628349    Top1 72.485632    
+2022-07-27 13:21:45,618 - ==> Top1: 72.486    Loss: 0.628
+
+2022-07-27 13:21:45,619 - ==> Confusion:
+[[3047  384   40    9]
+ [ 673 2140  124  543]
+ [  58   92 2716  614]
+ [  57  290  946 2187]]
+
+2022-07-27 13:21:45,685 - ==> Best [Top1: 72.486 on epoch: 0]
+2022-07-27 13:21:45,691 - Saving checkpoint to: jupyter_logging/asl_dcd_train_k8___2022.07.27-131730/asldcdnet_checkpoint.pth.tar
+2022-07-27 13:21:45,699 - Training epoch: 83520 samples (64 per mini-batch)
+2022-07-27 13:21:49,557 - Epoch: [1][  100/ 1305]    objective_loss 0.505201                                        LR 0.002000    
+2022-07-27 13:21:53,074 - Epoch: [1][  200/ 1305]    objective_loss 0.508473                                        LR 0.002000    
+2022-07-27 13:21:56,587 - Epoch: [1][  300/ 1305]    objective_loss 0.505549                                        LR 0.002000    
+2022-07-27 13:22:00,090 - Epoch: [1][  400/ 1305]    objective_loss 0.503735                                        LR 0.002000    
+2022-07-27 13:22:03,589 - Epoch: [1][  500/ 1305]    objective_loss 0.500963                                        LR 0.002000    
+2022-07-27 13:22:07,091 - Epoch: [1][  600/ 1305]    objective_loss 0.497442                                        LR 0.002000    
+2022-07-27 13:22:10,593 - Epoch: [1][  700/ 1305]    objective_loss 0.496060                                        LR 0.002000    
+2022-07-27 13:22:14,100 - Epoch: [1][  800/ 1305]    objective_loss 0.494430                                        LR 0.002000    
+2022-07-27 13:22:17,693 - Epoch: [1][  900/ 1305]    objective_loss 0.492454                                        LR 0.002000    
+2022-07-27 13:22:21,223 - Epoch: [1][ 1000/ 1305]    objective_loss 0.491631                                        LR 0.002000    
+2022-07-27 13:22:24,710 - Epoch: [1][ 1100/ 1305]    objective_loss 0.490102                                        LR 0.002000    
+2022-07-27 13:22:28,215 - Epoch: [1][ 1200/ 1305]    objective_loss 0.488407                                        LR 0.002000    
+2022-07-27 13:22:31,694 - Epoch: [1][ 1300/ 1305]    objective_loss 0.487358                                        LR 0.002000    
+2022-07-27 13:22:31,839 - Epoch: [1][ 1305/ 1305]    objective_loss 0.487471    Top1 75.781250    LR 0.002000    
+2022-07-27 13:22:31,892 - --- validate (epoch=1)-----------
+2022-07-27 13:22:31,892 - 13920 samples (64 per mini-batch)
+2022-07-27 13:22:35,776 - Epoch: [1][  100/  218]    Loss 0.636352    Top1 73.625000    
+2022-07-27 13:22:39,323 - Epoch: [1][  200/  218]    Loss 0.637126    Top1 73.390625    
+2022-07-27 13:22:39,926 - Epoch: [1][  218/  218]    Loss 0.638243    Top1 73.362069    
+2022-07-27 13:22:39,978 - ==> Top1: 73.362    Loss: 0.638
+
+2022-07-27 13:22:39,979 - ==> Confusion:
+[[3056  367   40   17]
+ [ 679 2034  176  591]
+ [  34   43 2742  661]
+ [  34  218  848 2380]]
+
+2022-07-27 13:22:40,048 - ==> Best [Top1: 73.362 on epoch: 1]
+2022-07-27 13:22:40,058 - Saving checkpoint to: jupyter_logging/asl_dcd_train_k8___2022.07.27-131730/asldcdnet_checkpoint.pth.tar
+2022-07-27 13:22:40,061 - Training epoch: 83520 samples (64 per mini-batch)
+2022-07-27 13:22:43,875 - Epoch: [2][  100/ 1305]    objective_loss 0.463158                                        LR 0.002000    
+2022-07-27 13:22:47,475 - Epoch: [2][  200/ 1305]    objective_loss 0.455997                                        LR 0.002000    
+2022-07-27 13:22:50,939 - Epoch: [2][  300/ 1305]    objective_loss 0.455208                                        LR 0.002000    
+2022-07-27 13:22:54,392 - Epoch: [2][  400/ 1305]    objective_loss 0.460008                                        LR 0.002000    
+2022-07-27 13:22:57,922 - Epoch: [2][  500/ 1305]    objective_loss 0.459840                                        LR 0.002000    
+2022-07-27 13:23:01,425 - Epoch: [2][  600/ 1305]    objective_loss 0.459385                                        LR 0.002000    
+2022-07-27 13:23:04,934 - Epoch: [2][  700/ 1305]    objective_loss 0.457260                                        LR 0.002000    
+2022-07-27 13:23:08,508 - Epoch: [2][  800/ 1305]    objective_loss 0.457053                                        LR 0.002000    
+2022-07-27 13:23:12,024 - Epoch: [2][  900/ 1305]    objective_loss 0.458343                                        LR 0.002000    
+2022-07-27 13:23:15,578 - Epoch: [2][ 1000/ 1305]    objective_loss 0.458058                                        LR 0.002000    
+2022-07-27 13:23:19,104 - Epoch: [2][ 1100/ 1305]    objective_loss 0.456160                                        LR 0.002000    
+2022-07-27 13:23:22,603 - Epoch: [2][ 1200/ 1305]    objective_loss 0.454858                                        LR 0.002000    
+2022-07-27 13:23:26,057 - Epoch: [2][ 1300/ 1305]    objective_loss 0.454474                                        LR 0.002000    
+2022-07-27 13:23:26,200 - Epoch: [2][ 1305/ 1305]    objective_loss 0.454650    Top1 75.781250    LR 0.002000    
+2022-07-27 13:23:26,254 - --- validate (epoch=2)-----------
+2022-07-27 13:23:26,255 - 13920 samples (64 per mini-batch)
+2022-07-27 13:23:30,081 - Epoch: [2][  100/  218]    Loss 0.636360    Top1 73.765625    
+2022-07-27 13:23:33,638 - Epoch: [2][  200/  218]    Loss 0.642553    Top1 73.398438    
+2022-07-27 13:23:34,234 - Epoch: [2][  218/  218]    Loss 0.646008    Top1 73.311782    
+2022-07-27 13:23:34,286 - ==> Top1: 73.312    Loss: 0.646
+
+2022-07-27 13:23:34,287 - ==> Confusion:
+[[2776  653   33   18]
+ [ 421 2265  117  677]
+ [  28   47 2630  775]
+ [  29  196  721 2534]]
+
+2022-07-27 13:23:34,349 - ==> Best [Top1: 73.362 on epoch: 1]
+2022-07-27 13:23:34,356 - Saving checkpoint to: jupyter_logging/asl_dcd_train_k8___2022.07.27-131730/asldcdnet_checkpoint.pth.tar
+2022-07-27 13:23:34,359 - Training epoch: 83520 samples (64 per mini-batch)
+2022-07-27 13:23:38,150 - Epoch: [3][  100/ 1305]    objective_loss 0.439124                                        LR 0.002000    
+2022-07-27 13:23:41,631 - Epoch: [3][  200/ 1305]    objective_loss 0.438667                                        LR 0.002000    
+2022-07-27 13:23:45,118 - Epoch: [3][  300/ 1305]    objective_loss 0.442211                                        LR 0.002000    
+2022-07-27 13:23:48,651 - Epoch: [3][  400/ 1305]    objective_loss 0.444284                                        LR 0.002000    
+2022-07-27 13:23:52,272 - Epoch: [3][  500/ 1305]    objective_loss 0.446220                                        LR 0.002000    
+2022-07-27 13:23:55,917 - Epoch: [3][  600/ 1305]    objective_loss 0.445574                                        LR 0.002000    
+2022-07-27 13:23:59,425 - Epoch: [3][  700/ 1305]    objective_loss 0.445047                                        LR 0.002000    
+2022-07-27 13:24:02,882 - Epoch: [3][  800/ 1305]    objective_loss 0.444124                                        LR 0.002000    
+2022-07-27 13:24:06,393 - Epoch: [3][  900/ 1305]    objective_loss 0.442455                                        LR 0.002000    
+2022-07-27 13:24:09,873 - Epoch: [3][ 1000/ 1305]    objective_loss 0.442979                                        LR 0.002000    
+2022-07-27 13:24:13,345 - Epoch: [3][ 1100/ 1305]    objective_loss 0.442038                                        LR 0.002000    
+2022-07-27 13:24:16,839 - Epoch: [3][ 1200/ 1305]    objective_loss 0.441855                                        LR 0.002000    
+2022-07-27 13:24:20,275 - Epoch: [3][ 1300/ 1305]    objective_loss 0.441344                                        LR 0.002000    
+2022-07-27 13:24:20,414 - Epoch: [3][ 1305/ 1305]    objective_loss 0.441329    Top1 82.031250    LR 0.002000    
+2022-07-27 13:24:20,478 - --- validate (epoch=3)-----------
+2022-07-27 13:24:20,479 - 13920 samples (64 per mini-batch)
+2022-07-27 13:24:24,336 - Epoch: [3][  100/  218]    Loss 0.670068    Top1 73.203125    
+2022-07-27 13:24:27,905 - Epoch: [3][  200/  218]    Loss 0.655986    Top1 73.414062    
+2022-07-27 13:24:28,501 - Epoch: [3][  218/  218]    Loss 0.655134    Top1 73.484195    
+2022-07-27 13:24:28,553 - ==> Top1: 73.484    Loss: 0.655
+
+2022-07-27 13:24:28,554 - ==> Confusion:
+[[2921  500   43   16]
+ [ 515 2211  194  560]
+ [  35   56 2928  461]
+ [  33  202 1076 2169]]
+
+2022-07-27 13:24:28,605 - ==> Best [Top1: 73.484 on epoch: 3]
+2022-07-27 13:24:28,611 - Saving checkpoint to: jupyter_logging/asl_dcd_train_k8___2022.07.27-131730/asldcdnet_checkpoint.pth.tar
+2022-07-27 13:24:28,618 - Training epoch: 83520 samples (64 per mini-batch)
+2022-07-27 13:24:32,522 - Epoch: [4][  100/ 1305]    objective_loss 0.734112                                        LR 0.000400    
+2022-07-27 13:24:36,086 - Epoch: [4][  200/ 1305]    objective_loss 0.720541                                        LR 0.000400    
+2022-07-27 13:24:39,719 - Epoch: [4][  300/ 1305]    objective_loss 0.708479                                        LR 0.000400    
+2022-07-27 13:24:43,293 - Epoch: [4][  400/ 1305]    objective_loss 0.698184                                        LR 0.000400    
+2022-07-27 13:24:46,915 - Epoch: [4][  500/ 1305]    objective_loss 0.688003                                        LR 0.000400    
+2022-07-27 13:24:50,493 - Epoch: [4][  600/ 1305]    objective_loss 0.680327                                        LR 0.000400    
+2022-07-27 13:24:54,093 - Epoch: [4][  700/ 1305]    objective_loss 0.672981                                        LR 0.000400    
+2022-07-27 13:24:57,764 - Epoch: [4][  800/ 1305]    objective_loss 0.667897                                        LR 0.000400    
+2022-07-27 13:25:01,336 - Epoch: [4][  900/ 1305]    objective_loss 0.664801                                        LR 0.000400    
+2022-07-27 13:25:04,953 - Epoch: [4][ 1000/ 1305]    objective_loss 0.684650                                        LR 0.000400    
+2022-07-27 13:25:08,552 - Epoch: [4][ 1100/ 1305]    objective_loss 0.699317                                        LR 0.000400    
+2022-07-27 13:25:12,095 - Epoch: [4][ 1200/ 1305]    objective_loss 0.711049                                        LR 0.000400    
+2022-07-27 13:25:15,668 - Epoch: [4][ 1300/ 1305]    objective_loss 0.720100                                        LR 0.000400    
+2022-07-27 13:25:15,810 - Epoch: [4][ 1305/ 1305]    objective_loss 0.720540    Top1 75.000000    LR 0.000400    
+2022-07-27 13:25:15,873 - --- validate (epoch=4)-----------
+2022-07-27 13:25:15,874 - 13920 samples (64 per mini-batch)
+2022-07-27 13:25:19,709 - Epoch: [4][  100/  218]    Loss 0.867962    Top1 73.125000    
+2022-07-27 13:25:23,266 - Epoch: [4][  200/  218]    Loss 0.871281    Top1 72.789062    
+2022-07-27 13:25:23,876 - Epoch: [4][  218/  218]    Loss 0.871515    Top1 72.823276    
+2022-07-27 13:25:23,927 - ==> Top1: 72.823    Loss: 0.872
+
+2022-07-27 13:25:23,928 - ==> Confusion:
+[[3059  361   43   17]
+ [ 690 2008  172  610]
+ [  41   52 2857  530]
+ [  36  207 1014 2223]]
+
+2022-07-27 13:25:23,993 - ==> Best [Top1: 72.823 on epoch: 4]
+2022-07-27 13:25:24,001 - Saving checkpoint to: jupyter_logging/asl_dcd_train_k8___2022.07.27-131730/asldcdnet_qat_checkpoint.pth.tar
+2022-07-27 13:25:24,005 - Training epoch: 83520 samples (64 per mini-batch)
+2022-07-27 13:25:27,870 - Epoch: [5][  100/ 1305]    objective_loss 0.813497                                        LR 0.000400    
+2022-07-27 13:25:31,445 - Epoch: [5][  200/ 1305]    objective_loss 0.816202                                        LR 0.000400    
+2022-07-27 13:25:35,021 - Epoch: [5][  300/ 1305]    objective_loss 0.811739                                        LR 0.000400    
+2022-07-27 13:25:38,669 - Epoch: [5][  400/ 1305]    objective_loss 0.808586                                        LR 0.000400    
+2022-07-27 13:25:42,306 - Epoch: [5][  500/ 1305]    objective_loss 0.804015                                        LR 0.000400    
+2022-07-27 13:25:45,871 - Epoch: [5][  600/ 1305]    objective_loss 0.800296                                        LR 0.000400    
+2022-07-27 13:25:49,426 - Epoch: [5][  700/ 1305]    objective_loss 0.795690                                        LR 0.000400    
+2022-07-27 13:25:52,980 - Epoch: [5][  800/ 1305]    objective_loss 0.791290                                        LR 0.000400    
+2022-07-27 13:25:56,639 - Epoch: [5][  900/ 1305]    objective_loss 0.787365                                        LR 0.000400    
+2022-07-27 13:26:00,190 - Epoch: [5][ 1000/ 1305]    objective_loss 0.783774                                        LR 0.000400    
+2022-07-27 13:26:03,762 - Epoch: [5][ 1100/ 1305]    objective_loss 0.780180                                        LR 0.000400    
+2022-07-27 13:26:07,370 - Epoch: [5][ 1200/ 1305]    objective_loss 0.776201                                        LR 0.000400    
+2022-07-27 13:26:10,982 - Epoch: [5][ 1300/ 1305]    objective_loss 0.772866                                        LR 0.000400    
+2022-07-27 13:26:11,132 - Epoch: [5][ 1305/ 1305]    objective_loss 0.772661    Top1 79.687500    LR 0.000400    
+2022-07-27 13:26:11,184 - --- validate (epoch=5)-----------
+2022-07-27 13:26:11,185 - 13920 samples (64 per mini-batch)
+2022-07-27 13:26:15,090 - Epoch: [5][  100/  218]    Loss 0.780900    Top1 73.718750    
+2022-07-27 13:26:18,656 - Epoch: [5][  200/  218]    Loss 0.777120    Top1 73.484375    
+2022-07-27 13:26:19,235 - Epoch: [5][  218/  218]    Loss 0.776704    Top1 73.584770    
+2022-07-27 13:26:19,287 - ==> Top1: 73.585    Loss: 0.777
+
+2022-07-27 13:26:19,288 - ==> Confusion:
+[[3130  309   31   10]
+ [ 762 2056  132  530]
+ [  47   52 2980  401]
+ [  37  271 1097 2075]]
+
+2022-07-27 13:26:19,352 - ==> Best [Top1: 73.585 on epoch: 5]
+2022-07-27 13:26:19,360 - Saving checkpoint to: jupyter_logging/asl_dcd_train_k8___2022.07.27-131730/asldcdnet_qat_checkpoint.pth.tar
+2022-07-27 13:26:19,364 - Training epoch: 83520 samples (64 per mini-batch)
+2022-07-27 13:26:23,297 - Epoch: [6][  100/ 1305]    objective_loss 0.726985                                        LR 0.000400    
+2022-07-27 13:26:26,933 - Epoch: [6][  200/ 1305]    objective_loss 0.721619                                        LR 0.000400    
+2022-07-27 13:26:30,479 - Epoch: [6][  300/ 1305]    objective_loss 0.716115                                        LR 0.000400    
+2022-07-27 13:26:34,021 - Epoch: [6][  400/ 1305]    objective_loss 0.711520                                        LR 0.000400    
+2022-07-27 13:26:37,582 - Epoch: [6][  500/ 1305]    objective_loss 0.709164                                        LR 0.000400    
+2022-07-27 13:26:41,211 - Epoch: [6][  600/ 1305]    objective_loss 0.706989                                        LR 0.000400    
+2022-07-27 13:26:44,817 - Epoch: [6][  700/ 1305]    objective_loss 0.704049                                        LR 0.000400    
+2022-07-27 13:26:48,398 - Epoch: [6][  800/ 1305]    objective_loss 0.701793                                        LR 0.000400    
+2022-07-27 13:26:52,000 - Epoch: [6][  900/ 1305]    objective_loss 0.699356                                        LR 0.000400    
+2022-07-27 13:26:55,575 - Epoch: [6][ 1000/ 1305]    objective_loss 0.695962                                        LR 0.000400    
+2022-07-27 13:26:59,146 - Epoch: [6][ 1100/ 1305]    objective_loss 0.693099                                        LR 0.000400    
+2022-07-27 13:27:02,719 - Epoch: [6][ 1200/ 1305]    objective_loss 0.689968                                        LR 0.000400    
+2022-07-27 13:27:06,363 - Epoch: [6][ 1300/ 1305]    objective_loss 0.686991                                        LR 0.000400    
+2022-07-27 13:27:06,511 - Epoch: [6][ 1305/ 1305]    objective_loss 0.686869    Top1 78.125000    LR 0.000400    
+2022-07-27 13:27:06,567 - --- validate (epoch=6)-----------
+2022-07-27 13:27:06,568 - 13920 samples (64 per mini-batch)
+2022-07-27 13:27:10,447 - Epoch: [6][  100/  218]    Loss 0.709859    Top1 73.687500    
+2022-07-27 13:27:14,031 - Epoch: [6][  200/  218]    Loss 0.709621    Top1 74.140625    
+2022-07-27 13:27:14,613 - Epoch: [6][  218/  218]    Loss 0.712106    Top1 73.936782    
+2022-07-27 13:27:14,665 - ==> Top1: 73.937    Loss: 0.712
+
+2022-07-27 13:27:14,666 - ==> Confusion:
+[[3174  267   36    3]
+ [ 778 2024  148  530]
+ [  44   45 3003  388]
+ [  38  282 1070 2090]]
+
+2022-07-27 13:27:14,727 - ==> Best [Top1: 73.937 on epoch: 6]
+2022-07-27 13:27:14,735 - Saving checkpoint to: jupyter_logging/asl_dcd_train_k8___2022.07.27-131730/asldcdnet_qat_checkpoint.pth.tar
+2022-07-27 13:27:14,738 - Training epoch: 83520 samples (64 per mini-batch)
+2022-07-27 13:27:18,644 - Epoch: [7][  100/ 1305]    objective_loss 0.652125                                        LR 0.000400    
+2022-07-27 13:27:22,232 - Epoch: [7][  200/ 1305]    objective_loss 0.650618                                        LR 0.000400    
+2022-07-27 13:27:25,850 - Epoch: [7][  300/ 1305]    objective_loss 0.644310                                        LR 0.000400    
+2022-07-27 13:27:29,427 - Epoch: [7][  400/ 1305]    objective_loss 0.641179                                        LR 0.000400    
+2022-07-27 13:27:32,983 - Epoch: [7][  500/ 1305]    objective_loss 0.638436                                        LR 0.000400    
+2022-07-27 13:27:36,619 - Epoch: [7][  600/ 1305]    objective_loss 0.635582                                        LR 0.000400    
+2022-07-27 13:27:40,209 - Epoch: [7][  700/ 1305]    objective_loss 0.634014                                        LR 0.000400    
+2022-07-27 13:27:43,790 - Epoch: [7][  800/ 1305]    objective_loss 0.632145                                        LR 0.000400    
+2022-07-27 13:27:47,439 - Epoch: [7][  900/ 1305]    objective_loss 0.629586                                        LR 0.000400    
+2022-07-27 13:27:51,015 - Epoch: [7][ 1000/ 1305]    objective_loss 0.627820                                        LR 0.000400    
+2022-07-27 13:27:54,586 - Epoch: [7][ 1100/ 1305]    objective_loss 0.626575                                        LR 0.000400    
+2022-07-27 13:27:58,197 - Epoch: [7][ 1200/ 1305]    objective_loss 0.625760                                        LR 0.000400    
+2022-07-27 13:28:01,755 - Epoch: [7][ 1300/ 1305]    objective_loss 0.624292                                        LR 0.000400    
+2022-07-27 13:28:01,897 - Epoch: [7][ 1305/ 1305]    objective_loss 0.624169    Top1 81.250000    LR 0.000400    
+2022-07-27 13:28:01,960 - --- validate (epoch=7)-----------
+2022-07-27 13:28:01,961 - 13920 samples (64 per mini-batch)
+2022-07-27 13:28:05,802 - Epoch: [7][  100/  218]    Loss 0.669275    Top1 75.000000    
+2022-07-27 13:28:09,328 - Epoch: [7][  200/  218]    Loss 0.670049    Top1 74.578125    
+2022-07-27 13:28:09,922 - Epoch: [7][  218/  218]    Loss 0.669812    Top1 74.497126    
+2022-07-27 13:28:09,978 - ==> Top1: 74.497    Loss: 0.670
+
+2022-07-27 13:28:09,979 - ==> Confusion:
+[[3077  350   44    9]
+ [ 643 2199  111  527]
+ [  42   66 2818  554]
+ [  29  296  875 2280]]
+
+2022-07-27 13:28:10,045 - ==> Best [Top1: 74.497 on epoch: 7]
+2022-07-27 13:28:10,052 - Saving checkpoint to: jupyter_logging/asl_dcd_train_k8___2022.07.27-131730/asldcdnet_qat_checkpoint.pth.tar
+2022-07-27 13:28:10,055 - Training epoch: 83520 samples (64 per mini-batch)
+2022-07-27 13:28:14,012 - Epoch: [8][  100/ 1305]    objective_loss 0.598342                                        LR 0.000080    
+2022-07-27 13:28:17,616 - Epoch: [8][  200/ 1305]    objective_loss 0.592092                                        LR 0.000080    
+2022-07-27 13:28:21,234 - Epoch: [8][  300/ 1305]    objective_loss 0.597076                                        LR 0.000080    
+2022-07-27 13:28:24,835 - Epoch: [8][  400/ 1305]    objective_loss 0.597789                                        LR 0.000080    
+2022-07-27 13:28:28,456 - Epoch: [8][  500/ 1305]    objective_loss 0.598618                                        LR 0.000080    
+2022-07-27 13:28:32,064 - Epoch: [8][  600/ 1305]    objective_loss 0.597994                                        LR 0.000080    
+2022-07-27 13:28:35,687 - Epoch: [8][  700/ 1305]    objective_loss 0.597695                                        LR 0.000080    
+2022-07-27 13:28:39,272 - Epoch: [8][  800/ 1305]    objective_loss 0.597388                                        LR 0.000080    
+2022-07-27 13:28:42,905 - Epoch: [8][  900/ 1305]    objective_loss 0.596470                                        LR 0.000080    
+2022-07-27 13:28:46,485 - Epoch: [8][ 1000/ 1305]    objective_loss 0.596039                                        LR 0.000080    
+2022-07-27 13:28:50,057 - Epoch: [8][ 1100/ 1305]    objective_loss 0.595091                                        LR 0.000080    
+2022-07-27 13:28:53,666 - Epoch: [8][ 1200/ 1305]    objective_loss 0.595120                                        LR 0.000080    
+2022-07-27 13:28:57,274 - Epoch: [8][ 1300/ 1305]    objective_loss 0.594453                                        LR 0.000080    
+2022-07-27 13:28:57,417 - Epoch: [8][ 1305/ 1305]    objective_loss 0.594344    Top1 78.125000    LR 0.000080    
+2022-07-27 13:28:57,470 - --- validate (epoch=8)-----------
+2022-07-27 13:28:57,470 - 13920 samples (64 per mini-batch)
+2022-07-27 13:29:01,386 - Epoch: [8][  100/  218]    Loss 0.660742    Top1 74.718750    
+2022-07-27 13:29:04,918 - Epoch: [8][  200/  218]    Loss 0.664384    Top1 74.179688    
+2022-07-27 13:29:05,512 - Epoch: [8][  218/  218]    Loss 0.663229    Top1 74.224138    
+2022-07-27 13:29:05,568 - ==> Top1: 74.224    Loss: 0.663
+
+2022-07-27 13:29:05,569 - ==> Confusion:
+[[3085  345   35   15]
+ [ 694 2130  115  541]
+ [  45   61 2850  524]
+ [  41  291  881 2267]]
+
+2022-07-27 13:29:05,634 - ==> Best [Top1: 74.497 on epoch: 7]
+2022-07-27 13:29:05,641 - Saving checkpoint to: jupyter_logging/asl_dcd_train_k8___2022.07.27-131730/asldcdnet_qat_checkpoint.pth.tar
+2022-07-27 13:29:05,644 - Training epoch: 83520 samples (64 per mini-batch)
+2022-07-27 13:29:09,551 - Epoch: [9][  100/ 1305]    objective_loss 0.589040                                        LR 0.000080    
+2022-07-27 13:29:13,140 - Epoch: [9][  200/ 1305]    objective_loss 0.587043                                        LR 0.000080    
+2022-07-27 13:29:16,674 - Epoch: [9][  300/ 1305]    objective_loss 0.585361                                        LR 0.000080    
+2022-07-27 13:29:20,240 - Epoch: [9][  400/ 1305]    objective_loss 0.586429                                        LR 0.000080    
+2022-07-27 13:29:23,808 - Epoch: [9][  500/ 1305]    objective_loss 0.587218                                        LR 0.000080    
+2022-07-27 13:29:27,345 - Epoch: [9][  600/ 1305]    objective_loss 0.587568                                        LR 0.000080    
+2022-07-27 13:29:30,907 - Epoch: [9][  700/ 1305]    objective_loss 0.587309                                        LR 0.000080    
+2022-07-27 13:29:34,480 - Epoch: [9][  800/ 1305]    objective_loss 0.587325                                        LR 0.000080    
+2022-07-27 13:29:38,028 - Epoch: [9][  900/ 1305]    objective_loss 0.585686                                        LR 0.000080    
+2022-07-27 13:29:41,583 - Epoch: [9][ 1000/ 1305]    objective_loss 0.585596                                        LR 0.000080    
+2022-07-27 13:29:45,128 - Epoch: [9][ 1100/ 1305]    objective_loss 0.585693                                        LR 0.000080    
+2022-07-27 13:29:48,686 - Epoch: [9][ 1200/ 1305]    objective_loss 0.585327                                        LR 0.000080    
+2022-07-27 13:29:52,239 - Epoch: [9][ 1300/ 1305]    objective_loss 0.584624                                        LR 0.000080    
+2022-07-27 13:29:52,382 - Epoch: [9][ 1305/ 1305]    objective_loss 0.584604    Top1 75.781250    LR 0.000080    
+2022-07-27 13:29:52,435 - --- validate (epoch=9)-----------
+2022-07-27 13:29:52,436 - 13920 samples (64 per mini-batch)
+2022-07-27 13:29:56,269 - Epoch: [9][  100/  218]    Loss 0.662254    Top1 73.687500    
+2022-07-27 13:29:59,853 - Epoch: [9][  200/  218]    Loss 0.661703    Top1 73.921875    
+2022-07-27 13:30:00,440 - Epoch: [9][  218/  218]    Loss 0.660425    Top1 74.073276    
+2022-07-27 13:30:00,495 - ==> Top1: 74.073    Loss: 0.660
+
+2022-07-27 13:30:00,496 - ==> Confusion:
+[[3078  360   35    7]
+ [ 677 2102  114  587]
+ [  41   56 2822  561]
+ [  33  263  877 2307]]
+
+2022-07-27 13:30:00,560 - ==> Best [Top1: 74.497 on epoch: 7]
+2022-07-27 13:30:00,568 - Saving checkpoint to: jupyter_logging/asl_dcd_train_k8___2022.07.27-131730/asldcdnet_qat_checkpoint.pth.tar
+2022-07-27 13:30:00,571 - Training time: 0:09:09.296437
