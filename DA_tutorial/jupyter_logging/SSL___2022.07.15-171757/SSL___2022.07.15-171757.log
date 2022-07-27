@@ -1,0 +1,1636 @@
+2022-07-15 17:17:57,869 - Log file for this run: /home/geffencooper/Model_Development/ai8x-training/jupyter_logging/SSL___2022.07.15-171757/SSL___2022.07.15-171757.log
+2022-07-15 17:17:57,895 - dataset_name:pass
+dataset_fn=<function pass_get_datasets at 0x7f9f25b43940>
+num_classes=0
+model_name=classifierbackbonenet
+dimensions=(3, 128, 128)
+batch_size=512
+validation_split=0.0
+lr=0.001000
+num_epochs=100
+qat_policy={'start_epoch': 15, 'weight_bits': 8}
+2022-07-15 17:18:08,696 - Dataset sizes:
+	training=299999
+	validation=1
+	test=1
+2022-07-15 17:18:08,697 - Augmentations:Compose(
+    RandomResizedCrop(size=(128, 128), scale=(0.08, 1.0), ratio=(0.75, 1.3333), interpolation=bilinear)
+    ColorJitter(brightness=(0.85, 1.15), contrast=(0.85, 1.15), saturation=(0.85, 1.15), hue=(-0.1, 0.1))
+    RandomGrayscale(p=0.25)
+    RandomHorizontalFlip(p=0.5)
+    ToTensor()
+    <ai8x.normalize object at 0x7f9efdfed280>
+)
+2022-07-15 17:18:12,865 - model: ClassifierBackbone(
+  (conv1): FusedConv2dReLU(
+    (activate): ReLU(inplace=True)
+    (op): Conv2d(3, 8, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+    (calc_out_shift): OutputShiftSqueeze()
+    (calc_weight_scale): One()
+    (scale): Scaler()
+    (calc_out_scale): OutputScale()
+    (quantize_weight): Empty()
+    (quantize_bias): Empty()
+    (clamp_weight): Empty()
+    (clamp_bias): Empty()
+    (quantize): Empty()
+    (clamp): Clamp()
+    (quantize_pool): Empty()
+    (clamp_pool): Empty()
+  )
+  (conv2): FusedConv2dReLU(
+    (activate): ReLU(inplace=True)
+    (op): Conv2d(8, 8, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+    (calc_out_shift): OutputShiftSqueeze()
+    (calc_weight_scale): One()
+    (scale): Scaler()
+    (calc_out_scale): OutputScale()
+    (quantize_weight): Empty()
+    (quantize_bias): Empty()
+    (clamp_weight): Empty()
+    (clamp_bias): Empty()
+    (quantize): Empty()
+    (clamp): Clamp()
+    (quantize_pool): Empty()
+    (clamp_pool): Empty()
+  )
+  (conv3): FusedMaxPoolConv2dReLU(
+    (activate): ReLU(inplace=True)
+    (pool): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (op): Conv2d(8, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+    (calc_out_shift): OutputShiftSqueeze()
+    (calc_weight_scale): One()
+    (scale): Scaler()
+    (calc_out_scale): OutputScale()
+    (quantize_weight): Empty()
+    (quantize_bias): Empty()
+    (clamp_weight): Empty()
+    (clamp_bias): Empty()
+    (quantize): Empty()
+    (clamp): Clamp()
+    (quantize_pool): Empty()
+    (clamp_pool): Empty()
+  )
+  (conv4): FusedConv2dBNReLU(
+    (activate): ReLU(inplace=True)
+    (op): Conv2d(16, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn): BatchNorm2d(16, eps=1e-05, momentum=0.05, affine=True, track_running_stats=True)
+    (calc_out_shift): OutputShiftSqueeze()
+    (calc_weight_scale): One()
+    (scale): Scaler()
+    (calc_out_scale): OutputScale()
+    (quantize_weight): Empty()
+    (quantize_bias): Empty()
+    (clamp_weight): Empty()
+    (clamp_bias): Empty()
+    (quantize): Empty()
+    (clamp): Clamp()
+    (quantize_pool): Empty()
+    (clamp_pool): Empty()
+  )
+  (conv5): FusedMaxPoolConv2dBNReLU(
+    (activate): ReLU(inplace=True)
+    (pool): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (op): Conv2d(16, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn): BatchNorm2d(32, eps=1e-05, momentum=0.05, affine=True, track_running_stats=True)
+    (calc_out_shift): OutputShiftSqueeze()
+    (calc_weight_scale): One()
+    (scale): Scaler()
+    (calc_out_scale): OutputScale()
+    (quantize_weight): Empty()
+    (quantize_bias): Empty()
+    (clamp_weight): Empty()
+    (clamp_bias): Empty()
+    (quantize): Empty()
+    (clamp): Clamp()
+    (quantize_pool): Empty()
+    (clamp_pool): Empty()
+  )
+  (conv6): FusedConv2dBNReLU(
+    (activate): ReLU(inplace=True)
+    (op): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn): BatchNorm2d(32, eps=1e-05, momentum=0.05, affine=True, track_running_stats=True)
+    (calc_out_shift): OutputShiftSqueeze()
+    (calc_weight_scale): One()
+    (scale): Scaler()
+    (calc_out_scale): OutputScale()
+    (quantize_weight): Empty()
+    (quantize_bias): Empty()
+    (clamp_weight): Empty()
+    (clamp_bias): Empty()
+    (quantize): Empty()
+    (clamp): Clamp()
+    (quantize_pool): Empty()
+    (clamp_pool): Empty()
+  )
+  (conv7): FusedMaxPoolConv2dBNReLU(
+    (activate): ReLU(inplace=True)
+    (pool): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (op): Conv2d(32, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn): BatchNorm2d(64, eps=1e-05, momentum=0.05, affine=True, track_running_stats=True)
+    (calc_out_shift): OutputShiftSqueeze()
+    (calc_weight_scale): One()
+    (scale): Scaler()
+    (calc_out_scale): OutputScale()
+    (quantize_weight): Empty()
+    (quantize_bias): Empty()
+    (clamp_weight): Empty()
+    (clamp_bias): Empty()
+    (quantize): Empty()
+    (clamp): Clamp()
+    (quantize_pool): Empty()
+    (clamp_pool): Empty()
+  )
+  (conv8): FusedConv2dBNReLU(
+    (activate): ReLU(inplace=True)
+    (op): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn): BatchNorm2d(64, eps=1e-05, momentum=0.05, affine=True, track_running_stats=True)
+    (calc_out_shift): OutputShiftSqueeze()
+    (calc_weight_scale): One()
+    (scale): Scaler()
+    (calc_out_scale): OutputScale()
+    (quantize_weight): Empty()
+    (quantize_bias): Empty()
+    (clamp_weight): Empty()
+    (clamp_bias): Empty()
+    (quantize): Empty()
+    (clamp): Clamp()
+    (quantize_pool): Empty()
+    (clamp_pool): Empty()
+  )
+  (conv9): FusedMaxPoolConv2dBNReLU(
+    (activate): ReLU(inplace=True)
+    (pool): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (op): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn): BatchNorm2d(64, eps=1e-05, momentum=0.05, affine=True, track_running_stats=True)
+    (calc_out_shift): OutputShiftSqueeze()
+    (calc_weight_scale): One()
+    (scale): Scaler()
+    (calc_out_scale): OutputScale()
+    (quantize_weight): Empty()
+    (quantize_bias): Empty()
+    (clamp_weight): Empty()
+    (clamp_bias): Empty()
+    (quantize): Empty()
+    (clamp): Clamp()
+    (quantize_pool): Empty()
+    (clamp_pool): Empty()
+  )
+  (conv10): FusedMaxPoolConv2dBNReLU(
+    (activate): ReLU(inplace=True)
+    (pool): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (op): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn): BatchNorm2d(64, eps=1e-05, momentum=0.05, affine=True, track_running_stats=True)
+    (calc_out_shift): OutputShiftSqueeze()
+    (calc_weight_scale): One()
+    (scale): Scaler()
+    (calc_out_scale): OutputScale()
+    (quantize_weight): Empty()
+    (quantize_bias): Empty()
+    (clamp_weight): Empty()
+    (clamp_bias): Empty()
+    (quantize): Empty()
+    (clamp): Clamp()
+    (quantize_pool): Empty()
+    (clamp_pool): Empty()
+  )
+  (fc1): FusedLinearReLU(
+    (activate): ReLU(inplace=True)
+    (op): Linear(in_features=1024, out_features=128, bias=True)
+    (calc_out_shift): OutputShiftSqueeze()
+    (calc_weight_scale): One()
+    (scale): Scaler()
+    (calc_out_scale): OutputScale()
+    (quantize_weight): Empty()
+    (quantize_bias): Empty()
+    (clamp_weight): Empty()
+    (clamp_bias): Empty()
+    (quantize): Empty()
+    (clamp): Clamp()
+    (quantize_pool): Empty()
+    (clamp_pool): Empty()
+  )
+  (do1): Dropout(p=0.5, inplace=False)
+  (fc2): Linear(
+    (activate): Empty()
+    (op): Linear(in_features=128, out_features=64, bias=True)
+    (calc_out_shift): OutputShiftSqueeze()
+    (calc_weight_scale): One()
+    (scale): Scaler()
+    (calc_out_scale): OutputScale()
+    (quantize_weight): Empty()
+    (quantize_bias): Empty()
+    (clamp_weight): Empty()
+    (clamp_bias): Empty()
+    (quantize): Empty()
+    (clamp): Clamp()
+    (quantize_pool): Empty()
+    (clamp_pool): Empty()
+  )
+)
+2022-07-15 17:18:14,748 - Number of Model Params: 287560
+2022-07-15 17:18:18,236 - Optimizer Type: <class 'torch.optim.adam.Adam'>
+2022-07-15 17:18:18,237 - lr_schedule:base: [0.001] milestones: Counter({15: 1, 35: 1, 100: 1}) gamma: 0.5
+2022-07-15 17:18:31,545 - Optimizer Type: <class 'torch.optim.adam.Adam'>
+2022-07-15 17:18:31,546 - lr_schedule:base: [0.001] milestones: Counter({15: 1, 35: 1, 100: 1}) gamma: 0.5
+2022-07-15 17:18:44,177 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 17:19:34,227 - Epoch: [0][   50/  586]    objective_loss 6.340745    LR 0.001000    
+2022-07-15 17:20:20,707 - Epoch: [0][  100/  586]    objective_loss 6.203648    LR 0.001000    
+2022-07-15 17:21:08,850 - Epoch: [0][  150/  586]    objective_loss 6.124511    LR 0.001000    
+2022-07-15 17:21:55,105 - Epoch: [0][  200/  586]    objective_loss 6.069827    LR 0.001000    
+2022-07-15 17:22:43,515 - Epoch: [0][  250/  586]    objective_loss 6.028871    LR 0.001000    
+2022-07-15 17:23:29,611 - Epoch: [0][  300/  586]    objective_loss 5.998061    LR 0.001000    
+2022-07-15 17:24:18,037 - Epoch: [0][  350/  586]    objective_loss 5.972859    LR 0.001000    
+2022-07-15 17:25:04,146 - Epoch: [0][  400/  586]    objective_loss 5.950420    LR 0.001000    
+2022-07-15 17:25:52,571 - Epoch: [0][  450/  586]    objective_loss 5.931690    LR 0.001000    
+2022-07-15 17:26:38,900 - Epoch: [0][  500/  586]    objective_loss 5.914994    LR 0.001000    
+2022-07-15 17:27:27,327 - Epoch: [0][  550/  586]    objective_loss 5.900554    LR 0.001000    
+2022-07-15 17:28:00,590 - Epoch: [0][  586/  586]    objective_loss 5.891330    LR 0.001000    
+2022-07-15 17:28:00,643 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_checkpoint.pth.tar
+2022-07-15 17:28:00,889 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 17:28:49,038 - Epoch: [1][   50/  586]    objective_loss 5.739006    LR 0.001000    
+2022-07-15 17:29:33,098 - Epoch: [1][  100/  586]    objective_loss 5.741131    LR 0.001000    
+2022-07-15 17:30:18,986 - Epoch: [1][  150/  586]    objective_loss 5.737910    LR 0.001000    
+2022-07-15 17:31:03,002 - Epoch: [1][  200/  586]    objective_loss 5.735369    LR 0.001000    
+2022-07-15 17:31:48,817 - Epoch: [1][  250/  586]    objective_loss 5.732060    LR 0.001000    
+2022-07-15 17:32:33,766 - Epoch: [1][  300/  586]    objective_loss 5.729885    LR 0.001000    
+2022-07-15 17:33:18,760 - Epoch: [1][  350/  586]    objective_loss 5.727933    LR 0.001000    
+2022-07-15 17:34:04,601 - Epoch: [1][  400/  586]    objective_loss 5.725464    LR 0.001000    
+2022-07-15 17:34:49,026 - Epoch: [1][  450/  586]    objective_loss 5.723930    LR 0.001000    
+2022-07-15 17:35:35,248 - Epoch: [1][  500/  586]    objective_loss 5.722080    LR 0.001000    
+2022-07-15 17:36:19,468 - Epoch: [1][  550/  586]    objective_loss 5.720048    LR 0.001000    
+2022-07-15 17:36:51,650 - Epoch: [1][  586/  586]    objective_loss 5.718920    LR 0.001000    
+2022-07-15 17:36:51,711 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_checkpoint.pth.tar
+2022-07-15 17:36:51,949 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 17:37:40,136 - Epoch: [2][   50/  586]    objective_loss 5.697384    LR 0.001000    
+2022-07-15 17:38:24,300 - Epoch: [2][  100/  586]    objective_loss 5.697086    LR 0.001000    
+2022-07-15 17:39:10,378 - Epoch: [2][  150/  586]    objective_loss 5.694721    LR 0.001000    
+2022-07-15 17:39:54,562 - Epoch: [2][  200/  586]    objective_loss 5.694854    LR 0.001000    
+2022-07-15 17:40:40,351 - Epoch: [2][  250/  586]    objective_loss 5.693636    LR 0.001000    
+2022-07-15 17:41:24,192 - Epoch: [2][  300/  586]    objective_loss 5.692747    LR 0.001000    
+2022-07-15 17:42:10,011 - Epoch: [2][  350/  586]    objective_loss 5.691867    LR 0.001000    
+2022-07-15 17:42:53,835 - Epoch: [2][  400/  586]    objective_loss 5.690314    LR 0.001000    
+2022-07-15 17:43:39,448 - Epoch: [2][  450/  586]    objective_loss 5.689163    LR 0.001000    
+2022-07-15 17:44:23,379 - Epoch: [2][  500/  586]    objective_loss 5.688590    LR 0.001000    
+2022-07-15 17:45:09,031 - Epoch: [2][  550/  586]    objective_loss 5.687277    LR 0.001000    
+2022-07-15 17:45:40,853 - Epoch: [2][  586/  586]    objective_loss 5.686186    LR 0.001000    
+2022-07-15 17:45:40,905 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_checkpoint.pth.tar
+2022-07-15 17:45:41,152 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 17:46:29,686 - Epoch: [3][   50/  586]    objective_loss 5.674889    LR 0.001000    
+2022-07-15 17:47:13,666 - Epoch: [3][  100/  586]    objective_loss 5.675008    LR 0.001000    
+2022-07-15 17:47:59,808 - Epoch: [3][  150/  586]    objective_loss 5.674627    LR 0.001000    
+2022-07-15 17:48:44,179 - Epoch: [3][  200/  586]    objective_loss 5.674920    LR 0.001000    
+2022-07-15 17:49:30,097 - Epoch: [3][  250/  586]    objective_loss 5.673348    LR 0.001000    
+2022-07-15 17:50:14,811 - Epoch: [3][  300/  586]    objective_loss 5.672677    LR 0.001000    
+2022-07-15 17:51:00,188 - Epoch: [3][  350/  586]    objective_loss 5.671811    LR 0.001000    
+2022-07-15 17:51:45,604 - Epoch: [3][  400/  586]    objective_loss 5.671051    LR 0.001000    
+2022-07-15 17:52:30,373 - Epoch: [3][  450/  586]    objective_loss 5.670755    LR 0.001000    
+2022-07-15 17:53:16,082 - Epoch: [3][  500/  586]    objective_loss 5.669699    LR 0.001000    
+2022-07-15 17:54:01,069 - Epoch: [3][  550/  586]    objective_loss 5.669109    LR 0.001000    
+2022-07-15 17:54:33,377 - Epoch: [3][  586/  586]    objective_loss 5.668999    LR 0.001000    
+2022-07-15 17:54:33,437 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_checkpoint.pth.tar
+2022-07-15 17:54:33,677 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 17:55:21,957 - Epoch: [4][   50/  586]    objective_loss 5.660750    LR 0.001000    
+2022-07-15 17:56:06,346 - Epoch: [4][  100/  586]    objective_loss 5.660963    LR 0.001000    
+2022-07-15 17:56:52,364 - Epoch: [4][  150/  586]    objective_loss 5.658548    LR 0.001000    
+2022-07-15 17:57:36,426 - Epoch: [4][  200/  586]    objective_loss 5.659642    LR 0.001000    
+2022-07-15 17:58:22,274 - Epoch: [4][  250/  586]    objective_loss 5.658823    LR 0.001000    
+2022-07-15 17:59:07,096 - Epoch: [4][  300/  586]    objective_loss 5.658152    LR 0.001000    
+2022-07-15 17:59:52,289 - Epoch: [4][  350/  586]    objective_loss 5.657724    LR 0.001000    
+2022-07-15 18:00:37,483 - Epoch: [4][  400/  586]    objective_loss 5.656191    LR 0.001000    
+2022-07-15 18:01:22,577 - Epoch: [4][  450/  586]    objective_loss 5.655063    LR 0.001000    
+2022-07-15 18:02:08,063 - Epoch: [4][  500/  586]    objective_loss 5.654757    LR 0.001000    
+2022-07-15 18:02:53,202 - Epoch: [4][  550/  586]    objective_loss 5.653481    LR 0.001000    
+2022-07-15 18:03:25,502 - Epoch: [4][  586/  586]    objective_loss 5.652853    LR 0.001000    
+2022-07-15 18:03:25,555 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_checkpoint.pth.tar
+2022-07-15 18:03:25,802 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 18:04:14,469 - Epoch: [5][   50/  586]    objective_loss 5.645340    LR 0.001000    
+2022-07-15 18:04:59,129 - Epoch: [5][  100/  586]    objective_loss 5.646397    LR 0.001000    
+2022-07-15 18:05:45,639 - Epoch: [5][  150/  586]    objective_loss 5.645288    LR 0.001000    
+2022-07-15 18:06:29,813 - Epoch: [5][  200/  586]    objective_loss 5.644463    LR 0.001000    
+2022-07-15 18:07:15,794 - Epoch: [5][  250/  586]    objective_loss 5.642826    LR 0.001000    
+2022-07-15 18:08:00,241 - Epoch: [5][  300/  586]    objective_loss 5.642060    LR 0.001000    
+2022-07-15 18:08:46,764 - Epoch: [5][  350/  586]    objective_loss 5.641830    LR 0.001000    
+2022-07-15 18:09:31,344 - Epoch: [5][  400/  586]    objective_loss 5.641181    LR 0.001000    
+2022-07-15 18:10:17,699 - Epoch: [5][  450/  586]    objective_loss 5.640770    LR 0.001000    
+2022-07-15 18:11:02,267 - Epoch: [5][  500/  586]    objective_loss 5.640715    LR 0.001000    
+2022-07-15 18:11:48,730 - Epoch: [5][  550/  586]    objective_loss 5.640603    LR 0.001000    
+2022-07-15 18:12:20,564 - Epoch: [5][  586/  586]    objective_loss 5.640127    LR 0.001000    
+2022-07-15 18:12:20,617 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_checkpoint.pth.tar
+2022-07-15 18:12:20,871 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 18:13:09,335 - Epoch: [6][   50/  586]    objective_loss 5.640533    LR 0.001000    
+2022-07-15 18:13:53,698 - Epoch: [6][  100/  586]    objective_loss 5.635606    LR 0.001000    
+2022-07-15 18:14:40,296 - Epoch: [6][  150/  586]    objective_loss 5.634761    LR 0.001000    
+2022-07-15 18:15:24,890 - Epoch: [6][  200/  586]    objective_loss 5.634264    LR 0.001000    
+2022-07-15 18:16:11,372 - Epoch: [6][  250/  586]    objective_loss 5.633864    LR 0.001000    
+2022-07-15 18:16:55,946 - Epoch: [6][  300/  586]    objective_loss 5.633740    LR 0.001000    
+2022-07-15 18:17:42,350 - Epoch: [6][  350/  586]    objective_loss 5.633193    LR 0.001000    
+2022-07-15 18:18:26,953 - Epoch: [6][  400/  586]    objective_loss 5.632820    LR 0.001000    
+2022-07-15 18:19:13,304 - Epoch: [6][  450/  586]    objective_loss 5.631911    LR 0.001000    
+2022-07-15 18:19:57,734 - Epoch: [6][  500/  586]    objective_loss 5.631394    LR 0.001000    
+2022-07-15 18:20:44,046 - Epoch: [6][  550/  586]    objective_loss 5.630981    LR 0.001000    
+2022-07-15 18:21:15,917 - Epoch: [6][  586/  586]    objective_loss 5.630512    LR 0.001000    
+2022-07-15 18:21:15,971 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_checkpoint.pth.tar
+2022-07-15 18:21:16,216 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 18:22:04,354 - Epoch: [7][   50/  586]    objective_loss 5.623483    LR 0.001000    
+2022-07-15 18:22:48,489 - Epoch: [7][  100/  586]    objective_loss 5.623186    LR 0.001000    
+2022-07-15 18:23:34,330 - Epoch: [7][  150/  586]    objective_loss 5.623634    LR 0.001000    
+2022-07-15 18:24:18,483 - Epoch: [7][  200/  586]    objective_loss 5.623331    LR 0.001000    
+2022-07-15 18:25:04,477 - Epoch: [7][  250/  586]    objective_loss 5.621986    LR 0.001000    
+2022-07-15 18:25:48,333 - Epoch: [7][  300/  586]    objective_loss 5.621128    LR 0.001000    
+2022-07-15 18:26:34,427 - Epoch: [7][  350/  586]    objective_loss 5.620761    LR 0.001000    
+2022-07-15 18:27:18,529 - Epoch: [7][  400/  586]    objective_loss 5.620479    LR 0.001000    
+2022-07-15 18:28:04,600 - Epoch: [7][  450/  586]    objective_loss 5.619796    LR 0.001000    
+2022-07-15 18:28:48,988 - Epoch: [7][  500/  586]    objective_loss 5.619446    LR 0.001000    
+2022-07-15 18:29:35,166 - Epoch: [7][  550/  586]    objective_loss 5.619529    LR 0.001000    
+2022-07-15 18:30:07,114 - Epoch: [7][  586/  586]    objective_loss 5.619746    LR 0.001000    
+2022-07-15 18:30:07,170 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_checkpoint.pth.tar
+2022-07-15 18:30:07,414 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 18:30:55,295 - Epoch: [8][   50/  586]    objective_loss 5.610602    LR 0.001000    
+2022-07-15 18:31:39,219 - Epoch: [8][  100/  586]    objective_loss 5.613297    LR 0.001000    
+2022-07-15 18:32:24,945 - Epoch: [8][  150/  586]    objective_loss 5.613890    LR 0.001000    
+2022-07-15 18:33:09,571 - Epoch: [8][  200/  586]    objective_loss 5.613103    LR 0.001000    
+2022-07-15 18:33:54,465 - Epoch: [8][  250/  586]    objective_loss 5.613145    LR 0.001000    
+2022-07-15 18:34:39,890 - Epoch: [8][  300/  586]    objective_loss 5.612721    LR 0.001000    
+2022-07-15 18:35:24,535 - Epoch: [8][  350/  586]    objective_loss 5.612873    LR 0.001000    
+2022-07-15 18:36:10,487 - Epoch: [8][  400/  586]    objective_loss 5.612595    LR 0.001000    
+2022-07-15 18:36:54,954 - Epoch: [8][  450/  586]    objective_loss 5.612664    LR 0.001000    
+2022-07-15 18:37:41,256 - Epoch: [8][  500/  586]    objective_loss 5.612412    LR 0.001000    
+2022-07-15 18:38:25,613 - Epoch: [8][  550/  586]    objective_loss 5.612459    LR 0.001000    
+2022-07-15 18:38:58,076 - Epoch: [8][  586/  586]    objective_loss 5.611965    LR 0.001000    
+2022-07-15 18:38:58,136 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_checkpoint.pth.tar
+2022-07-15 18:38:58,374 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 18:39:46,367 - Epoch: [9][   50/  586]    objective_loss 5.611219    LR 0.001000    
+2022-07-15 18:40:30,328 - Epoch: [9][  100/  586]    objective_loss 5.611365    LR 0.001000    
+2022-07-15 18:41:16,128 - Epoch: [9][  150/  586]    objective_loss 5.609373    LR 0.001000    
+2022-07-15 18:41:59,999 - Epoch: [9][  200/  586]    objective_loss 5.609024    LR 0.001000    
+2022-07-15 18:42:45,944 - Epoch: [9][  250/  586]    objective_loss 5.608224    LR 0.001000    
+2022-07-15 18:43:29,978 - Epoch: [9][  300/  586]    objective_loss 5.607135    LR 0.001000    
+2022-07-15 18:44:15,679 - Epoch: [9][  350/  586]    objective_loss 5.606596    LR 0.001000    
+2022-07-15 18:44:59,939 - Epoch: [9][  400/  586]    objective_loss 5.606777    LR 0.001000    
+2022-07-15 18:45:44,916 - Epoch: [9][  450/  586]    objective_loss 5.606855    LR 0.001000    
+2022-07-15 18:46:30,378 - Epoch: [9][  500/  586]    objective_loss 5.606968    LR 0.001000    
+2022-07-15 18:47:15,330 - Epoch: [9][  550/  586]    objective_loss 5.606498    LR 0.001000    
+2022-07-15 18:47:47,309 - Epoch: [9][  586/  586]    objective_loss 5.606323    LR 0.001000    
+2022-07-15 18:47:47,361 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_checkpoint.pth.tar
+2022-07-15 18:47:47,616 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 18:48:35,513 - Epoch: [10][   50/  586]    objective_loss 5.601373    LR 0.001000    
+2022-07-15 18:49:19,634 - Epoch: [10][  100/  586]    objective_loss 5.600947    LR 0.001000    
+2022-07-15 18:50:05,410 - Epoch: [10][  150/  586]    objective_loss 5.600357    LR 0.001000    
+2022-07-15 18:50:49,161 - Epoch: [10][  200/  586]    objective_loss 5.601555    LR 0.001000    
+2022-07-15 18:51:35,288 - Epoch: [10][  250/  586]    objective_loss 5.602020    LR 0.001000    
+2022-07-15 18:52:19,537 - Epoch: [10][  300/  586]    objective_loss 5.602413    LR 0.001000    
+2022-07-15 18:53:05,324 - Epoch: [10][  350/  586]    objective_loss 5.602048    LR 0.001000    
+2022-07-15 18:53:49,166 - Epoch: [10][  400/  586]    objective_loss 5.601944    LR 0.001000    
+2022-07-15 18:54:34,958 - Epoch: [10][  450/  586]    objective_loss 5.602171    LR 0.001000    
+2022-07-15 18:55:18,983 - Epoch: [10][  500/  586]    objective_loss 5.601612    LR 0.001000    
+2022-07-15 18:56:04,813 - Epoch: [10][  550/  586]    objective_loss 5.601372    LR 0.001000    
+2022-07-15 18:56:36,392 - Epoch: [10][  586/  586]    objective_loss 5.601119    LR 0.001000    
+2022-07-15 18:56:36,445 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_checkpoint.pth.tar
+2022-07-15 18:56:36,691 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 18:57:24,995 - Epoch: [11][   50/  586]    objective_loss 5.596103    LR 0.001000    
+2022-07-15 18:58:09,564 - Epoch: [11][  100/  586]    objective_loss 5.597083    LR 0.001000    
+2022-07-15 18:58:56,199 - Epoch: [11][  150/  586]    objective_loss 5.597142    LR 0.001000    
+2022-07-15 18:59:40,801 - Epoch: [11][  200/  586]    objective_loss 5.597646    LR 0.001000    
+2022-07-15 19:00:27,315 - Epoch: [11][  250/  586]    objective_loss 5.597669    LR 0.001000    
+2022-07-15 19:01:11,928 - Epoch: [11][  300/  586]    objective_loss 5.598018    LR 0.001000    
+2022-07-15 19:01:58,424 - Epoch: [11][  350/  586]    objective_loss 5.598099    LR 0.001000    
+2022-07-15 19:02:43,147 - Epoch: [11][  400/  586]    objective_loss 5.598142    LR 0.001000    
+2022-07-15 19:03:29,553 - Epoch: [11][  450/  586]    objective_loss 5.598313    LR 0.001000    
+2022-07-15 19:04:14,368 - Epoch: [11][  500/  586]    objective_loss 5.598262    LR 0.001000    
+2022-07-15 19:05:00,605 - Epoch: [11][  550/  586]    objective_loss 5.598059    LR 0.001000    
+2022-07-15 19:05:32,662 - Epoch: [11][  586/  586]    objective_loss 5.597432    LR 0.001000    
+2022-07-15 19:05:32,716 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_checkpoint.pth.tar
+2022-07-15 19:05:32,970 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 19:06:21,075 - Epoch: [12][   50/  586]    objective_loss 5.596768    LR 0.001000    
+2022-07-15 19:07:05,094 - Epoch: [12][  100/  586]    objective_loss 5.595925    LR 0.001000    
+2022-07-15 19:07:51,232 - Epoch: [12][  150/  586]    objective_loss 5.594853    LR 0.001000    
+2022-07-15 19:08:35,519 - Epoch: [12][  200/  586]    objective_loss 5.594897    LR 0.001000    
+2022-07-15 19:09:21,131 - Epoch: [12][  250/  586]    objective_loss 5.595089    LR 0.001000    
+2022-07-15 19:10:06,396 - Epoch: [12][  300/  586]    objective_loss 5.595318    LR 0.001000    
+2022-07-15 19:10:51,024 - Epoch: [12][  350/  586]    objective_loss 5.595136    LR 0.001000    
+2022-07-15 19:11:37,390 - Epoch: [12][  400/  586]    objective_loss 5.594751    LR 0.001000    
+2022-07-15 19:12:21,895 - Epoch: [12][  450/  586]    objective_loss 5.594618    LR 0.001000    
+2022-07-15 19:13:08,150 - Epoch: [12][  500/  586]    objective_loss 5.594213    LR 0.001000    
+2022-07-15 19:13:52,351 - Epoch: [12][  550/  586]    objective_loss 5.593890    LR 0.001000    
+2022-07-15 19:14:24,619 - Epoch: [12][  586/  586]    objective_loss 5.593510    LR 0.001000    
+2022-07-15 19:14:24,673 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_checkpoint.pth.tar
+2022-07-15 19:14:24,918 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 19:15:13,048 - Epoch: [13][   50/  586]    objective_loss 5.592633    LR 0.001000    
+2022-07-15 19:15:56,949 - Epoch: [13][  100/  586]    objective_loss 5.591443    LR 0.001000    
+2022-07-15 19:16:42,710 - Epoch: [13][  150/  586]    objective_loss 5.591641    LR 0.001000    
+2022-07-15 19:17:27,368 - Epoch: [13][  200/  586]    objective_loss 5.591480    LR 0.001000    
+2022-07-15 19:18:12,541 - Epoch: [13][  250/  586]    objective_loss 5.590827    LR 0.001000    
+2022-07-15 19:18:58,187 - Epoch: [13][  300/  586]    objective_loss 5.590838    LR 0.001000    
+2022-07-15 19:19:42,550 - Epoch: [13][  350/  586]    objective_loss 5.590957    LR 0.001000    
+2022-07-15 19:20:29,164 - Epoch: [13][  400/  586]    objective_loss 5.591031    LR 0.001000    
+2022-07-15 19:21:13,753 - Epoch: [13][  450/  586]    objective_loss 5.591065    LR 0.001000    
+2022-07-15 19:22:00,243 - Epoch: [13][  500/  586]    objective_loss 5.590715    LR 0.001000    
+2022-07-15 19:22:44,795 - Epoch: [13][  550/  586]    objective_loss 5.590698    LR 0.001000    
+2022-07-15 19:23:17,070 - Epoch: [13][  586/  586]    objective_loss 5.590541    LR 0.001000    
+2022-07-15 19:23:17,126 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_checkpoint.pth.tar
+2022-07-15 19:23:17,378 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 19:24:06,077 - Epoch: [14][   50/  586]    objective_loss 5.590490    LR 0.001000    
+2022-07-15 19:24:50,626 - Epoch: [14][  100/  586]    objective_loss 5.589360    LR 0.001000    
+2022-07-15 19:25:37,054 - Epoch: [14][  150/  586]    objective_loss 5.588706    LR 0.001000    
+2022-07-15 19:26:21,696 - Epoch: [14][  200/  586]    objective_loss 5.588423    LR 0.001000    
+2022-07-15 19:27:07,883 - Epoch: [14][  250/  586]    objective_loss 5.588132    LR 0.001000    
+2022-07-15 19:27:52,101 - Epoch: [14][  300/  586]    objective_loss 5.588119    LR 0.001000    
+2022-07-15 19:28:38,075 - Epoch: [14][  350/  586]    objective_loss 5.588545    LR 0.001000    
+2022-07-15 19:29:22,284 - Epoch: [14][  400/  586]    objective_loss 5.588912    LR 0.001000    
+2022-07-15 19:30:08,720 - Epoch: [14][  450/  586]    objective_loss 5.588917    LR 0.001000    
+2022-07-15 19:30:53,218 - Epoch: [14][  500/  586]    objective_loss 5.588626    LR 0.001000    
+2022-07-15 19:31:39,407 - Epoch: [14][  550/  586]    objective_loss 5.588628    LR 0.001000    
+2022-07-15 19:32:11,296 - Epoch: [14][  586/  586]    objective_loss 5.588579    LR 0.001000    
+2022-07-15 19:32:11,349 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_checkpoint.pth.tar
+2022-07-15 19:32:11,616 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 19:33:00,106 - Epoch: [15][   50/  586]    objective_loss 5.982277    LR 0.000500    
+2022-07-15 19:33:44,609 - Epoch: [15][  100/  586]    objective_loss 5.866643    LR 0.000500    
+2022-07-15 19:34:31,035 - Epoch: [15][  150/  586]    objective_loss 5.811921    LR 0.000500    
+2022-07-15 19:35:15,587 - Epoch: [15][  200/  586]    objective_loss 5.778545    LR 0.000500    
+2022-07-15 19:36:01,940 - Epoch: [15][  250/  586]    objective_loss 5.756923    LR 0.000500    
+2022-07-15 19:36:46,519 - Epoch: [15][  300/  586]    objective_loss 5.741474    LR 0.000500    
+2022-07-15 19:37:32,773 - Epoch: [15][  350/  586]    objective_loss 5.728280    LR 0.000500    
+2022-07-15 19:38:17,380 - Epoch: [15][  400/  586]    objective_loss 5.718491    LR 0.000500    
+2022-07-15 19:39:03,728 - Epoch: [15][  450/  586]    objective_loss 5.710196    LR 0.000500    
+2022-07-15 19:39:48,268 - Epoch: [15][  500/  586]    objective_loss 5.703274    LR 0.000500    
+2022-07-15 19:40:34,375 - Epoch: [15][  550/  586]    objective_loss 5.696260    LR 0.000500    
+2022-07-15 19:41:06,302 - Epoch: [15][  586/  586]    objective_loss 5.691571    LR 0.000500    
+2022-07-15 19:41:06,355 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 19:41:06,589 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 19:41:54,810 - Epoch: [16][   50/  586]    objective_loss 5.626432    LR 0.000500    
+2022-07-15 19:42:39,045 - Epoch: [16][  100/  586]    objective_loss 5.627252    LR 0.000500    
+2022-07-15 19:43:25,246 - Epoch: [16][  150/  586]    objective_loss 5.626409    LR 0.000500    
+2022-07-15 19:44:09,593 - Epoch: [16][  200/  586]    objective_loss 5.625216    LR 0.000500    
+2022-07-15 19:44:55,806 - Epoch: [16][  250/  586]    objective_loss 5.624836    LR 0.000500    
+2022-07-15 19:45:39,994 - Epoch: [16][  300/  586]    objective_loss 5.623986    LR 0.000500    
+2022-07-15 19:46:25,800 - Epoch: [16][  350/  586]    objective_loss 5.622711    LR 0.000500    
+2022-07-15 19:47:10,870 - Epoch: [16][  400/  586]    objective_loss 5.621927    LR 0.000500    
+2022-07-15 19:47:55,631 - Epoch: [16][  450/  586]    objective_loss 5.620941    LR 0.000500    
+2022-07-15 19:48:41,747 - Epoch: [16][  500/  586]    objective_loss 5.619984    LR 0.000500    
+2022-07-15 19:49:26,350 - Epoch: [16][  550/  586]    objective_loss 5.618989    LR 0.000500    
+2022-07-15 19:49:58,710 - Epoch: [16][  586/  586]    objective_loss 5.618572    LR 0.000500    
+2022-07-15 19:49:58,772 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 19:49:59,007 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 19:50:47,560 - Epoch: [17][   50/  586]    objective_loss 5.613077    LR 0.000500    
+2022-07-15 19:51:31,945 - Epoch: [17][  100/  586]    objective_loss 5.615040    LR 0.000500    
+2022-07-15 19:52:18,111 - Epoch: [17][  150/  586]    objective_loss 5.615208    LR 0.000500    
+2022-07-15 19:53:02,545 - Epoch: [17][  200/  586]    objective_loss 5.613434    LR 0.000500    
+2022-07-15 19:53:48,698 - Epoch: [17][  250/  586]    objective_loss 5.612290    LR 0.000500    
+2022-07-15 19:54:33,195 - Epoch: [17][  300/  586]    objective_loss 5.612326    LR 0.000500    
+2022-07-15 19:55:19,364 - Epoch: [17][  350/  586]    objective_loss 5.612259    LR 0.000500    
+2022-07-15 19:56:03,730 - Epoch: [17][  400/  586]    objective_loss 5.610733    LR 0.000500    
+2022-07-15 19:56:49,916 - Epoch: [17][  450/  586]    objective_loss 5.610854    LR 0.000500    
+2022-07-15 19:57:34,355 - Epoch: [17][  500/  586]    objective_loss 5.611134    LR 0.000500    
+2022-07-15 19:58:20,483 - Epoch: [17][  550/  586]    objective_loss 5.610443    LR 0.000500    
+2022-07-15 19:58:52,393 - Epoch: [17][  586/  586]    objective_loss 5.610211    LR 0.000500    
+2022-07-15 19:58:52,456 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 19:58:52,689 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 19:59:40,915 - Epoch: [18][   50/  586]    objective_loss 5.606892    LR 0.000500    
+2022-07-15 20:00:25,252 - Epoch: [18][  100/  586]    objective_loss 5.607583    LR 0.000500    
+2022-07-15 20:01:11,270 - Epoch: [18][  150/  586]    objective_loss 5.606415    LR 0.000500    
+2022-07-15 20:01:55,932 - Epoch: [18][  200/  586]    objective_loss 5.605912    LR 0.000500    
+2022-07-15 20:02:41,820 - Epoch: [18][  250/  586]    objective_loss 5.606311    LR 0.000500    
+2022-07-15 20:03:26,107 - Epoch: [18][  300/  586]    objective_loss 5.605574    LR 0.000500    
+2022-07-15 20:04:12,515 - Epoch: [18][  350/  586]    objective_loss 5.605063    LR 0.000500    
+2022-07-15 20:04:57,260 - Epoch: [18][  400/  586]    objective_loss 5.605194    LR 0.000500    
+2022-07-15 20:05:43,367 - Epoch: [18][  450/  586]    objective_loss 5.605399    LR 0.000500    
+2022-07-15 20:06:27,612 - Epoch: [18][  500/  586]    objective_loss 5.605020    LR 0.000500    
+2022-07-15 20:07:13,824 - Epoch: [18][  550/  586]    objective_loss 5.604840    LR 0.000500    
+2022-07-15 20:07:45,647 - Epoch: [18][  586/  586]    objective_loss 5.604556    LR 0.000500    
+2022-07-15 20:07:45,711 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 20:07:45,943 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 20:08:34,471 - Epoch: [19][   50/  586]    objective_loss 5.604210    LR 0.000500    
+2022-07-15 20:09:18,620 - Epoch: [19][  100/  586]    objective_loss 5.603168    LR 0.000500    
+2022-07-15 20:10:04,335 - Epoch: [19][  150/  586]    objective_loss 5.603577    LR 0.000500    
+2022-07-15 20:10:48,574 - Epoch: [19][  200/  586]    objective_loss 5.601265    LR 0.000500    
+2022-07-15 20:11:34,357 - Epoch: [19][  250/  586]    objective_loss 5.600440    LR 0.000500    
+2022-07-15 20:12:18,923 - Epoch: [19][  300/  586]    objective_loss 5.601630    LR 0.000500    
+2022-07-15 20:13:03,912 - Epoch: [19][  350/  586]    objective_loss 5.601845    LR 0.000500    
+2022-07-15 20:13:49,440 - Epoch: [19][  400/  586]    objective_loss 5.602246    LR 0.000500    
+2022-07-15 20:14:33,781 - Epoch: [19][  450/  586]    objective_loss 5.602127    LR 0.000500    
+2022-07-15 20:15:19,944 - Epoch: [19][  500/  586]    objective_loss 5.602028    LR 0.000500    
+2022-07-15 20:16:04,359 - Epoch: [19][  550/  586]    objective_loss 5.602029    LR 0.000500    
+2022-07-15 20:16:36,660 - Epoch: [19][  586/  586]    objective_loss 5.601620    LR 0.000500    
+2022-07-15 20:16:36,714 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 20:16:36,954 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 20:17:25,448 - Epoch: [20][   50/  586]    objective_loss 5.596224    LR 0.000500    
+2022-07-15 20:18:09,441 - Epoch: [20][  100/  586]    objective_loss 5.597934    LR 0.000500    
+2022-07-15 20:18:55,536 - Epoch: [20][  150/  586]    objective_loss 5.598618    LR 0.000500    
+2022-07-15 20:19:39,901 - Epoch: [20][  200/  586]    objective_loss 5.599983    LR 0.000500    
+2022-07-15 20:20:25,761 - Epoch: [20][  250/  586]    objective_loss 5.599953    LR 0.000500    
+2022-07-15 20:21:09,993 - Epoch: [20][  300/  586]    objective_loss 5.600056    LR 0.000500    
+2022-07-15 20:21:56,042 - Epoch: [20][  350/  586]    objective_loss 5.598982    LR 0.000500    
+2022-07-15 20:22:40,134 - Epoch: [20][  400/  586]    objective_loss 5.598448    LR 0.000500    
+2022-07-15 20:23:25,896 - Epoch: [20][  450/  586]    objective_loss 5.599161    LR 0.000500    
+2022-07-15 20:24:10,079 - Epoch: [20][  500/  586]    objective_loss 5.598941    LR 0.000500    
+2022-07-15 20:24:56,011 - Epoch: [20][  550/  586]    objective_loss 5.598598    LR 0.000500    
+2022-07-15 20:25:27,718 - Epoch: [20][  586/  586]    objective_loss 5.598717    LR 0.000500    
+2022-07-15 20:25:27,778 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 20:25:28,013 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 20:26:16,476 - Epoch: [21][   50/  586]    objective_loss 5.606003    LR 0.000500    
+2022-07-15 20:27:00,904 - Epoch: [21][  100/  586]    objective_loss 5.602686    LR 0.000500    
+2022-07-15 20:27:47,106 - Epoch: [21][  150/  586]    objective_loss 5.601858    LR 0.000500    
+2022-07-15 20:28:31,454 - Epoch: [21][  200/  586]    objective_loss 5.600608    LR 0.000500    
+2022-07-15 20:29:17,818 - Epoch: [21][  250/  586]    objective_loss 5.600293    LR 0.000500    
+2022-07-15 20:30:02,196 - Epoch: [21][  300/  586]    objective_loss 5.600087    LR 0.000500    
+2022-07-15 20:30:48,354 - Epoch: [21][  350/  586]    objective_loss 5.599876    LR 0.000500    
+2022-07-15 20:31:32,678 - Epoch: [21][  400/  586]    objective_loss 5.599544    LR 0.000500    
+2022-07-15 20:32:18,982 - Epoch: [21][  450/  586]    objective_loss 5.599512    LR 0.000500    
+2022-07-15 20:33:03,241 - Epoch: [21][  500/  586]    objective_loss 5.598982    LR 0.000500    
+2022-07-15 20:33:49,257 - Epoch: [21][  550/  586]    objective_loss 5.598678    LR 0.000500    
+2022-07-15 20:34:21,090 - Epoch: [21][  586/  586]    objective_loss 5.598919    LR 0.000500    
+2022-07-15 20:34:21,144 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 20:34:21,386 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 20:35:09,588 - Epoch: [22][   50/  586]    objective_loss 5.595064    LR 0.000500    
+2022-07-15 20:35:53,745 - Epoch: [22][  100/  586]    objective_loss 5.595594    LR 0.000500    
+2022-07-15 20:36:39,577 - Epoch: [22][  150/  586]    objective_loss 5.594037    LR 0.000500    
+2022-07-15 20:37:24,312 - Epoch: [22][  200/  586]    objective_loss 5.593343    LR 0.000500    
+2022-07-15 20:38:09,750 - Epoch: [22][  250/  586]    objective_loss 5.592908    LR 0.000500    
+2022-07-15 20:38:55,090 - Epoch: [22][  300/  586]    objective_loss 5.593464    LR 0.000500    
+2022-07-15 20:39:39,999 - Epoch: [22][  350/  586]    objective_loss 5.593577    LR 0.000500    
+2022-07-15 20:40:26,019 - Epoch: [22][  400/  586]    objective_loss 5.593405    LR 0.000500    
+2022-07-15 20:41:10,692 - Epoch: [22][  450/  586]    objective_loss 5.593836    LR 0.000500    
+2022-07-15 20:41:56,961 - Epoch: [22][  500/  586]    objective_loss 5.593581    LR 0.000500    
+2022-07-15 20:42:41,532 - Epoch: [22][  550/  586]    objective_loss 5.594025    LR 0.000500    
+2022-07-15 20:43:14,112 - Epoch: [22][  586/  586]    objective_loss 5.594032    LR 0.000500    
+2022-07-15 20:43:14,168 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 20:43:14,408 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 20:44:02,804 - Epoch: [23][   50/  586]    objective_loss 5.590941    LR 0.000500    
+2022-07-15 20:44:47,369 - Epoch: [23][  100/  586]    objective_loss 5.593527    LR 0.000500    
+2022-07-15 20:45:33,694 - Epoch: [23][  150/  586]    objective_loss 5.593886    LR 0.000500    
+2022-07-15 20:46:18,243 - Epoch: [23][  200/  586]    objective_loss 5.595591    LR 0.000500    
+2022-07-15 20:47:04,300 - Epoch: [23][  250/  586]    objective_loss 5.595765    LR 0.000500    
+2022-07-15 20:47:48,820 - Epoch: [23][  300/  586]    objective_loss 5.595908    LR 0.000500    
+2022-07-15 20:48:35,185 - Epoch: [23][  350/  586]    objective_loss 5.596427    LR 0.000500    
+2022-07-15 20:49:19,636 - Epoch: [23][  400/  586]    objective_loss 5.596434    LR 0.000500    
+2022-07-15 20:50:05,831 - Epoch: [23][  450/  586]    objective_loss 5.596760    LR 0.000500    
+2022-07-15 20:50:50,380 - Epoch: [23][  500/  586]    objective_loss 5.596493    LR 0.000500    
+2022-07-15 20:51:36,663 - Epoch: [23][  550/  586]    objective_loss 5.596710    LR 0.000500    
+2022-07-15 20:52:07,985 - Epoch: [23][  586/  586]    objective_loss 5.596481    LR 0.000500    
+2022-07-15 20:52:08,039 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 20:52:08,271 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 20:52:56,508 - Epoch: [24][   50/  586]    objective_loss 5.594024    LR 0.000500    
+2022-07-15 20:53:40,844 - Epoch: [24][  100/  586]    objective_loss 5.595193    LR 0.000500    
+2022-07-15 20:54:27,331 - Epoch: [24][  150/  586]    objective_loss 5.593967    LR 0.000500    
+2022-07-15 20:55:11,944 - Epoch: [24][  200/  586]    objective_loss 5.593914    LR 0.000500    
+2022-07-15 20:55:58,101 - Epoch: [24][  250/  586]    objective_loss 5.592826    LR 0.000500    
+2022-07-15 20:56:42,619 - Epoch: [24][  300/  586]    objective_loss 5.593735    LR 0.000500    
+2022-07-15 20:57:28,729 - Epoch: [24][  350/  586]    objective_loss 5.593761    LR 0.000500    
+2022-07-15 20:58:13,487 - Epoch: [24][  400/  586]    objective_loss 5.593987    LR 0.000500    
+2022-07-15 20:58:59,729 - Epoch: [24][  450/  586]    objective_loss 5.594252    LR 0.000500    
+2022-07-15 20:59:44,137 - Epoch: [24][  500/  586]    objective_loss 5.593696    LR 0.000500    
+2022-07-15 21:00:30,269 - Epoch: [24][  550/  586]    objective_loss 5.593427    LR 0.000500    
+2022-07-15 21:01:01,904 - Epoch: [24][  586/  586]    objective_loss 5.593511    LR 0.000500    
+2022-07-15 21:01:01,958 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 21:01:02,198 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 21:01:50,639 - Epoch: [25][   50/  586]    objective_loss 5.594987    LR 0.000500    
+2022-07-15 21:02:34,880 - Epoch: [25][  100/  586]    objective_loss 5.594783    LR 0.000500    
+2022-07-15 21:03:20,945 - Epoch: [25][  150/  586]    objective_loss 5.593076    LR 0.000500    
+2022-07-15 21:04:05,282 - Epoch: [25][  200/  586]    objective_loss 5.593688    LR 0.000500    
+2022-07-15 21:04:51,341 - Epoch: [25][  250/  586]    objective_loss 5.592794    LR 0.000500    
+2022-07-15 21:05:35,747 - Epoch: [25][  300/  586]    objective_loss 5.593052    LR 0.000500    
+2022-07-15 21:06:21,920 - Epoch: [25][  350/  586]    objective_loss 5.593293    LR 0.000500    
+2022-07-15 21:07:06,413 - Epoch: [25][  400/  586]    objective_loss 5.593028    LR 0.000500    
+2022-07-15 21:07:52,676 - Epoch: [25][  450/  586]    objective_loss 5.593114    LR 0.000500    
+2022-07-15 21:08:37,134 - Epoch: [25][  500/  586]    objective_loss 5.592419    LR 0.000500    
+2022-07-15 21:09:23,314 - Epoch: [25][  550/  586]    objective_loss 5.592655    LR 0.000500    
+2022-07-15 21:09:55,192 - Epoch: [25][  586/  586]    objective_loss 5.592748    LR 0.000500    
+2022-07-15 21:09:55,245 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 21:09:55,478 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 21:10:43,649 - Epoch: [26][   50/  586]    objective_loss 5.590662    LR 0.000500    
+2022-07-15 21:11:27,605 - Epoch: [26][  100/  586]    objective_loss 5.594474    LR 0.000500    
+2022-07-15 21:12:13,310 - Epoch: [26][  150/  586]    objective_loss 5.594553    LR 0.000500    
+2022-07-15 21:12:58,201 - Epoch: [26][  200/  586]    objective_loss 5.595131    LR 0.000500    
+2022-07-15 21:13:43,319 - Epoch: [26][  250/  586]    objective_loss 5.594938    LR 0.000500    
+2022-07-15 21:14:28,829 - Epoch: [26][  300/  586]    objective_loss 5.594940    LR 0.000500    
+2022-07-15 21:15:13,172 - Epoch: [26][  350/  586]    objective_loss 5.595066    LR 0.000500    
+2022-07-15 21:15:59,465 - Epoch: [26][  400/  586]    objective_loss 5.595069    LR 0.000500    
+2022-07-15 21:16:44,166 - Epoch: [26][  450/  586]    objective_loss 5.594447    LR 0.000500    
+2022-07-15 21:17:30,531 - Epoch: [26][  500/  586]    objective_loss 5.593804    LR 0.000500    
+2022-07-15 21:18:15,111 - Epoch: [26][  550/  586]    objective_loss 5.593849    LR 0.000500    
+2022-07-15 21:18:47,519 - Epoch: [26][  586/  586]    objective_loss 5.593097    LR 0.000500    
+2022-07-15 21:18:47,573 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 21:18:47,813 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 21:19:36,196 - Epoch: [27][   50/  586]    objective_loss 5.589788    LR 0.000500    
+2022-07-15 21:20:20,579 - Epoch: [27][  100/  586]    objective_loss 5.590427    LR 0.000500    
+2022-07-15 21:21:06,744 - Epoch: [27][  150/  586]    objective_loss 5.589649    LR 0.000500    
+2022-07-15 21:21:51,128 - Epoch: [27][  200/  586]    objective_loss 5.590903    LR 0.000500    
+2022-07-15 21:22:37,118 - Epoch: [27][  250/  586]    objective_loss 5.591397    LR 0.000500    
+2022-07-15 21:23:21,309 - Epoch: [27][  300/  586]    objective_loss 5.591894    LR 0.000500    
+2022-07-15 21:24:07,119 - Epoch: [27][  350/  586]    objective_loss 5.591916    LR 0.000500    
+2022-07-15 21:24:51,908 - Epoch: [27][  400/  586]    objective_loss 5.591428    LR 0.000500    
+2022-07-15 21:25:37,244 - Epoch: [27][  450/  586]    objective_loss 5.591648    LR 0.000500    
+2022-07-15 21:26:22,666 - Epoch: [27][  500/  586]    objective_loss 5.591862    LR 0.000500    
+2022-07-15 21:27:07,448 - Epoch: [27][  550/  586]    objective_loss 5.591426    LR 0.000500    
+2022-07-15 21:27:39,763 - Epoch: [27][  586/  586]    objective_loss 5.591384    LR 0.000500    
+2022-07-15 21:27:39,817 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 21:27:40,058 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 21:28:28,224 - Epoch: [28][   50/  586]    objective_loss 5.591122    LR 0.000500    
+2022-07-15 21:29:12,606 - Epoch: [28][  100/  586]    objective_loss 5.593640    LR 0.000500    
+2022-07-15 21:29:58,976 - Epoch: [28][  150/  586]    objective_loss 5.592044    LR 0.000500    
+2022-07-15 21:30:43,422 - Epoch: [28][  200/  586]    objective_loss 5.591846    LR 0.000500    
+2022-07-15 21:31:29,688 - Epoch: [28][  250/  586]    objective_loss 5.591302    LR 0.000500    
+2022-07-15 21:32:14,177 - Epoch: [28][  300/  586]    objective_loss 5.590669    LR 0.000500    
+2022-07-15 21:33:00,231 - Epoch: [28][  350/  586]    objective_loss 5.591103    LR 0.000500    
+2022-07-15 21:33:44,616 - Epoch: [28][  400/  586]    objective_loss 5.590682    LR 0.000500    
+2022-07-15 21:34:30,868 - Epoch: [28][  450/  586]    objective_loss 5.590644    LR 0.000500    
+2022-07-15 21:35:15,384 - Epoch: [28][  500/  586]    objective_loss 5.590570    LR 0.000500    
+2022-07-15 21:36:01,542 - Epoch: [28][  550/  586]    objective_loss 5.590662    LR 0.000500    
+2022-07-15 21:36:33,028 - Epoch: [28][  586/  586]    objective_loss 5.590624    LR 0.000500    
+2022-07-15 21:36:33,081 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 21:36:33,314 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 21:37:21,835 - Epoch: [29][   50/  586]    objective_loss 5.590436    LR 0.000500    
+2022-07-15 21:38:05,961 - Epoch: [29][  100/  586]    objective_loss 5.593084    LR 0.000500    
+2022-07-15 21:38:52,021 - Epoch: [29][  150/  586]    objective_loss 5.592325    LR 0.000500    
+2022-07-15 21:39:36,282 - Epoch: [29][  200/  586]    objective_loss 5.591857    LR 0.000500    
+2022-07-15 21:40:22,218 - Epoch: [29][  250/  586]    objective_loss 5.591639    LR 0.000500    
+2022-07-15 21:41:06,441 - Epoch: [29][  300/  586]    objective_loss 5.591738    LR 0.000500    
+2022-07-15 21:41:52,343 - Epoch: [29][  350/  586]    objective_loss 5.590649    LR 0.000500    
+2022-07-15 21:42:36,401 - Epoch: [29][  400/  586]    objective_loss 5.590896    LR 0.000500    
+2022-07-15 21:43:22,470 - Epoch: [29][  450/  586]    objective_loss 5.590577    LR 0.000500    
+2022-07-15 21:44:06,789 - Epoch: [29][  500/  586]    objective_loss 5.590374    LR 0.000500    
+2022-07-15 21:44:53,109 - Epoch: [29][  550/  586]    objective_loss 5.591054    LR 0.000500    
+2022-07-15 21:45:25,146 - Epoch: [29][  586/  586]    objective_loss 5.591127    LR 0.000500    
+2022-07-15 21:45:25,200 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 21:45:25,441 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 21:46:14,112 - Epoch: [30][   50/  586]    objective_loss 5.587677    LR 0.000500    
+2022-07-15 21:46:58,593 - Epoch: [30][  100/  586]    objective_loss 5.589210    LR 0.000500    
+2022-07-15 21:47:44,972 - Epoch: [30][  150/  586]    objective_loss 5.589224    LR 0.000500    
+2022-07-15 21:48:29,500 - Epoch: [30][  200/  586]    objective_loss 5.589928    LR 0.000500    
+2022-07-15 21:49:15,818 - Epoch: [30][  250/  586]    objective_loss 5.589544    LR 0.000500    
+2022-07-15 21:50:00,395 - Epoch: [30][  300/  586]    objective_loss 5.588960    LR 0.000500    
+2022-07-15 21:50:46,777 - Epoch: [30][  350/  586]    objective_loss 5.588642    LR 0.000500    
+2022-07-15 21:51:31,285 - Epoch: [30][  400/  586]    objective_loss 5.588511    LR 0.000500    
+2022-07-15 21:52:17,507 - Epoch: [30][  450/  586]    objective_loss 5.588189    LR 0.000500    
+2022-07-15 21:53:01,967 - Epoch: [30][  500/  586]    objective_loss 5.588406    LR 0.000500    
+2022-07-15 21:53:48,220 - Epoch: [30][  550/  586]    objective_loss 5.588564    LR 0.000500    
+2022-07-15 21:54:20,004 - Epoch: [30][  586/  586]    objective_loss 5.588633    LR 0.000500    
+2022-07-15 21:54:20,060 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 21:54:20,301 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 21:55:08,495 - Epoch: [31][   50/  586]    objective_loss 5.591104    LR 0.000500    
+2022-07-15 21:55:52,730 - Epoch: [31][  100/  586]    objective_loss 5.590723    LR 0.000500    
+2022-07-15 21:56:38,755 - Epoch: [31][  150/  586]    objective_loss 5.590179    LR 0.000500    
+2022-07-15 21:57:22,997 - Epoch: [31][  200/  586]    objective_loss 5.589574    LR 0.000500    
+2022-07-15 21:58:08,797 - Epoch: [31][  250/  586]    objective_loss 5.589708    LR 0.000500    
+2022-07-15 21:58:52,880 - Epoch: [31][  300/  586]    objective_loss 5.589690    LR 0.000500    
+2022-07-15 21:59:38,875 - Epoch: [31][  350/  586]    objective_loss 5.589728    LR 0.000500    
+2022-07-15 22:00:23,315 - Epoch: [31][  400/  586]    objective_loss 5.590060    LR 0.000500    
+2022-07-15 22:01:08,864 - Epoch: [31][  450/  586]    objective_loss 5.589667    LR 0.000500    
+2022-07-15 22:01:54,413 - Epoch: [31][  500/  586]    objective_loss 5.589596    LR 0.000500    
+2022-07-15 22:02:39,066 - Epoch: [31][  550/  586]    objective_loss 5.589695    LR 0.000500    
+2022-07-15 22:03:11,809 - Epoch: [31][  586/  586]    objective_loss 5.589927    LR 0.000500    
+2022-07-15 22:03:11,862 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 22:03:12,106 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 22:04:00,494 - Epoch: [32][   50/  586]    objective_loss 5.589266    LR 0.000500    
+2022-07-15 22:04:44,720 - Epoch: [32][  100/  586]    objective_loss 5.587610    LR 0.000500    
+2022-07-15 22:05:30,513 - Epoch: [32][  150/  586]    objective_loss 5.587465    LR 0.000500    
+2022-07-15 22:06:15,266 - Epoch: [32][  200/  586]    objective_loss 5.587917    LR 0.000500    
+2022-07-15 22:07:00,438 - Epoch: [32][  250/  586]    objective_loss 5.588791    LR 0.000500    
+2022-07-15 22:07:45,352 - Epoch: [32][  300/  586]    objective_loss 5.589005    LR 0.000500    
+2022-07-15 22:08:30,725 - Epoch: [32][  350/  586]    objective_loss 5.588589    LR 0.000500    
+2022-07-15 22:09:15,344 - Epoch: [32][  400/  586]    objective_loss 5.588138    LR 0.000500    
+2022-07-15 22:10:00,936 - Epoch: [32][  450/  586]    objective_loss 5.588541    LR 0.000500    
+2022-07-15 22:10:45,793 - Epoch: [32][  500/  586]    objective_loss 5.588625    LR 0.000500    
+2022-07-15 22:11:32,089 - Epoch: [32][  550/  586]    objective_loss 5.588223    LR 0.000500    
+2022-07-15 22:12:04,218 - Epoch: [32][  586/  586]    objective_loss 5.588173    LR 0.000500    
+2022-07-15 22:12:04,273 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 22:12:04,514 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 22:12:52,723 - Epoch: [33][   50/  586]    objective_loss 5.581927    LR 0.000500    
+2022-07-15 22:13:37,013 - Epoch: [33][  100/  586]    objective_loss 5.586450    LR 0.000500    
+2022-07-15 22:14:23,108 - Epoch: [33][  150/  586]    objective_loss 5.587888    LR 0.000500    
+2022-07-15 22:15:07,485 - Epoch: [33][  200/  586]    objective_loss 5.587550    LR 0.000500    
+2022-07-15 22:15:53,565 - Epoch: [33][  250/  586]    objective_loss 5.587793    LR 0.000500    
+2022-07-15 22:16:37,723 - Epoch: [33][  300/  586]    objective_loss 5.588231    LR 0.000500    
+2022-07-15 22:17:23,842 - Epoch: [33][  350/  586]    objective_loss 5.588064    LR 0.000500    
+2022-07-15 22:18:08,318 - Epoch: [33][  400/  586]    objective_loss 5.587938    LR 0.000500    
+2022-07-15 22:18:54,663 - Epoch: [33][  450/  586]    objective_loss 5.588065    LR 0.000500    
+2022-07-15 22:19:39,078 - Epoch: [33][  500/  586]    objective_loss 5.587606    LR 0.000500    
+2022-07-15 22:20:25,307 - Epoch: [33][  550/  586]    objective_loss 5.587428    LR 0.000500    
+2022-07-15 22:20:57,045 - Epoch: [33][  586/  586]    objective_loss 5.587419    LR 0.000500    
+2022-07-15 22:20:57,103 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 22:20:57,340 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 22:21:45,770 - Epoch: [34][   50/  586]    objective_loss 5.587643    LR 0.000500    
+2022-07-15 22:22:29,889 - Epoch: [34][  100/  586]    objective_loss 5.586301    LR 0.000500    
+2022-07-15 22:23:15,772 - Epoch: [34][  150/  586]    objective_loss 5.586970    LR 0.000500    
+2022-07-15 22:24:00,104 - Epoch: [34][  200/  586]    objective_loss 5.588299    LR 0.000500    
+2022-07-15 22:24:46,065 - Epoch: [34][  250/  586]    objective_loss 5.588814    LR 0.000500    
+2022-07-15 22:25:30,237 - Epoch: [34][  300/  586]    objective_loss 5.588199    LR 0.000500    
+2022-07-15 22:26:16,156 - Epoch: [34][  350/  586]    objective_loss 5.587992    LR 0.000500    
+2022-07-15 22:27:01,172 - Epoch: [34][  400/  586]    objective_loss 5.587928    LR 0.000500    
+2022-07-15 22:27:45,976 - Epoch: [34][  450/  586]    objective_loss 5.587511    LR 0.000500    
+2022-07-15 22:28:31,347 - Epoch: [34][  500/  586]    objective_loss 5.587407    LR 0.000500    
+2022-07-15 22:29:16,310 - Epoch: [34][  550/  586]    objective_loss 5.587384    LR 0.000500    
+2022-07-15 22:29:48,313 - Epoch: [34][  586/  586]    objective_loss 5.587258    LR 0.000500    
+2022-07-15 22:29:48,366 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 22:29:48,599 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 22:30:36,979 - Epoch: [35][   50/  586]    objective_loss 5.578858    LR 0.000250    
+2022-07-15 22:31:21,012 - Epoch: [35][  100/  586]    objective_loss 5.578746    LR 0.000250    
+2022-07-15 22:32:07,219 - Epoch: [35][  150/  586]    objective_loss 5.577946    LR 0.000250    
+2022-07-15 22:32:51,528 - Epoch: [35][  200/  586]    objective_loss 5.578180    LR 0.000250    
+2022-07-15 22:33:37,733 - Epoch: [35][  250/  586]    objective_loss 5.578359    LR 0.000250    
+2022-07-15 22:34:22,109 - Epoch: [35][  300/  586]    objective_loss 5.578711    LR 0.000250    
+2022-07-15 22:35:08,299 - Epoch: [35][  350/  586]    objective_loss 5.578821    LR 0.000250    
+2022-07-15 22:35:52,898 - Epoch: [35][  400/  586]    objective_loss 5.579656    LR 0.000250    
+2022-07-15 22:36:39,144 - Epoch: [35][  450/  586]    objective_loss 5.579636    LR 0.000250    
+2022-07-15 22:37:23,786 - Epoch: [35][  500/  586]    objective_loss 5.579281    LR 0.000250    
+2022-07-15 22:38:10,027 - Epoch: [35][  550/  586]    objective_loss 5.578836    LR 0.000250    
+2022-07-15 22:38:41,668 - Epoch: [35][  586/  586]    objective_loss 5.578678    LR 0.000250    
+2022-07-15 22:38:41,722 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 22:38:41,964 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 22:39:30,603 - Epoch: [36][   50/  586]    objective_loss 5.577790    LR 0.000250    
+2022-07-15 22:40:15,164 - Epoch: [36][  100/  586]    objective_loss 5.578212    LR 0.000250    
+2022-07-15 22:41:01,281 - Epoch: [36][  150/  586]    objective_loss 5.578889    LR 0.000250    
+2022-07-15 22:41:45,797 - Epoch: [36][  200/  586]    objective_loss 5.578160    LR 0.000250    
+2022-07-15 22:42:31,949 - Epoch: [36][  250/  586]    objective_loss 5.578753    LR 0.000250    
+2022-07-15 22:43:16,087 - Epoch: [36][  300/  586]    objective_loss 5.579380    LR 0.000250    
+2022-07-15 22:44:02,116 - Epoch: [36][  350/  586]    objective_loss 5.579742    LR 0.000250    
+2022-07-15 22:44:46,266 - Epoch: [36][  400/  586]    objective_loss 5.579381    LR 0.000250    
+2022-07-15 22:45:32,291 - Epoch: [36][  450/  586]    objective_loss 5.579929    LR 0.000250    
+2022-07-15 22:46:16,446 - Epoch: [36][  500/  586]    objective_loss 5.580010    LR 0.000250    
+2022-07-15 22:47:02,308 - Epoch: [36][  550/  586]    objective_loss 5.579554    LR 0.000250    
+2022-07-15 22:47:34,317 - Epoch: [36][  586/  586]    objective_loss 5.579584    LR 0.000250    
+2022-07-15 22:47:34,371 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 22:47:34,612 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 22:48:23,051 - Epoch: [37][   50/  586]    objective_loss 5.576540    LR 0.000250    
+2022-07-15 22:49:07,347 - Epoch: [37][  100/  586]    objective_loss 5.576195    LR 0.000250    
+2022-07-15 22:49:53,462 - Epoch: [37][  150/  586]    objective_loss 5.578686    LR 0.000250    
+2022-07-15 22:50:37,690 - Epoch: [37][  200/  586]    objective_loss 5.578947    LR 0.000250    
+2022-07-15 22:51:23,844 - Epoch: [37][  250/  586]    objective_loss 5.579594    LR 0.000250    
+2022-07-15 22:52:08,230 - Epoch: [37][  300/  586]    objective_loss 5.578895    LR 0.000250    
+2022-07-15 22:52:54,542 - Epoch: [37][  350/  586]    objective_loss 5.579307    LR 0.000250    
+2022-07-15 22:53:39,180 - Epoch: [37][  400/  586]    objective_loss 5.578872    LR 0.000250    
+2022-07-15 22:54:25,503 - Epoch: [37][  450/  586]    objective_loss 5.578778    LR 0.000250    
+2022-07-15 22:55:10,069 - Epoch: [37][  500/  586]    objective_loss 5.578594    LR 0.000250    
+2022-07-15 22:55:56,476 - Epoch: [37][  550/  586]    objective_loss 5.578493    LR 0.000250    
+2022-07-15 22:56:28,392 - Epoch: [37][  586/  586]    objective_loss 5.578304    LR 0.000250    
+2022-07-15 22:56:28,446 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 22:56:28,686 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 22:57:17,244 - Epoch: [38][   50/  586]    objective_loss 5.578751    LR 0.000250    
+2022-07-15 22:58:01,581 - Epoch: [38][  100/  586]    objective_loss 5.579565    LR 0.000250    
+2022-07-15 22:58:47,880 - Epoch: [38][  150/  586]    objective_loss 5.578377    LR 0.000250    
+2022-07-15 22:59:32,297 - Epoch: [38][  200/  586]    objective_loss 5.577107    LR 0.000250    
+2022-07-15 23:00:18,884 - Epoch: [38][  250/  586]    objective_loss 5.577346    LR 0.000250    
+2022-07-15 23:01:03,546 - Epoch: [38][  300/  586]    objective_loss 5.577772    LR 0.000250    
+2022-07-15 23:01:49,905 - Epoch: [38][  350/  586]    objective_loss 5.578576    LR 0.000250    
+2022-07-15 23:02:34,626 - Epoch: [38][  400/  586]    objective_loss 5.578823    LR 0.000250    
+2022-07-15 23:03:20,879 - Epoch: [38][  450/  586]    objective_loss 5.578823    LR 0.000250    
+2022-07-15 23:04:05,419 - Epoch: [38][  500/  586]    objective_loss 5.578747    LR 0.000250    
+2022-07-15 23:04:51,769 - Epoch: [38][  550/  586]    objective_loss 5.578324    LR 0.000250    
+2022-07-15 23:05:23,644 - Epoch: [38][  586/  586]    objective_loss 5.578275    LR 0.000250    
+2022-07-15 23:05:23,697 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 23:05:23,942 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 23:06:12,163 - Epoch: [39][   50/  586]    objective_loss 5.578653    LR 0.000250    
+2022-07-15 23:06:56,405 - Epoch: [39][  100/  586]    objective_loss 5.580252    LR 0.000250    
+2022-07-15 23:07:42,723 - Epoch: [39][  150/  586]    objective_loss 5.578753    LR 0.000250    
+2022-07-15 23:08:26,994 - Epoch: [39][  200/  586]    objective_loss 5.578651    LR 0.000250    
+2022-07-15 23:09:12,994 - Epoch: [39][  250/  586]    objective_loss 5.577475    LR 0.000250    
+2022-07-15 23:09:57,295 - Epoch: [39][  300/  586]    objective_loss 5.577725    LR 0.000250    
+2022-07-15 23:10:43,537 - Epoch: [39][  350/  586]    objective_loss 5.578057    LR 0.000250    
+2022-07-15 23:11:28,016 - Epoch: [39][  400/  586]    objective_loss 5.578477    LR 0.000250    
+2022-07-15 23:12:14,129 - Epoch: [39][  450/  586]    objective_loss 5.578309    LR 0.000250    
+2022-07-15 23:12:58,677 - Epoch: [39][  500/  586]    objective_loss 5.578253    LR 0.000250    
+2022-07-15 23:13:45,075 - Epoch: [39][  550/  586]    objective_loss 5.578899    LR 0.000250    
+2022-07-15 23:14:16,703 - Epoch: [39][  586/  586]    objective_loss 5.578650    LR 0.000250    
+2022-07-15 23:14:16,757 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 23:14:16,998 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 23:15:05,428 - Epoch: [40][   50/  586]    objective_loss 5.575869    LR 0.000250    
+2022-07-15 23:15:49,569 - Epoch: [40][  100/  586]    objective_loss 5.578785    LR 0.000250    
+2022-07-15 23:16:35,459 - Epoch: [40][  150/  586]    objective_loss 5.577477    LR 0.000250    
+2022-07-15 23:17:20,109 - Epoch: [40][  200/  586]    objective_loss 5.577140    LR 0.000250    
+2022-07-15 23:18:05,985 - Epoch: [40][  250/  586]    objective_loss 5.576540    LR 0.000250    
+2022-07-15 23:18:50,767 - Epoch: [40][  300/  586]    objective_loss 5.575910    LR 0.000250    
+2022-07-15 23:19:36,841 - Epoch: [40][  350/  586]    objective_loss 5.576242    LR 0.000250    
+2022-07-15 23:20:21,411 - Epoch: [40][  400/  586]    objective_loss 5.576348    LR 0.000250    
+2022-07-15 23:21:07,738 - Epoch: [40][  450/  586]    objective_loss 5.576887    LR 0.000250    
+2022-07-15 23:21:52,422 - Epoch: [40][  500/  586]    objective_loss 5.576930    LR 0.000250    
+2022-07-15 23:22:38,683 - Epoch: [40][  550/  586]    objective_loss 5.577191    LR 0.000250    
+2022-07-15 23:23:10,562 - Epoch: [40][  586/  586]    objective_loss 5.577367    LR 0.000250    
+2022-07-15 23:23:10,615 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 23:23:10,856 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 23:23:59,733 - Epoch: [41][   50/  586]    objective_loss 5.576759    LR 0.000250    
+2022-07-15 23:24:44,487 - Epoch: [41][  100/  586]    objective_loss 5.576651    LR 0.000250    
+2022-07-15 23:25:30,734 - Epoch: [41][  150/  586]    objective_loss 5.575889    LR 0.000250    
+2022-07-15 23:26:15,272 - Epoch: [41][  200/  586]    objective_loss 5.576197    LR 0.000250    
+2022-07-15 23:27:01,836 - Epoch: [41][  250/  586]    objective_loss 5.575704    LR 0.000250    
+2022-07-15 23:27:46,377 - Epoch: [41][  300/  586]    objective_loss 5.576251    LR 0.000250    
+2022-07-15 23:28:32,818 - Epoch: [41][  350/  586]    objective_loss 5.576348    LR 0.000250    
+2022-07-15 23:29:17,451 - Epoch: [41][  400/  586]    objective_loss 5.576389    LR 0.000250    
+2022-07-15 23:30:03,950 - Epoch: [41][  450/  586]    objective_loss 5.576400    LR 0.000250    
+2022-07-15 23:30:48,763 - Epoch: [41][  500/  586]    objective_loss 5.576713    LR 0.000250    
+2022-07-15 23:31:35,114 - Epoch: [41][  550/  586]    objective_loss 5.576720    LR 0.000250    
+2022-07-15 23:32:07,692 - Epoch: [41][  586/  586]    objective_loss 5.576498    LR 0.000250    
+2022-07-15 23:32:07,747 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 23:32:07,989 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 23:32:56,372 - Epoch: [42][   50/  586]    objective_loss 5.580036    LR 0.000250    
+2022-07-15 23:33:40,408 - Epoch: [42][  100/  586]    objective_loss 5.580364    LR 0.000250    
+2022-07-15 23:34:26,536 - Epoch: [42][  150/  586]    objective_loss 5.579109    LR 0.000250    
+2022-07-15 23:35:10,940 - Epoch: [42][  200/  586]    objective_loss 5.577716    LR 0.000250    
+2022-07-15 23:35:57,014 - Epoch: [42][  250/  586]    objective_loss 5.577377    LR 0.000250    
+2022-07-15 23:36:41,432 - Epoch: [42][  300/  586]    objective_loss 5.577438    LR 0.000250    
+2022-07-15 23:37:27,542 - Epoch: [42][  350/  586]    objective_loss 5.577080    LR 0.000250    
+2022-07-15 23:38:12,014 - Epoch: [42][  400/  586]    objective_loss 5.576704    LR 0.000250    
+2022-07-15 23:38:58,307 - Epoch: [42][  450/  586]    objective_loss 5.576462    LR 0.000250    
+2022-07-15 23:39:42,656 - Epoch: [42][  500/  586]    objective_loss 5.576328    LR 0.000250    
+2022-07-15 23:40:28,914 - Epoch: [42][  550/  586]    objective_loss 5.576109    LR 0.000250    
+2022-07-15 23:41:00,494 - Epoch: [42][  586/  586]    objective_loss 5.575689    LR 0.000250    
+2022-07-15 23:41:00,550 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 23:41:00,787 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 23:41:49,396 - Epoch: [43][   50/  586]    objective_loss 5.576383    LR 0.000250    
+2022-07-15 23:42:33,993 - Epoch: [43][  100/  586]    objective_loss 5.577812    LR 0.000250    
+2022-07-15 23:43:20,508 - Epoch: [43][  150/  586]    objective_loss 5.577867    LR 0.000250    
+2022-07-15 23:44:05,137 - Epoch: [43][  200/  586]    objective_loss 5.576704    LR 0.000250    
+2022-07-15 23:44:51,566 - Epoch: [43][  250/  586]    objective_loss 5.576763    LR 0.000250    
+2022-07-15 23:45:36,008 - Epoch: [43][  300/  586]    objective_loss 5.576311    LR 0.000250    
+2022-07-15 23:46:22,233 - Epoch: [43][  350/  586]    objective_loss 5.576749    LR 0.000250    
+2022-07-15 23:47:06,717 - Epoch: [43][  400/  586]    objective_loss 5.576333    LR 0.000250    
+2022-07-15 23:47:53,091 - Epoch: [43][  450/  586]    objective_loss 5.576696    LR 0.000250    
+2022-07-15 23:48:37,843 - Epoch: [43][  500/  586]    objective_loss 5.576645    LR 0.000250    
+2022-07-15 23:49:24,386 - Epoch: [43][  550/  586]    objective_loss 5.576624    LR 0.000250    
+2022-07-15 23:49:56,229 - Epoch: [43][  586/  586]    objective_loss 5.576218    LR 0.000250    
+2022-07-15 23:49:56,284 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 23:49:56,523 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 23:50:45,266 - Epoch: [44][   50/  586]    objective_loss 5.574548    LR 0.000250    
+2022-07-15 23:51:29,702 - Epoch: [44][  100/  586]    objective_loss 5.574422    LR 0.000250    
+2022-07-15 23:52:15,775 - Epoch: [44][  150/  586]    objective_loss 5.575108    LR 0.000250    
+2022-07-15 23:53:00,209 - Epoch: [44][  200/  586]    objective_loss 5.575460    LR 0.000250    
+2022-07-15 23:53:46,235 - Epoch: [44][  250/  586]    objective_loss 5.575012    LR 0.000250    
+2022-07-15 23:54:30,514 - Epoch: [44][  300/  586]    objective_loss 5.574941    LR 0.000250    
+2022-07-15 23:55:16,620 - Epoch: [44][  350/  586]    objective_loss 5.575282    LR 0.000250    
+2022-07-15 23:56:00,985 - Epoch: [44][  400/  586]    objective_loss 5.575330    LR 0.000250    
+2022-07-15 23:56:47,104 - Epoch: [44][  450/  586]    objective_loss 5.575463    LR 0.000250    
+2022-07-15 23:57:31,559 - Epoch: [44][  500/  586]    objective_loss 5.575121    LR 0.000250    
+2022-07-15 23:58:17,699 - Epoch: [44][  550/  586]    objective_loss 5.575589    LR 0.000250    
+2022-07-15 23:58:49,507 - Epoch: [44][  586/  586]    objective_loss 5.575465    LR 0.000250    
+2022-07-15 23:58:49,561 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-15 23:58:49,801 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-15 23:59:37,999 - Epoch: [45][   50/  586]    objective_loss 5.579035    LR 0.000250    
+2022-07-16 00:00:22,171 - Epoch: [45][  100/  586]    objective_loss 5.577556    LR 0.000250    
+2022-07-16 00:01:08,093 - Epoch: [45][  150/  586]    objective_loss 5.577526    LR 0.000250    
+2022-07-16 00:01:52,212 - Epoch: [45][  200/  586]    objective_loss 5.577663    LR 0.000250    
+2022-07-16 00:02:37,982 - Epoch: [45][  250/  586]    objective_loss 5.577581    LR 0.000250    
+2022-07-16 00:03:22,574 - Epoch: [45][  300/  586]    objective_loss 5.576675    LR 0.000250    
+2022-07-16 00:04:08,128 - Epoch: [45][  350/  586]    objective_loss 5.576662    LR 0.000250    
+2022-07-16 00:04:52,929 - Epoch: [45][  400/  586]    objective_loss 5.576600    LR 0.000250    
+2022-07-16 00:05:38,213 - Epoch: [45][  450/  586]    objective_loss 5.576926    LR 0.000250    
+2022-07-16 00:06:23,350 - Epoch: [45][  500/  586]    objective_loss 5.576793    LR 0.000250    
+2022-07-16 00:07:08,058 - Epoch: [45][  550/  586]    objective_loss 5.576707    LR 0.000250    
+2022-07-16 00:07:40,439 - Epoch: [45][  586/  586]    objective_loss 5.576505    LR 0.000250    
+2022-07-16 00:07:40,493 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 00:07:40,735 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 00:08:29,019 - Epoch: [46][   50/  586]    objective_loss 5.573690    LR 0.000250    
+2022-07-16 00:09:13,393 - Epoch: [46][  100/  586]    objective_loss 5.575395    LR 0.000250    
+2022-07-16 00:09:59,658 - Epoch: [46][  150/  586]    objective_loss 5.574218    LR 0.000250    
+2022-07-16 00:10:44,133 - Epoch: [46][  200/  586]    objective_loss 5.576048    LR 0.000250    
+2022-07-16 00:11:30,399 - Epoch: [46][  250/  586]    objective_loss 5.575594    LR 0.000250    
+2022-07-16 00:12:14,805 - Epoch: [46][  300/  586]    objective_loss 5.575703    LR 0.000250    
+2022-07-16 00:13:00,961 - Epoch: [46][  350/  586]    objective_loss 5.576656    LR 0.000250    
+2022-07-16 00:13:45,395 - Epoch: [46][  400/  586]    objective_loss 5.576422    LR 0.000250    
+2022-07-16 00:14:31,493 - Epoch: [46][  450/  586]    objective_loss 5.576509    LR 0.000250    
+2022-07-16 00:15:15,887 - Epoch: [46][  500/  586]    objective_loss 5.576300    LR 0.000250    
+2022-07-16 00:16:02,304 - Epoch: [46][  550/  586]    objective_loss 5.576168    LR 0.000250    
+2022-07-16 00:16:34,003 - Epoch: [46][  586/  586]    objective_loss 5.576031    LR 0.000250    
+2022-07-16 00:16:34,062 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 00:16:34,298 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 00:17:22,611 - Epoch: [47][   50/  586]    objective_loss 5.576085    LR 0.000250    
+2022-07-16 00:18:06,860 - Epoch: [47][  100/  586]    objective_loss 5.577282    LR 0.000250    
+2022-07-16 00:18:52,890 - Epoch: [47][  150/  586]    objective_loss 5.576525    LR 0.000250    
+2022-07-16 00:19:37,201 - Epoch: [47][  200/  586]    objective_loss 5.576204    LR 0.000250    
+2022-07-16 00:20:23,273 - Epoch: [47][  250/  586]    objective_loss 5.576850    LR 0.000250    
+2022-07-16 00:21:07,397 - Epoch: [47][  300/  586]    objective_loss 5.576609    LR 0.000250    
+2022-07-16 00:21:53,248 - Epoch: [47][  350/  586]    objective_loss 5.576501    LR 0.000250    
+2022-07-16 00:22:37,478 - Epoch: [47][  400/  586]    objective_loss 5.576337    LR 0.000250    
+2022-07-16 00:23:23,826 - Epoch: [47][  450/  586]    objective_loss 5.576342    LR 0.000250    
+2022-07-16 00:24:08,298 - Epoch: [47][  500/  586]    objective_loss 5.576072    LR 0.000250    
+2022-07-16 00:24:54,208 - Epoch: [47][  550/  586]    objective_loss 5.576047    LR 0.000250    
+2022-07-16 00:25:25,983 - Epoch: [47][  586/  586]    objective_loss 5.575797    LR 0.000250    
+2022-07-16 00:25:26,037 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 00:25:26,279 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 00:26:14,786 - Epoch: [48][   50/  586]    objective_loss 5.577631    LR 0.000250    
+2022-07-16 00:26:59,336 - Epoch: [48][  100/  586]    objective_loss 5.575999    LR 0.000250    
+2022-07-16 00:27:45,796 - Epoch: [48][  150/  586]    objective_loss 5.574630    LR 0.000250    
+2022-07-16 00:28:30,439 - Epoch: [48][  200/  586]    objective_loss 5.574888    LR 0.000250    
+2022-07-16 00:29:16,905 - Epoch: [48][  250/  586]    objective_loss 5.574350    LR 0.000250    
+2022-07-16 00:30:01,430 - Epoch: [48][  300/  586]    objective_loss 5.574156    LR 0.000250    
+2022-07-16 00:30:47,657 - Epoch: [48][  350/  586]    objective_loss 5.573803    LR 0.000250    
+2022-07-16 00:31:32,149 - Epoch: [48][  400/  586]    objective_loss 5.574039    LR 0.000250    
+2022-07-16 00:32:18,466 - Epoch: [48][  450/  586]    objective_loss 5.574445    LR 0.000250    
+2022-07-16 00:33:02,898 - Epoch: [48][  500/  586]    objective_loss 5.574870    LR 0.000250    
+2022-07-16 00:33:49,141 - Epoch: [48][  550/  586]    objective_loss 5.574728    LR 0.000250    
+2022-07-16 00:34:20,854 - Epoch: [48][  586/  586]    objective_loss 5.574331    LR 0.000250    
+2022-07-16 00:34:20,910 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 00:34:21,141 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 00:35:09,977 - Epoch: [49][   50/  586]    objective_loss 5.577976    LR 0.000250    
+2022-07-16 00:35:54,530 - Epoch: [49][  100/  586]    objective_loss 5.576427    LR 0.000250    
+2022-07-16 00:36:41,097 - Epoch: [49][  150/  586]    objective_loss 5.575749    LR 0.000250    
+2022-07-16 00:37:25,889 - Epoch: [49][  200/  586]    objective_loss 5.577156    LR 0.000250    
+2022-07-16 00:38:12,278 - Epoch: [49][  250/  586]    objective_loss 5.576248    LR 0.000250    
+2022-07-16 00:38:57,037 - Epoch: [49][  300/  586]    objective_loss 5.576076    LR 0.000250    
+2022-07-16 00:39:43,453 - Epoch: [49][  350/  586]    objective_loss 5.576389    LR 0.000250    
+2022-07-16 00:40:28,271 - Epoch: [49][  400/  586]    objective_loss 5.576156    LR 0.000250    
+2022-07-16 00:41:14,807 - Epoch: [49][  450/  586]    objective_loss 5.575753    LR 0.000250    
+2022-07-16 00:41:59,613 - Epoch: [49][  500/  586]    objective_loss 5.575558    LR 0.000250    
+2022-07-16 00:42:46,068 - Epoch: [49][  550/  586]    objective_loss 5.575543    LR 0.000250    
+2022-07-16 00:43:17,806 - Epoch: [49][  586/  586]    objective_loss 5.575467    LR 0.000250    
+2022-07-16 00:43:17,862 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 00:43:18,093 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 00:44:06,448 - Epoch: [50][   50/  586]    objective_loss 5.575187    LR 0.000250    
+2022-07-16 00:44:50,705 - Epoch: [50][  100/  586]    objective_loss 5.576374    LR 0.000250    
+2022-07-16 00:45:36,745 - Epoch: [50][  150/  586]    objective_loss 5.575291    LR 0.000250    
+2022-07-16 00:46:21,030 - Epoch: [50][  200/  586]    objective_loss 5.574700    LR 0.000250    
+2022-07-16 00:47:07,060 - Epoch: [50][  250/  586]    objective_loss 5.575111    LR 0.000250    
+2022-07-16 00:47:51,270 - Epoch: [50][  300/  586]    objective_loss 5.574849    LR 0.000250    
+2022-07-16 00:48:37,221 - Epoch: [50][  350/  586]    objective_loss 5.574940    LR 0.000250    
+2022-07-16 00:49:21,702 - Epoch: [50][  400/  586]    objective_loss 5.574841    LR 0.000250    
+2022-07-16 00:50:07,266 - Epoch: [50][  450/  586]    objective_loss 5.574985    LR 0.000250    
+2022-07-16 00:50:52,475 - Epoch: [50][  500/  586]    objective_loss 5.574347    LR 0.000250    
+2022-07-16 00:51:37,216 - Epoch: [50][  550/  586]    objective_loss 5.573929    LR 0.000250    
+2022-07-16 00:52:09,497 - Epoch: [50][  586/  586]    objective_loss 5.573677    LR 0.000250    
+2022-07-16 00:52:09,551 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 00:52:09,792 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 00:52:58,405 - Epoch: [51][   50/  586]    objective_loss 5.577251    LR 0.000250    
+2022-07-16 00:53:42,931 - Epoch: [51][  100/  586]    objective_loss 5.577162    LR 0.000250    
+2022-07-16 00:54:29,174 - Epoch: [51][  150/  586]    objective_loss 5.575394    LR 0.000250    
+2022-07-16 00:55:13,319 - Epoch: [51][  200/  586]    objective_loss 5.574731    LR 0.000250    
+2022-07-16 00:55:59,289 - Epoch: [51][  250/  586]    objective_loss 5.575525    LR 0.000250    
+2022-07-16 00:56:44,231 - Epoch: [51][  300/  586]    objective_loss 5.574922    LR 0.000250    
+2022-07-16 00:57:29,682 - Epoch: [51][  350/  586]    objective_loss 5.574791    LR 0.000250    
+2022-07-16 00:58:15,403 - Epoch: [51][  400/  586]    objective_loss 5.575222    LR 0.000250    
+2022-07-16 00:59:00,096 - Epoch: [51][  450/  586]    objective_loss 5.575159    LR 0.000250    
+2022-07-16 00:59:46,366 - Epoch: [51][  500/  586]    objective_loss 5.574947    LR 0.000250    
+2022-07-16 01:00:30,806 - Epoch: [51][  550/  586]    objective_loss 5.575158    LR 0.000250    
+2022-07-16 01:01:03,184 - Epoch: [51][  586/  586]    objective_loss 5.574809    LR 0.000250    
+2022-07-16 01:01:03,246 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 01:01:03,479 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 01:01:51,885 - Epoch: [52][   50/  586]    objective_loss 5.578101    LR 0.000250    
+2022-07-16 01:02:36,677 - Epoch: [52][  100/  586]    objective_loss 5.577185    LR 0.000250    
+2022-07-16 01:03:22,928 - Epoch: [52][  150/  586]    objective_loss 5.576469    LR 0.000250    
+2022-07-16 01:04:07,606 - Epoch: [52][  200/  586]    objective_loss 5.575421    LR 0.000250    
+2022-07-16 01:04:53,967 - Epoch: [52][  250/  586]    objective_loss 5.575108    LR 0.000250    
+2022-07-16 01:05:38,397 - Epoch: [52][  300/  586]    objective_loss 5.575124    LR 0.000250    
+2022-07-16 01:06:24,863 - Epoch: [52][  350/  586]    objective_loss 5.574795    LR 0.000250    
+2022-07-16 01:07:09,450 - Epoch: [52][  400/  586]    objective_loss 5.574918    LR 0.000250    
+2022-07-16 01:07:55,661 - Epoch: [52][  450/  586]    objective_loss 5.575028    LR 0.000250    
+2022-07-16 01:08:40,226 - Epoch: [52][  500/  586]    objective_loss 5.574813    LR 0.000250    
+2022-07-16 01:09:26,449 - Epoch: [52][  550/  586]    objective_loss 5.574713    LR 0.000250    
+2022-07-16 01:09:58,270 - Epoch: [52][  586/  586]    objective_loss 5.574593    LR 0.000250    
+2022-07-16 01:09:58,324 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 01:09:58,557 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 01:10:47,244 - Epoch: [53][   50/  586]    objective_loss 5.573055    LR 0.000250    
+2022-07-16 01:11:32,076 - Epoch: [53][  100/  586]    objective_loss 5.576072    LR 0.000250    
+2022-07-16 01:12:18,689 - Epoch: [53][  150/  586]    objective_loss 5.574470    LR 0.000250    
+2022-07-16 01:13:03,615 - Epoch: [53][  200/  586]    objective_loss 5.574748    LR 0.000250    
+2022-07-16 01:13:50,417 - Epoch: [53][  250/  586]    objective_loss 5.574516    LR 0.000250    
+2022-07-16 01:14:35,522 - Epoch: [53][  300/  586]    objective_loss 5.574178    LR 0.000250    
+2022-07-16 01:15:22,187 - Epoch: [53][  350/  586]    objective_loss 5.574448    LR 0.000250    
+2022-07-16 01:16:07,076 - Epoch: [53][  400/  586]    objective_loss 5.574207    LR 0.000250    
+2022-07-16 01:16:53,822 - Epoch: [53][  450/  586]    objective_loss 5.574654    LR 0.000250    
+2022-07-16 01:17:38,760 - Epoch: [53][  500/  586]    objective_loss 5.574770    LR 0.000250    
+2022-07-16 01:18:25,466 - Epoch: [53][  550/  586]    objective_loss 5.574685    LR 0.000250    
+2022-07-16 01:18:57,307 - Epoch: [53][  586/  586]    objective_loss 5.574587    LR 0.000250    
+2022-07-16 01:18:57,360 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 01:18:57,605 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 01:19:45,834 - Epoch: [54][   50/  586]    objective_loss 5.572796    LR 0.000250    
+2022-07-16 01:20:29,950 - Epoch: [54][  100/  586]    objective_loss 5.572881    LR 0.000250    
+2022-07-16 01:21:15,669 - Epoch: [54][  150/  586]    objective_loss 5.572495    LR 0.000250    
+2022-07-16 01:22:00,054 - Epoch: [54][  200/  586]    objective_loss 5.572682    LR 0.000250    
+2022-07-16 01:22:45,164 - Epoch: [54][  250/  586]    objective_loss 5.572941    LR 0.000250    
+2022-07-16 01:23:30,692 - Epoch: [54][  300/  586]    objective_loss 5.572949    LR 0.000250    
+2022-07-16 01:24:15,556 - Epoch: [54][  350/  586]    objective_loss 5.573534    LR 0.000250    
+2022-07-16 01:25:01,382 - Epoch: [54][  400/  586]    objective_loss 5.574045    LR 0.000250    
+2022-07-16 01:25:45,959 - Epoch: [54][  450/  586]    objective_loss 5.573956    LR 0.000250    
+2022-07-16 01:26:32,062 - Epoch: [54][  500/  586]    objective_loss 5.574361    LR 0.000250    
+2022-07-16 01:27:16,535 - Epoch: [54][  550/  586]    objective_loss 5.574301    LR 0.000250    
+2022-07-16 01:27:48,885 - Epoch: [54][  586/  586]    objective_loss 5.574284    LR 0.000250    
+2022-07-16 01:27:48,940 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 01:27:49,182 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 01:28:37,407 - Epoch: [55][   50/  586]    objective_loss 5.571111    LR 0.000250    
+2022-07-16 01:29:21,556 - Epoch: [55][  100/  586]    objective_loss 5.570576    LR 0.000250    
+2022-07-16 01:30:07,438 - Epoch: [55][  150/  586]    objective_loss 5.570627    LR 0.000250    
+2022-07-16 01:30:51,599 - Epoch: [55][  200/  586]    objective_loss 5.571408    LR 0.000250    
+2022-07-16 01:31:37,397 - Epoch: [55][  250/  586]    objective_loss 5.571882    LR 0.000250    
+2022-07-16 01:32:22,119 - Epoch: [55][  300/  586]    objective_loss 5.572247    LR 0.000250    
+2022-07-16 01:33:07,390 - Epoch: [55][  350/  586]    objective_loss 5.572940    LR 0.000250    
+2022-07-16 01:33:52,540 - Epoch: [55][  400/  586]    objective_loss 5.573393    LR 0.000250    
+2022-07-16 01:34:37,262 - Epoch: [55][  450/  586]    objective_loss 5.573782    LR 0.000250    
+2022-07-16 01:35:22,962 - Epoch: [55][  500/  586]    objective_loss 5.573411    LR 0.000250    
+2022-07-16 01:36:07,393 - Epoch: [55][  550/  586]    objective_loss 5.573120    LR 0.000250    
+2022-07-16 01:36:39,751 - Epoch: [55][  586/  586]    objective_loss 5.572918    LR 0.000250    
+2022-07-16 01:36:39,805 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 01:36:40,047 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 01:37:28,608 - Epoch: [56][   50/  586]    objective_loss 5.577487    LR 0.000250    
+2022-07-16 01:38:12,952 - Epoch: [56][  100/  586]    objective_loss 5.575884    LR 0.000250    
+2022-07-16 01:38:59,214 - Epoch: [56][  150/  586]    objective_loss 5.574862    LR 0.000250    
+2022-07-16 01:39:43,705 - Epoch: [56][  200/  586]    objective_loss 5.574975    LR 0.000250    
+2022-07-16 01:40:30,111 - Epoch: [56][  250/  586]    objective_loss 5.574397    LR 0.000250    
+2022-07-16 01:41:14,546 - Epoch: [56][  300/  586]    objective_loss 5.573918    LR 0.000250    
+2022-07-16 01:42:00,837 - Epoch: [56][  350/  586]    objective_loss 5.574339    LR 0.000250    
+2022-07-16 01:42:45,481 - Epoch: [56][  400/  586]    objective_loss 5.574427    LR 0.000250    
+2022-07-16 01:43:31,911 - Epoch: [56][  450/  586]    objective_loss 5.574223    LR 0.000250    
+2022-07-16 01:44:16,505 - Epoch: [56][  500/  586]    objective_loss 5.574280    LR 0.000250    
+2022-07-16 01:45:02,705 - Epoch: [56][  550/  586]    objective_loss 5.574292    LR 0.000250    
+2022-07-16 01:45:34,552 - Epoch: [56][  586/  586]    objective_loss 5.574147    LR 0.000250    
+2022-07-16 01:45:34,607 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 01:45:34,846 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 01:46:23,429 - Epoch: [57][   50/  586]    objective_loss 5.568929    LR 0.000250    
+2022-07-16 01:47:07,931 - Epoch: [57][  100/  586]    objective_loss 5.571935    LR 0.000250    
+2022-07-16 01:47:54,097 - Epoch: [57][  150/  586]    objective_loss 5.573391    LR 0.000250    
+2022-07-16 01:48:38,515 - Epoch: [57][  200/  586]    objective_loss 5.572762    LR 0.000250    
+2022-07-16 01:49:24,932 - Epoch: [57][  250/  586]    objective_loss 5.573075    LR 0.000250    
+2022-07-16 01:50:09,298 - Epoch: [57][  300/  586]    objective_loss 5.573386    LR 0.000250    
+2022-07-16 01:50:55,593 - Epoch: [57][  350/  586]    objective_loss 5.573777    LR 0.000250    
+2022-07-16 01:51:39,692 - Epoch: [57][  400/  586]    objective_loss 5.574078    LR 0.000250    
+2022-07-16 01:52:25,756 - Epoch: [57][  450/  586]    objective_loss 5.573570    LR 0.000250    
+2022-07-16 01:53:09,769 - Epoch: [57][  500/  586]    objective_loss 5.573300    LR 0.000250    
+2022-07-16 01:53:55,497 - Epoch: [57][  550/  586]    objective_loss 5.573209    LR 0.000250    
+2022-07-16 01:54:27,208 - Epoch: [57][  586/  586]    objective_loss 5.573139    LR 0.000250    
+2022-07-16 01:54:27,265 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 01:54:27,494 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 01:55:16,354 - Epoch: [58][   50/  586]    objective_loss 5.574412    LR 0.000250    
+2022-07-16 01:56:01,199 - Epoch: [58][  100/  586]    objective_loss 5.574800    LR 0.000250    
+2022-07-16 01:56:47,886 - Epoch: [58][  150/  586]    objective_loss 5.572771    LR 0.000250    
+2022-07-16 01:57:32,353 - Epoch: [58][  200/  586]    objective_loss 5.573843    LR 0.000250    
+2022-07-16 01:58:18,507 - Epoch: [58][  250/  586]    objective_loss 5.573839    LR 0.000250    
+2022-07-16 01:59:03,211 - Epoch: [58][  300/  586]    objective_loss 5.574157    LR 0.000250    
+2022-07-16 01:59:49,494 - Epoch: [58][  350/  586]    objective_loss 5.573828    LR 0.000250    
+2022-07-16 02:00:34,073 - Epoch: [58][  400/  586]    objective_loss 5.573857    LR 0.000250    
+2022-07-16 02:01:20,295 - Epoch: [58][  450/  586]    objective_loss 5.573769    LR 0.000250    
+2022-07-16 02:02:04,693 - Epoch: [58][  500/  586]    objective_loss 5.573655    LR 0.000250    
+2022-07-16 02:02:50,867 - Epoch: [58][  550/  586]    objective_loss 5.573589    LR 0.000250    
+2022-07-16 02:03:22,711 - Epoch: [58][  586/  586]    objective_loss 5.573295    LR 0.000250    
+2022-07-16 02:03:22,767 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 02:03:23,009 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 02:04:11,261 - Epoch: [59][   50/  586]    objective_loss 5.578013    LR 0.000250    
+2022-07-16 02:04:55,856 - Epoch: [59][  100/  586]    objective_loss 5.573850    LR 0.000250    
+2022-07-16 02:05:41,942 - Epoch: [59][  150/  586]    objective_loss 5.573066    LR 0.000250    
+2022-07-16 02:06:26,266 - Epoch: [59][  200/  586]    objective_loss 5.573454    LR 0.000250    
+2022-07-16 02:07:12,349 - Epoch: [59][  250/  586]    objective_loss 5.572982    LR 0.000250    
+2022-07-16 02:07:56,803 - Epoch: [59][  300/  586]    objective_loss 5.573382    LR 0.000250    
+2022-07-16 02:08:43,061 - Epoch: [59][  350/  586]    objective_loss 5.573548    LR 0.000250    
+2022-07-16 02:09:27,272 - Epoch: [59][  400/  586]    objective_loss 5.573206    LR 0.000250    
+2022-07-16 02:10:13,188 - Epoch: [59][  450/  586]    objective_loss 5.572753    LR 0.000250    
+2022-07-16 02:10:57,376 - Epoch: [59][  500/  586]    objective_loss 5.572890    LR 0.000250    
+2022-07-16 02:11:43,377 - Epoch: [59][  550/  586]    objective_loss 5.573040    LR 0.000250    
+2022-07-16 02:12:15,033 - Epoch: [59][  586/  586]    objective_loss 5.572922    LR 0.000250    
+2022-07-16 02:12:15,087 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 02:12:15,322 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 02:13:03,933 - Epoch: [60][   50/  586]    objective_loss 5.574711    LR 0.000250    
+2022-07-16 02:13:48,374 - Epoch: [60][  100/  586]    objective_loss 5.570253    LR 0.000250    
+2022-07-16 02:14:34,452 - Epoch: [60][  150/  586]    objective_loss 5.571408    LR 0.000250    
+2022-07-16 02:15:18,751 - Epoch: [60][  200/  586]    objective_loss 5.570577    LR 0.000250    
+2022-07-16 02:16:04,861 - Epoch: [60][  250/  586]    objective_loss 5.570982    LR 0.000250    
+2022-07-16 02:16:49,063 - Epoch: [60][  300/  586]    objective_loss 5.571891    LR 0.000250    
+2022-07-16 02:17:35,271 - Epoch: [60][  350/  586]    objective_loss 5.572343    LR 0.000250    
+2022-07-16 02:18:20,082 - Epoch: [60][  400/  586]    objective_loss 5.572526    LR 0.000250    
+2022-07-16 02:19:06,347 - Epoch: [60][  450/  586]    objective_loss 5.572901    LR 0.000250    
+2022-07-16 02:19:50,811 - Epoch: [60][  500/  586]    objective_loss 5.572844    LR 0.000250    
+2022-07-16 02:20:37,039 - Epoch: [60][  550/  586]    objective_loss 5.572892    LR 0.000250    
+2022-07-16 02:21:08,853 - Epoch: [60][  586/  586]    objective_loss 5.572928    LR 0.000250    
+2022-07-16 02:21:08,907 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 02:21:09,142 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 02:21:57,528 - Epoch: [61][   50/  586]    objective_loss 5.568759    LR 0.000250    
+2022-07-16 02:22:41,983 - Epoch: [61][  100/  586]    objective_loss 5.572596    LR 0.000250    
+2022-07-16 02:23:28,399 - Epoch: [61][  150/  586]    objective_loss 5.572370    LR 0.000250    
+2022-07-16 02:24:12,943 - Epoch: [61][  200/  586]    objective_loss 5.571503    LR 0.000250    
+2022-07-16 02:24:59,323 - Epoch: [61][  250/  586]    objective_loss 5.571405    LR 0.000250    
+2022-07-16 02:25:44,097 - Epoch: [61][  300/  586]    objective_loss 5.571477    LR 0.000250    
+2022-07-16 02:26:30,456 - Epoch: [61][  350/  586]    objective_loss 5.571840    LR 0.000250    
+2022-07-16 02:27:15,055 - Epoch: [61][  400/  586]    objective_loss 5.572377    LR 0.000250    
+2022-07-16 02:28:01,566 - Epoch: [61][  450/  586]    objective_loss 5.572956    LR 0.000250    
+2022-07-16 02:28:46,116 - Epoch: [61][  500/  586]    objective_loss 5.572803    LR 0.000250    
+2022-07-16 02:29:32,369 - Epoch: [61][  550/  586]    objective_loss 5.572553    LR 0.000250    
+2022-07-16 02:30:03,914 - Epoch: [61][  586/  586]    objective_loss 5.572527    LR 0.000250    
+2022-07-16 02:30:03,977 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 02:30:04,211 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 02:30:52,999 - Epoch: [62][   50/  586]    objective_loss 5.570670    LR 0.000250    
+2022-07-16 02:31:37,544 - Epoch: [62][  100/  586]    objective_loss 5.571051    LR 0.000250    
+2022-07-16 02:32:23,802 - Epoch: [62][  150/  586]    objective_loss 5.572042    LR 0.000250    
+2022-07-16 02:33:08,375 - Epoch: [62][  200/  586]    objective_loss 5.572413    LR 0.000250    
+2022-07-16 02:33:54,982 - Epoch: [62][  250/  586]    objective_loss 5.572399    LR 0.000250    
+2022-07-16 02:34:39,680 - Epoch: [62][  300/  586]    objective_loss 5.572327    LR 0.000250    
+2022-07-16 02:35:26,081 - Epoch: [62][  350/  586]    objective_loss 5.572218    LR 0.000250    
+2022-07-16 02:36:10,513 - Epoch: [62][  400/  586]    objective_loss 5.572487    LR 0.000250    
+2022-07-16 02:36:56,958 - Epoch: [62][  450/  586]    objective_loss 5.572405    LR 0.000250    
+2022-07-16 02:37:41,439 - Epoch: [62][  500/  586]    objective_loss 5.572423    LR 0.000250    
+2022-07-16 02:38:27,787 - Epoch: [62][  550/  586]    objective_loss 5.571940    LR 0.000250    
+2022-07-16 02:38:59,652 - Epoch: [62][  586/  586]    objective_loss 5.571701    LR 0.000250    
+2022-07-16 02:38:59,712 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 02:38:59,948 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 02:39:48,175 - Epoch: [63][   50/  586]    objective_loss 5.572264    LR 0.000250    
+2022-07-16 02:40:32,708 - Epoch: [63][  100/  586]    objective_loss 5.572941    LR 0.000250    
+2022-07-16 02:41:19,066 - Epoch: [63][  150/  586]    objective_loss 5.573420    LR 0.000250    
+2022-07-16 02:42:03,660 - Epoch: [63][  200/  586]    objective_loss 5.572827    LR 0.000250    
+2022-07-16 02:42:50,006 - Epoch: [63][  250/  586]    objective_loss 5.571618    LR 0.000250    
+2022-07-16 02:43:34,546 - Epoch: [63][  300/  586]    objective_loss 5.572130    LR 0.000250    
+2022-07-16 02:44:20,836 - Epoch: [63][  350/  586]    objective_loss 5.572217    LR 0.000250    
+2022-07-16 02:45:05,414 - Epoch: [63][  400/  586]    objective_loss 5.573145    LR 0.000250    
+2022-07-16 02:45:51,755 - Epoch: [63][  450/  586]    objective_loss 5.573086    LR 0.000250    
+2022-07-16 02:46:36,371 - Epoch: [63][  500/  586]    objective_loss 5.573456    LR 0.000250    
+2022-07-16 02:47:22,713 - Epoch: [63][  550/  586]    objective_loss 5.573682    LR 0.000250    
+2022-07-16 02:47:54,205 - Epoch: [63][  586/  586]    objective_loss 5.573667    LR 0.000250    
+2022-07-16 02:47:54,258 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 02:47:54,499 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 02:48:42,776 - Epoch: [64][   50/  586]    objective_loss 5.574900    LR 0.000250    
+2022-07-16 02:49:27,152 - Epoch: [64][  100/  586]    objective_loss 5.573877    LR 0.000250    
+2022-07-16 02:50:13,354 - Epoch: [64][  150/  586]    objective_loss 5.572899    LR 0.000250    
+2022-07-16 02:50:57,833 - Epoch: [64][  200/  586]    objective_loss 5.572393    LR 0.000250    
+2022-07-16 02:51:44,059 - Epoch: [64][  250/  586]    objective_loss 5.572611    LR 0.000250    
+2022-07-16 02:52:28,380 - Epoch: [64][  300/  586]    objective_loss 5.572429    LR 0.000250    
+2022-07-16 02:53:14,376 - Epoch: [64][  350/  586]    objective_loss 5.572672    LR 0.000250    
+2022-07-16 02:53:58,492 - Epoch: [64][  400/  586]    objective_loss 5.572655    LR 0.000250    
+2022-07-16 02:54:44,500 - Epoch: [64][  450/  586]    objective_loss 5.573057    LR 0.000250    
+2022-07-16 02:55:28,649 - Epoch: [64][  500/  586]    objective_loss 5.573295    LR 0.000250    
+2022-07-16 02:56:14,469 - Epoch: [64][  550/  586]    objective_loss 5.573285    LR 0.000250    
+2022-07-16 02:56:46,093 - Epoch: [64][  586/  586]    objective_loss 5.572825    LR 0.000250    
+2022-07-16 02:56:46,146 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 02:56:46,380 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 02:57:34,954 - Epoch: [65][   50/  586]    objective_loss 5.571301    LR 0.000250    
+2022-07-16 02:58:19,389 - Epoch: [65][  100/  586]    objective_loss 5.573131    LR 0.000250    
+2022-07-16 02:59:05,290 - Epoch: [65][  150/  586]    objective_loss 5.571350    LR 0.000250    
+2022-07-16 02:59:49,468 - Epoch: [65][  200/  586]    objective_loss 5.571697    LR 0.000250    
+2022-07-16 03:00:35,479 - Epoch: [65][  250/  586]    objective_loss 5.572373    LR 0.000250    
+2022-07-16 03:01:19,967 - Epoch: [65][  300/  586]    objective_loss 5.571723    LR 0.000250    
+2022-07-16 03:02:06,011 - Epoch: [65][  350/  586]    objective_loss 5.571491    LR 0.000250    
+2022-07-16 03:02:50,323 - Epoch: [65][  400/  586]    objective_loss 5.571803    LR 0.000250    
+2022-07-16 03:03:36,760 - Epoch: [65][  450/  586]    objective_loss 5.571667    LR 0.000250    
+2022-07-16 03:04:21,137 - Epoch: [65][  500/  586]    objective_loss 5.571533    LR 0.000250    
+2022-07-16 03:05:07,346 - Epoch: [65][  550/  586]    objective_loss 5.571760    LR 0.000250    
+2022-07-16 03:05:38,992 - Epoch: [65][  586/  586]    objective_loss 5.571805    LR 0.000250    
+2022-07-16 03:05:39,046 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 03:05:39,280 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 03:06:27,814 - Epoch: [66][   50/  586]    objective_loss 5.568541    LR 0.000250    
+2022-07-16 03:07:12,171 - Epoch: [66][  100/  586]    objective_loss 5.571813    LR 0.000250    
+2022-07-16 03:07:58,402 - Epoch: [66][  150/  586]    objective_loss 5.571130    LR 0.000250    
+2022-07-16 03:08:42,660 - Epoch: [66][  200/  586]    objective_loss 5.573422    LR 0.000250    
+2022-07-16 03:09:28,771 - Epoch: [66][  250/  586]    objective_loss 5.573729    LR 0.000250    
+2022-07-16 03:10:13,104 - Epoch: [66][  300/  586]    objective_loss 5.573947    LR 0.000250    
+2022-07-16 03:10:59,190 - Epoch: [66][  350/  586]    objective_loss 5.573152    LR 0.000250    
+2022-07-16 03:11:43,320 - Epoch: [66][  400/  586]    objective_loss 5.572668    LR 0.000250    
+2022-07-16 03:12:29,018 - Epoch: [66][  450/  586]    objective_loss 5.572247    LR 0.000250    
+2022-07-16 03:13:13,027 - Epoch: [66][  500/  586]    objective_loss 5.571873    LR 0.000250    
+2022-07-16 03:13:58,883 - Epoch: [66][  550/  586]    objective_loss 5.571657    LR 0.000250    
+2022-07-16 03:14:30,817 - Epoch: [66][  586/  586]    objective_loss 5.571610    LR 0.000250    
+2022-07-16 03:14:30,873 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 03:14:31,114 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 03:15:19,468 - Epoch: [67][   50/  586]    objective_loss 5.572892    LR 0.000250    
+2022-07-16 03:16:03,716 - Epoch: [67][  100/  586]    objective_loss 5.573990    LR 0.000250    
+2022-07-16 03:16:49,792 - Epoch: [67][  150/  586]    objective_loss 5.572864    LR 0.000250    
+2022-07-16 03:17:34,343 - Epoch: [67][  200/  586]    objective_loss 5.573498    LR 0.000250    
+2022-07-16 03:18:19,961 - Epoch: [67][  250/  586]    objective_loss 5.573156    LR 0.000250    
+2022-07-16 03:19:04,575 - Epoch: [67][  300/  586]    objective_loss 5.573583    LR 0.000250    
+2022-07-16 03:19:50,915 - Epoch: [67][  350/  586]    objective_loss 5.573275    LR 0.000250    
+2022-07-16 03:20:35,510 - Epoch: [67][  400/  586]    objective_loss 5.573452    LR 0.000250    
+2022-07-16 03:21:21,952 - Epoch: [67][  450/  586]    objective_loss 5.573337    LR 0.000250    
+2022-07-16 03:22:06,718 - Epoch: [67][  500/  586]    objective_loss 5.573141    LR 0.000250    
+2022-07-16 03:22:53,232 - Epoch: [67][  550/  586]    objective_loss 5.572782    LR 0.000250    
+2022-07-16 03:23:25,224 - Epoch: [67][  586/  586]    objective_loss 5.572396    LR 0.000250    
+2022-07-16 03:23:25,280 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 03:23:25,520 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 03:24:13,741 - Epoch: [68][   50/  586]    objective_loss 5.568716    LR 0.000250    
+2022-07-16 03:24:57,829 - Epoch: [68][  100/  586]    objective_loss 5.569514    LR 0.000250    
+2022-07-16 03:25:43,833 - Epoch: [68][  150/  586]    objective_loss 5.571913    LR 0.000250    
+2022-07-16 03:26:28,119 - Epoch: [68][  200/  586]    objective_loss 5.571768    LR 0.000250    
+2022-07-16 03:27:14,393 - Epoch: [68][  250/  586]    objective_loss 5.571040    LR 0.000250    
+2022-07-16 03:27:58,792 - Epoch: [68][  300/  586]    objective_loss 5.571247    LR 0.000250    
+2022-07-16 03:28:44,996 - Epoch: [68][  350/  586]    objective_loss 5.571602    LR 0.000250    
+2022-07-16 03:29:29,318 - Epoch: [68][  400/  586]    objective_loss 5.571469    LR 0.000250    
+2022-07-16 03:30:15,475 - Epoch: [68][  450/  586]    objective_loss 5.571188    LR 0.000250    
+2022-07-16 03:30:59,918 - Epoch: [68][  500/  586]    objective_loss 5.571193    LR 0.000250    
+2022-07-16 03:31:46,113 - Epoch: [68][  550/  586]    objective_loss 5.570974    LR 0.000250    
+2022-07-16 03:32:17,824 - Epoch: [68][  586/  586]    objective_loss 5.570720    LR 0.000250    
+2022-07-16 03:32:17,878 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 03:32:18,120 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 03:33:06,483 - Epoch: [69][   50/  586]    objective_loss 5.567160    LR 0.000250    
+2022-07-16 03:33:50,933 - Epoch: [69][  100/  586]    objective_loss 5.571724    LR 0.000250    
+2022-07-16 03:34:37,229 - Epoch: [69][  150/  586]    objective_loss 5.572197    LR 0.000250    
+2022-07-16 03:35:21,631 - Epoch: [69][  200/  586]    objective_loss 5.571968    LR 0.000250    
+2022-07-16 03:36:07,829 - Epoch: [69][  250/  586]    objective_loss 5.572025    LR 0.000250    
+2022-07-16 03:36:52,288 - Epoch: [69][  300/  586]    objective_loss 5.571699    LR 0.000250    
+2022-07-16 03:37:38,491 - Epoch: [69][  350/  586]    objective_loss 5.571273    LR 0.000250    
+2022-07-16 03:38:22,874 - Epoch: [69][  400/  586]    objective_loss 5.571403    LR 0.000250    
+2022-07-16 03:39:08,956 - Epoch: [69][  450/  586]    objective_loss 5.571461    LR 0.000250    
+2022-07-16 03:39:53,231 - Epoch: [69][  500/  586]    objective_loss 5.571637    LR 0.000250    
+2022-07-16 03:40:39,303 - Epoch: [69][  550/  586]    objective_loss 5.571432    LR 0.000250    
+2022-07-16 03:41:11,224 - Epoch: [69][  586/  586]    objective_loss 5.571329    LR 0.000250    
+2022-07-16 03:41:11,286 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 03:41:11,517 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 03:42:00,004 - Epoch: [70][   50/  586]    objective_loss 5.575827    LR 0.000250    
+2022-07-16 03:42:44,408 - Epoch: [70][  100/  586]    objective_loss 5.574773    LR 0.000250    
+2022-07-16 03:43:30,584 - Epoch: [70][  150/  586]    objective_loss 5.573627    LR 0.000250    
+2022-07-16 03:44:14,886 - Epoch: [70][  200/  586]    objective_loss 5.573319    LR 0.000250    
+2022-07-16 03:45:00,658 - Epoch: [70][  250/  586]    objective_loss 5.573203    LR 0.000250    
+2022-07-16 03:45:44,765 - Epoch: [70][  300/  586]    objective_loss 5.572739    LR 0.000250    
+2022-07-16 03:46:30,611 - Epoch: [70][  350/  586]    objective_loss 5.572320    LR 0.000250    
+2022-07-16 03:47:14,755 - Epoch: [70][  400/  586]    objective_loss 5.572499    LR 0.000250    
+2022-07-16 03:48:00,639 - Epoch: [70][  450/  586]    objective_loss 5.572532    LR 0.000250    
+2022-07-16 03:48:45,123 - Epoch: [70][  500/  586]    objective_loss 5.572370    LR 0.000250    
+2022-07-16 03:49:30,490 - Epoch: [70][  550/  586]    objective_loss 5.571998    LR 0.000250    
+2022-07-16 03:50:02,484 - Epoch: [70][  586/  586]    objective_loss 5.571721    LR 0.000250    
+2022-07-16 03:50:02,538 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 03:50:02,781 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 03:50:51,295 - Epoch: [71][   50/  586]    objective_loss 5.570702    LR 0.000250    
+2022-07-16 03:51:36,250 - Epoch: [71][  100/  586]    objective_loss 5.570158    LR 0.000250    
+2022-07-16 03:52:23,198 - Epoch: [71][  150/  586]    objective_loss 5.569298    LR 0.000250    
+2022-07-16 03:53:08,228 - Epoch: [71][  200/  586]    objective_loss 5.569879    LR 0.000250    
+2022-07-16 03:53:55,199 - Epoch: [71][  250/  586]    objective_loss 5.569235    LR 0.000250    
+2022-07-16 03:54:40,117 - Epoch: [71][  300/  586]    objective_loss 5.569600    LR 0.000250    
+2022-07-16 03:55:26,456 - Epoch: [71][  350/  586]    objective_loss 5.569793    LR 0.000250    
+2022-07-16 03:56:10,966 - Epoch: [71][  400/  586]    objective_loss 5.570404    LR 0.000250    
+2022-07-16 03:56:57,051 - Epoch: [71][  450/  586]    objective_loss 5.570746    LR 0.000250    
+2022-07-16 03:57:41,531 - Epoch: [71][  500/  586]    objective_loss 5.570586    LR 0.000250    
+2022-07-16 03:58:27,803 - Epoch: [71][  550/  586]    objective_loss 5.570695    LR 0.000250    
+2022-07-16 03:58:59,251 - Epoch: [71][  586/  586]    objective_loss 5.570455    LR 0.000250    
+2022-07-16 03:58:59,304 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 03:58:59,547 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 03:59:48,275 - Epoch: [72][   50/  586]    objective_loss 5.568005    LR 0.000250    
+2022-07-16 04:00:32,741 - Epoch: [72][  100/  586]    objective_loss 5.570469    LR 0.000250    
+2022-07-16 04:01:18,994 - Epoch: [72][  150/  586]    objective_loss 5.569652    LR 0.000250    
+2022-07-16 04:02:03,479 - Epoch: [72][  200/  586]    objective_loss 5.570585    LR 0.000250    
+2022-07-16 04:02:49,706 - Epoch: [72][  250/  586]    objective_loss 5.570423    LR 0.000250    
+2022-07-16 04:03:34,220 - Epoch: [72][  300/  586]    objective_loss 5.570578    LR 0.000250    
+2022-07-16 04:04:20,604 - Epoch: [72][  350/  586]    objective_loss 5.571269    LR 0.000250    
+2022-07-16 04:05:05,210 - Epoch: [72][  400/  586]    objective_loss 5.571162    LR 0.000250    
+2022-07-16 04:05:51,597 - Epoch: [72][  450/  586]    objective_loss 5.571062    LR 0.000250    
+2022-07-16 04:06:36,304 - Epoch: [72][  500/  586]    objective_loss 5.571029    LR 0.000250    
+2022-07-16 04:07:22,495 - Epoch: [72][  550/  586]    objective_loss 5.570714    LR 0.000250    
+2022-07-16 04:07:54,618 - Epoch: [72][  586/  586]    objective_loss 5.570633    LR 0.000250    
+2022-07-16 04:07:54,672 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 04:07:54,912 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 04:08:43,530 - Epoch: [73][   50/  586]    objective_loss 5.567973    LR 0.000250    
+2022-07-16 04:09:27,961 - Epoch: [73][  100/  586]    objective_loss 5.567835    LR 0.000250    
+2022-07-16 04:10:13,985 - Epoch: [73][  150/  586]    objective_loss 5.570295    LR 0.000250    
+2022-07-16 04:10:58,058 - Epoch: [73][  200/  586]    objective_loss 5.571364    LR 0.000250    
+2022-07-16 04:11:43,859 - Epoch: [73][  250/  586]    objective_loss 5.570222    LR 0.000250    
+2022-07-16 04:12:27,982 - Epoch: [73][  300/  586]    objective_loss 5.570517    LR 0.000250    
+2022-07-16 04:13:13,751 - Epoch: [73][  350/  586]    objective_loss 5.569886    LR 0.000250    
+2022-07-16 04:13:57,883 - Epoch: [73][  400/  586]    objective_loss 5.569928    LR 0.000250    
+2022-07-16 04:14:43,688 - Epoch: [73][  450/  586]    objective_loss 5.569895    LR 0.000250    
+2022-07-16 04:15:27,885 - Epoch: [73][  500/  586]    objective_loss 5.569800    LR 0.000250    
+2022-07-16 04:16:13,952 - Epoch: [73][  550/  586]    objective_loss 5.569728    LR 0.000250    
+2022-07-16 04:16:45,927 - Epoch: [73][  586/  586]    objective_loss 5.569901    LR 0.000250    
+2022-07-16 04:16:45,982 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 04:16:46,222 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 04:17:34,616 - Epoch: [74][   50/  586]    objective_loss 5.570604    LR 0.000250    
+2022-07-16 04:18:19,081 - Epoch: [74][  100/  586]    objective_loss 5.571181    LR 0.000250    
+2022-07-16 04:19:05,203 - Epoch: [74][  150/  586]    objective_loss 5.569965    LR 0.000250    
+2022-07-16 04:19:49,535 - Epoch: [74][  200/  586]    objective_loss 5.570578    LR 0.000250    
+2022-07-16 04:20:35,446 - Epoch: [74][  250/  586]    objective_loss 5.570926    LR 0.000250    
+2022-07-16 04:21:19,637 - Epoch: [74][  300/  586]    objective_loss 5.571215    LR 0.000250    
+2022-07-16 04:22:05,551 - Epoch: [74][  350/  586]    objective_loss 5.571368    LR 0.000250    
+2022-07-16 04:22:49,769 - Epoch: [74][  400/  586]    objective_loss 5.571197    LR 0.000250    
+2022-07-16 04:23:35,745 - Epoch: [74][  450/  586]    objective_loss 5.570997    LR 0.000250    
+2022-07-16 04:24:20,174 - Epoch: [74][  500/  586]    objective_loss 5.570954    LR 0.000250    
+2022-07-16 04:25:05,958 - Epoch: [74][  550/  586]    objective_loss 5.570334    LR 0.000250    
+2022-07-16 04:25:38,016 - Epoch: [74][  586/  586]    objective_loss 5.569988    LR 0.000250    
+2022-07-16 04:25:38,073 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 04:25:38,314 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 04:26:26,547 - Epoch: [75][   50/  586]    objective_loss 5.567666    LR 0.000250    
+2022-07-16 04:27:10,898 - Epoch: [75][  100/  586]    objective_loss 5.569774    LR 0.000250    
+2022-07-16 04:27:56,782 - Epoch: [75][  150/  586]    objective_loss 5.570638    LR 0.000250    
+2022-07-16 04:28:40,924 - Epoch: [75][  200/  586]    objective_loss 5.570644    LR 0.000250    
+2022-07-16 04:29:27,153 - Epoch: [75][  250/  586]    objective_loss 5.571091    LR 0.000250    
+2022-07-16 04:30:11,188 - Epoch: [75][  300/  586]    objective_loss 5.570548    LR 0.000250    
+2022-07-16 04:30:57,227 - Epoch: [75][  350/  586]    objective_loss 5.571075    LR 0.000250    
+2022-07-16 04:31:41,510 - Epoch: [75][  400/  586]    objective_loss 5.571000    LR 0.000250    
+2022-07-16 04:32:27,752 - Epoch: [75][  450/  586]    objective_loss 5.570996    LR 0.000250    
+2022-07-16 04:33:12,128 - Epoch: [75][  500/  586]    objective_loss 5.570716    LR 0.000250    
+2022-07-16 04:33:58,093 - Epoch: [75][  550/  586]    objective_loss 5.570506    LR 0.000250    
+2022-07-16 04:34:30,320 - Epoch: [75][  586/  586]    objective_loss 5.570611    LR 0.000250    
+2022-07-16 04:34:30,375 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 04:34:30,618 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 04:35:18,713 - Epoch: [76][   50/  586]    objective_loss 5.568415    LR 0.000250    
+2022-07-16 04:36:02,897 - Epoch: [76][  100/  586]    objective_loss 5.568817    LR 0.000250    
+2022-07-16 04:36:49,060 - Epoch: [76][  150/  586]    objective_loss 5.568575    LR 0.000250    
+2022-07-16 04:37:33,390 - Epoch: [76][  200/  586]    objective_loss 5.569895    LR 0.000250    
+2022-07-16 04:38:19,560 - Epoch: [76][  250/  586]    objective_loss 5.569481    LR 0.000250    
+2022-07-16 04:39:04,406 - Epoch: [76][  300/  586]    objective_loss 5.569568    LR 0.000250    
+2022-07-16 04:39:49,679 - Epoch: [76][  350/  586]    objective_loss 5.569013    LR 0.000250    
+2022-07-16 04:40:35,425 - Epoch: [76][  400/  586]    objective_loss 5.569213    LR 0.000250    
+2022-07-16 04:41:20,057 - Epoch: [76][  450/  586]    objective_loss 5.569137    LR 0.000250    
+2022-07-16 04:42:06,387 - Epoch: [76][  500/  586]    objective_loss 5.569072    LR 0.000250    
+2022-07-16 04:42:51,239 - Epoch: [76][  550/  586]    objective_loss 5.569078    LR 0.000250    
+2022-07-16 04:43:23,790 - Epoch: [76][  586/  586]    objective_loss 5.569044    LR 0.000250    
+2022-07-16 04:43:23,846 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 04:43:24,087 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 04:44:12,533 - Epoch: [77][   50/  586]    objective_loss 5.573664    LR 0.000250    
+2022-07-16 04:44:56,801 - Epoch: [77][  100/  586]    objective_loss 5.571330    LR 0.000250    
+2022-07-16 04:45:42,895 - Epoch: [77][  150/  586]    objective_loss 5.571747    LR 0.000250    
+2022-07-16 04:46:27,331 - Epoch: [77][  200/  586]    objective_loss 5.571020    LR 0.000250    
+2022-07-16 04:47:13,562 - Epoch: [77][  250/  586]    objective_loss 5.569750    LR 0.000250    
+2022-07-16 04:47:58,306 - Epoch: [77][  300/  586]    objective_loss 5.571087    LR 0.000250    
+2022-07-16 04:48:44,481 - Epoch: [77][  350/  586]    objective_loss 5.571324    LR 0.000250    
+2022-07-16 04:49:28,592 - Epoch: [77][  400/  586]    objective_loss 5.571060    LR 0.000250    
+2022-07-16 04:50:14,955 - Epoch: [77][  450/  586]    objective_loss 5.570699    LR 0.000250    
+2022-07-16 04:50:59,284 - Epoch: [77][  500/  586]    objective_loss 5.570485    LR 0.000250    
+2022-07-16 04:51:45,492 - Epoch: [77][  550/  586]    objective_loss 5.570309    LR 0.000250    
+2022-07-16 04:52:17,673 - Epoch: [77][  586/  586]    objective_loss 5.570253    LR 0.000250    
+2022-07-16 04:52:17,727 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 04:52:17,969 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 04:53:06,607 - Epoch: [78][   50/  586]    objective_loss 5.569105    LR 0.000250    
+2022-07-16 04:53:51,227 - Epoch: [78][  100/  586]    objective_loss 5.568168    LR 0.000250    
+2022-07-16 04:54:37,890 - Epoch: [78][  150/  586]    objective_loss 5.567596    LR 0.000250    
+2022-07-16 04:55:22,570 - Epoch: [78][  200/  586]    objective_loss 5.567764    LR 0.000250    
+2022-07-16 04:56:09,181 - Epoch: [78][  250/  586]    objective_loss 5.567876    LR 0.000250    
+2022-07-16 04:56:53,902 - Epoch: [78][  300/  586]    objective_loss 5.568544    LR 0.000250    
+2022-07-16 04:57:40,446 - Epoch: [78][  350/  586]    objective_loss 5.568644    LR 0.000250    
+2022-07-16 04:58:25,332 - Epoch: [78][  400/  586]    objective_loss 5.568594    LR 0.000250    
+2022-07-16 04:59:11,604 - Epoch: [78][  450/  586]    objective_loss 5.569392    LR 0.000250    
+2022-07-16 04:59:56,003 - Epoch: [78][  500/  586]    objective_loss 5.569554    LR 0.000250    
+2022-07-16 05:00:42,146 - Epoch: [78][  550/  586]    objective_loss 5.569510    LR 0.000250    
+2022-07-16 05:01:13,817 - Epoch: [78][  586/  586]    objective_loss 5.569248    LR 0.000250    
+2022-07-16 05:01:13,871 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 05:01:14,112 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 05:02:02,463 - Epoch: [79][   50/  586]    objective_loss 5.567970    LR 0.000250    
+2022-07-16 05:02:46,927 - Epoch: [79][  100/  586]    objective_loss 5.568553    LR 0.000250    
+2022-07-16 05:03:33,135 - Epoch: [79][  150/  586]    objective_loss 5.567660    LR 0.000250    
+2022-07-16 05:04:17,474 - Epoch: [79][  200/  586]    objective_loss 5.567252    LR 0.000250    
+2022-07-16 05:05:03,442 - Epoch: [79][  250/  586]    objective_loss 5.568752    LR 0.000250    
+2022-07-16 05:05:47,805 - Epoch: [79][  300/  586]    objective_loss 5.569456    LR 0.000250    
+2022-07-16 05:06:33,921 - Epoch: [79][  350/  586]    objective_loss 5.569529    LR 0.000250    
+2022-07-16 05:07:18,229 - Epoch: [79][  400/  586]    objective_loss 5.569585    LR 0.000250    
+2022-07-16 05:08:04,333 - Epoch: [79][  450/  586]    objective_loss 5.569679    LR 0.000250    
+2022-07-16 05:08:48,480 - Epoch: [79][  500/  586]    objective_loss 5.570058    LR 0.000250    
+2022-07-16 05:09:34,530 - Epoch: [79][  550/  586]    objective_loss 5.569867    LR 0.000250    
+2022-07-16 05:10:06,260 - Epoch: [79][  586/  586]    objective_loss 5.569687    LR 0.000250    
+2022-07-16 05:10:06,314 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 05:10:06,557 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 05:10:55,080 - Epoch: [80][   50/  586]    objective_loss 5.568519    LR 0.000250    
+2022-07-16 05:11:39,396 - Epoch: [80][  100/  586]    objective_loss 5.571003    LR 0.000250    
+2022-07-16 05:12:25,427 - Epoch: [80][  150/  586]    objective_loss 5.570207    LR 0.000250    
+2022-07-16 05:13:09,687 - Epoch: [80][  200/  586]    objective_loss 5.571106    LR 0.000250    
+2022-07-16 05:13:56,113 - Epoch: [80][  250/  586]    objective_loss 5.571119    LR 0.000250    
+2022-07-16 05:14:40,636 - Epoch: [80][  300/  586]    objective_loss 5.570450    LR 0.000250    
+2022-07-16 05:15:26,913 - Epoch: [80][  350/  586]    objective_loss 5.570142    LR 0.000250    
+2022-07-16 05:16:11,322 - Epoch: [80][  400/  586]    objective_loss 5.570570    LR 0.000250    
+2022-07-16 05:16:57,718 - Epoch: [80][  450/  586]    objective_loss 5.570475    LR 0.000250    
+2022-07-16 05:17:42,308 - Epoch: [80][  500/  586]    objective_loss 5.570432    LR 0.000250    
+2022-07-16 05:18:28,627 - Epoch: [80][  550/  586]    objective_loss 5.570322    LR 0.000250    
+2022-07-16 05:19:00,640 - Epoch: [80][  586/  586]    objective_loss 5.570192    LR 0.000250    
+2022-07-16 05:19:00,693 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 05:19:00,936 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 05:19:49,324 - Epoch: [81][   50/  586]    objective_loss 5.569340    LR 0.000250    
+2022-07-16 05:20:33,668 - Epoch: [81][  100/  586]    objective_loss 5.568839    LR 0.000250    
+2022-07-16 05:21:19,641 - Epoch: [81][  150/  586]    objective_loss 5.568930    LR 0.000250    
+2022-07-16 05:22:03,767 - Epoch: [81][  200/  586]    objective_loss 5.569417    LR 0.000250    
+2022-07-16 05:22:49,813 - Epoch: [81][  250/  586]    objective_loss 5.569852    LR 0.000250    
+2022-07-16 05:23:33,888 - Epoch: [81][  300/  586]    objective_loss 5.569300    LR 0.000250    
+2022-07-16 05:24:19,799 - Epoch: [81][  350/  586]    objective_loss 5.568968    LR 0.000250    
+2022-07-16 05:25:04,021 - Epoch: [81][  400/  586]    objective_loss 5.569427    LR 0.000250    
+2022-07-16 05:25:49,954 - Epoch: [81][  450/  586]    objective_loss 5.569050    LR 0.000250    
+2022-07-16 05:26:34,253 - Epoch: [81][  500/  586]    objective_loss 5.569059    LR 0.000250    
+2022-07-16 05:27:20,328 - Epoch: [81][  550/  586]    objective_loss 5.569232    LR 0.000250    
+2022-07-16 05:27:52,171 - Epoch: [81][  586/  586]    objective_loss 5.569138    LR 0.000250    
+2022-07-16 05:27:52,225 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 05:27:52,467 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 05:28:40,913 - Epoch: [82][   50/  586]    objective_loss 5.568359    LR 0.000250    
+2022-07-16 05:29:25,066 - Epoch: [82][  100/  586]    objective_loss 5.568620    LR 0.000250    
+2022-07-16 05:30:10,994 - Epoch: [82][  150/  586]    objective_loss 5.568126    LR 0.000250    
+2022-07-16 05:30:55,336 - Epoch: [82][  200/  586]    objective_loss 5.569821    LR 0.000250    
+2022-07-16 05:31:41,287 - Epoch: [82][  250/  586]    objective_loss 5.570107    LR 0.000250    
+2022-07-16 05:32:25,644 - Epoch: [82][  300/  586]    objective_loss 5.571062    LR 0.000250    
+2022-07-16 05:33:11,421 - Epoch: [82][  350/  586]    objective_loss 5.570892    LR 0.000250    
+2022-07-16 05:33:56,446 - Epoch: [82][  400/  586]    objective_loss 5.571118    LR 0.000250    
+2022-07-16 05:34:41,421 - Epoch: [82][  450/  586]    objective_loss 5.570894    LR 0.000250    
+2022-07-16 05:35:27,178 - Epoch: [82][  500/  586]    objective_loss 5.570832    LR 0.000250    
+2022-07-16 05:36:11,716 - Epoch: [82][  550/  586]    objective_loss 5.570749    LR 0.000250    
+2022-07-16 05:36:44,272 - Epoch: [82][  586/  586]    objective_loss 5.570845    LR 0.000250    
+2022-07-16 05:36:44,332 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 05:36:44,566 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 05:37:32,816 - Epoch: [83][   50/  586]    objective_loss 5.570946    LR 0.000250    
+2022-07-16 05:38:17,379 - Epoch: [83][  100/  586]    objective_loss 5.570007    LR 0.000250    
+2022-07-16 05:39:03,421 - Epoch: [83][  150/  586]    objective_loss 5.569508    LR 0.000250    
+2022-07-16 05:39:47,501 - Epoch: [83][  200/  586]    objective_loss 5.569218    LR 0.000250    
+2022-07-16 05:40:33,318 - Epoch: [83][  250/  586]    objective_loss 5.568937    LR 0.000250    
+2022-07-16 05:41:17,808 - Epoch: [83][  300/  586]    objective_loss 5.569524    LR 0.000250    
+2022-07-16 05:42:03,189 - Epoch: [83][  350/  586]    objective_loss 5.569659    LR 0.000250    
+2022-07-16 05:42:48,415 - Epoch: [83][  400/  586]    objective_loss 5.569396    LR 0.000250    
+2022-07-16 05:43:32,985 - Epoch: [83][  450/  586]    objective_loss 5.569726    LR 0.000250    
+2022-07-16 05:44:18,821 - Epoch: [83][  500/  586]    objective_loss 5.570174    LR 0.000250    
+2022-07-16 05:45:03,071 - Epoch: [83][  550/  586]    objective_loss 5.570199    LR 0.000250    
+2022-07-16 05:45:35,451 - Epoch: [83][  586/  586]    objective_loss 5.569921    LR 0.000250    
+2022-07-16 05:45:35,504 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 05:45:35,738 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 05:46:23,992 - Epoch: [84][   50/  586]    objective_loss 5.572764    LR 0.000250    
+2022-07-16 05:47:08,691 - Epoch: [84][  100/  586]    objective_loss 5.571549    LR 0.000250    
+2022-07-16 05:47:55,020 - Epoch: [84][  150/  586]    objective_loss 5.570091    LR 0.000250    
+2022-07-16 05:48:39,242 - Epoch: [84][  200/  586]    objective_loss 5.569827    LR 0.000250    
+2022-07-16 05:49:25,397 - Epoch: [84][  250/  586]    objective_loss 5.569514    LR 0.000250    
+2022-07-16 05:50:09,872 - Epoch: [84][  300/  586]    objective_loss 5.569554    LR 0.000250    
+2022-07-16 05:50:56,004 - Epoch: [84][  350/  586]    objective_loss 5.570139    LR 0.000250    
+2022-07-16 05:51:40,389 - Epoch: [84][  400/  586]    objective_loss 5.569773    LR 0.000250    
+2022-07-16 05:52:26,488 - Epoch: [84][  450/  586]    objective_loss 5.569630    LR 0.000250    
+2022-07-16 05:53:11,096 - Epoch: [84][  500/  586]    objective_loss 5.569717    LR 0.000250    
+2022-07-16 05:53:57,348 - Epoch: [84][  550/  586]    objective_loss 5.569654    LR 0.000250    
+2022-07-16 05:54:29,136 - Epoch: [84][  586/  586]    objective_loss 5.569624    LR 0.000250    
+2022-07-16 05:54:29,191 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 05:54:29,433 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 05:55:17,644 - Epoch: [85][   50/  586]    objective_loss 5.565687    LR 0.000250    
+2022-07-16 05:56:01,657 - Epoch: [85][  100/  586]    objective_loss 5.565473    LR 0.000250    
+2022-07-16 05:56:47,661 - Epoch: [85][  150/  586]    objective_loss 5.565701    LR 0.000250    
+2022-07-16 05:57:32,950 - Epoch: [85][  200/  586]    objective_loss 5.567149    LR 0.000250    
+2022-07-16 05:58:17,969 - Epoch: [85][  250/  586]    objective_loss 5.566881    LR 0.000250    
+2022-07-16 05:59:03,945 - Epoch: [85][  300/  586]    objective_loss 5.567675    LR 0.000250    
+2022-07-16 05:59:48,626 - Epoch: [85][  350/  586]    objective_loss 5.567640    LR 0.000250    
+2022-07-16 06:00:34,984 - Epoch: [85][  400/  586]    objective_loss 5.567990    LR 0.000250    
+2022-07-16 06:01:19,703 - Epoch: [85][  450/  586]    objective_loss 5.568316    LR 0.000250    
+2022-07-16 06:02:06,084 - Epoch: [85][  500/  586]    objective_loss 5.568239    LR 0.000250    
+2022-07-16 06:02:50,893 - Epoch: [85][  550/  586]    objective_loss 5.567997    LR 0.000250    
+2022-07-16 06:03:23,496 - Epoch: [85][  586/  586]    objective_loss 5.568096    LR 0.000250    
+2022-07-16 06:03:23,553 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 06:03:23,794 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 06:04:12,486 - Epoch: [86][   50/  586]    objective_loss 5.569709    LR 0.000250    
+2022-07-16 06:04:57,004 - Epoch: [86][  100/  586]    objective_loss 5.569095    LR 0.000250    
+2022-07-16 06:05:43,204 - Epoch: [86][  150/  586]    objective_loss 5.569251    LR 0.000250    
+2022-07-16 06:06:27,943 - Epoch: [86][  200/  586]    objective_loss 5.568247    LR 0.000250    
+2022-07-16 06:07:14,229 - Epoch: [86][  250/  586]    objective_loss 5.568167    LR 0.000250    
+2022-07-16 06:07:58,615 - Epoch: [86][  300/  586]    objective_loss 5.568313    LR 0.000250    
+2022-07-16 06:08:45,008 - Epoch: [86][  350/  586]    objective_loss 5.568499    LR 0.000250    
+2022-07-16 06:09:29,560 - Epoch: [86][  400/  586]    objective_loss 5.568667    LR 0.000250    
+2022-07-16 06:10:15,742 - Epoch: [86][  450/  586]    objective_loss 5.568703    LR 0.000250    
+2022-07-16 06:11:00,035 - Epoch: [86][  500/  586]    objective_loss 5.568984    LR 0.000250    
+2022-07-16 06:11:45,895 - Epoch: [86][  550/  586]    objective_loss 5.569037    LR 0.000250    
+2022-07-16 06:12:17,820 - Epoch: [86][  586/  586]    objective_loss 5.568834    LR 0.000250    
+2022-07-16 06:12:17,874 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 06:12:18,116 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 06:13:06,175 - Epoch: [87][   50/  586]    objective_loss 5.567766    LR 0.000250    
+2022-07-16 06:13:50,521 - Epoch: [87][  100/  586]    objective_loss 5.567871    LR 0.000250    
+2022-07-16 06:14:36,735 - Epoch: [87][  150/  586]    objective_loss 5.568066    LR 0.000250    
+2022-07-16 06:15:21,102 - Epoch: [87][  200/  586]    objective_loss 5.567231    LR 0.000250    
+2022-07-16 06:16:07,289 - Epoch: [87][  250/  586]    objective_loss 5.567230    LR 0.000250    
+2022-07-16 06:16:51,734 - Epoch: [87][  300/  586]    objective_loss 5.567868    LR 0.000250    
+2022-07-16 06:17:37,944 - Epoch: [87][  350/  586]    objective_loss 5.567913    LR 0.000250    
+2022-07-16 06:18:22,292 - Epoch: [87][  400/  586]    objective_loss 5.568861    LR 0.000250    
+2022-07-16 06:19:08,413 - Epoch: [87][  450/  586]    objective_loss 5.568837    LR 0.000250    
+2022-07-16 06:19:52,809 - Epoch: [87][  500/  586]    objective_loss 5.568661    LR 0.000250    
+2022-07-16 06:20:39,018 - Epoch: [87][  550/  586]    objective_loss 5.568581    LR 0.000250    
+2022-07-16 06:21:10,783 - Epoch: [87][  586/  586]    objective_loss 5.568771    LR 0.000250    
+2022-07-16 06:21:10,839 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 06:21:11,080 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 06:21:59,227 - Epoch: [88][   50/  586]    objective_loss 5.568384    LR 0.000250    
+2022-07-16 06:22:43,611 - Epoch: [88][  100/  586]    objective_loss 5.568263    LR 0.000250    
+2022-07-16 06:23:29,890 - Epoch: [88][  150/  586]    objective_loss 5.568267    LR 0.000250    
+2022-07-16 06:24:14,420 - Epoch: [88][  200/  586]    objective_loss 5.568741    LR 0.000250    
+2022-07-16 06:25:00,870 - Epoch: [88][  250/  586]    objective_loss 5.568547    LR 0.000250    
+2022-07-16 06:25:45,552 - Epoch: [88][  300/  586]    objective_loss 5.568330    LR 0.000250    
+2022-07-16 06:26:31,893 - Epoch: [88][  350/  586]    objective_loss 5.568329    LR 0.000250    
+2022-07-16 06:27:16,506 - Epoch: [88][  400/  586]    objective_loss 5.568936    LR 0.000250    
+2022-07-16 06:28:02,886 - Epoch: [88][  450/  586]    objective_loss 5.568580    LR 0.000250    
+2022-07-16 06:28:47,421 - Epoch: [88][  500/  586]    objective_loss 5.568803    LR 0.000250    
+2022-07-16 06:29:33,643 - Epoch: [88][  550/  586]    objective_loss 5.568296    LR 0.000250    
+2022-07-16 06:30:05,384 - Epoch: [88][  586/  586]    objective_loss 5.568268    LR 0.000250    
+2022-07-16 06:30:05,443 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 06:30:05,681 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 06:30:54,116 - Epoch: [89][   50/  586]    objective_loss 5.567223    LR 0.000250    
+2022-07-16 06:31:38,632 - Epoch: [89][  100/  586]    objective_loss 5.569881    LR 0.000250    
+2022-07-16 06:32:24,737 - Epoch: [89][  150/  586]    objective_loss 5.569722    LR 0.000250    
+2022-07-16 06:33:08,961 - Epoch: [89][  200/  586]    objective_loss 5.569499    LR 0.000250    
+2022-07-16 06:33:55,113 - Epoch: [89][  250/  586]    objective_loss 5.569267    LR 0.000250    
+2022-07-16 06:34:39,861 - Epoch: [89][  300/  586]    objective_loss 5.569480    LR 0.000250    
+2022-07-16 06:35:25,696 - Epoch: [89][  350/  586]    objective_loss 5.569517    LR 0.000250    
+2022-07-16 06:36:10,814 - Epoch: [89][  400/  586]    objective_loss 5.569097    LR 0.000250    
+2022-07-16 06:36:56,080 - Epoch: [89][  450/  586]    objective_loss 5.568995    LR 0.000250    
+2022-07-16 06:37:41,662 - Epoch: [89][  500/  586]    objective_loss 5.568899    LR 0.000250    
+2022-07-16 06:38:26,435 - Epoch: [89][  550/  586]    objective_loss 5.568954    LR 0.000250    
+2022-07-16 06:38:58,673 - Epoch: [89][  586/  586]    objective_loss 5.568924    LR 0.000250    
+2022-07-16 06:38:58,727 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 06:38:58,969 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 06:39:47,117 - Epoch: [90][   50/  586]    objective_loss 5.568982    LR 0.000250    
+2022-07-16 06:40:31,402 - Epoch: [90][  100/  586]    objective_loss 5.566241    LR 0.000250    
+2022-07-16 06:41:17,496 - Epoch: [90][  150/  586]    objective_loss 5.564521    LR 0.000250    
+2022-07-16 06:42:02,329 - Epoch: [90][  200/  586]    objective_loss 5.564192    LR 0.000250    
+2022-07-16 06:42:48,744 - Epoch: [90][  250/  586]    objective_loss 5.565040    LR 0.000250    
+2022-07-16 06:43:33,237 - Epoch: [90][  300/  586]    objective_loss 5.564875    LR 0.000250    
+2022-07-16 06:44:19,488 - Epoch: [90][  350/  586]    objective_loss 5.566160    LR 0.000250    
+2022-07-16 06:45:03,772 - Epoch: [90][  400/  586]    objective_loss 5.566002    LR 0.000250    
+2022-07-16 06:45:49,913 - Epoch: [90][  450/  586]    objective_loss 5.566261    LR 0.000250    
+2022-07-16 06:46:34,278 - Epoch: [90][  500/  586]    objective_loss 5.566539    LR 0.000250    
+2022-07-16 06:47:20,249 - Epoch: [90][  550/  586]    objective_loss 5.566624    LR 0.000250    
+2022-07-16 06:47:52,350 - Epoch: [90][  586/  586]    objective_loss 5.565953    LR 0.000250    
+2022-07-16 06:47:52,404 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 06:47:52,647 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 06:48:41,314 - Epoch: [91][   50/  586]    objective_loss 5.567672    LR 0.000250    
+2022-07-16 06:49:25,805 - Epoch: [91][  100/  586]    objective_loss 5.567632    LR 0.000250    
+2022-07-16 06:50:12,112 - Epoch: [91][  150/  586]    objective_loss 5.568650    LR 0.000250    
+2022-07-16 06:50:56,641 - Epoch: [91][  200/  586]    objective_loss 5.569082    LR 0.000250    
+2022-07-16 06:51:42,910 - Epoch: [91][  250/  586]    objective_loss 5.568143    LR 0.000250    
+2022-07-16 06:52:27,489 - Epoch: [91][  300/  586]    objective_loss 5.568102    LR 0.000250    
+2022-07-16 06:53:13,790 - Epoch: [91][  350/  586]    objective_loss 5.567593    LR 0.000250    
+2022-07-16 06:53:58,210 - Epoch: [91][  400/  586]    objective_loss 5.567764    LR 0.000250    
+2022-07-16 06:54:44,550 - Epoch: [91][  450/  586]    objective_loss 5.567427    LR 0.000250    
+2022-07-16 06:55:29,254 - Epoch: [91][  500/  586]    objective_loss 5.567222    LR 0.000250    
+2022-07-16 06:56:15,636 - Epoch: [91][  550/  586]    objective_loss 5.567610    LR 0.000250    
+2022-07-16 06:56:47,524 - Epoch: [91][  586/  586]    objective_loss 5.567408    LR 0.000250    
+2022-07-16 06:56:47,581 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 06:56:47,820 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 06:57:36,438 - Epoch: [92][   50/  586]    objective_loss 5.572167    LR 0.000250    
+2022-07-16 06:58:21,012 - Epoch: [92][  100/  586]    objective_loss 5.571053    LR 0.000250    
+2022-07-16 06:59:07,215 - Epoch: [92][  150/  586]    objective_loss 5.570023    LR 0.000250    
+2022-07-16 06:59:51,808 - Epoch: [92][  200/  586]    objective_loss 5.571024    LR 0.000250    
+2022-07-16 07:00:38,144 - Epoch: [92][  250/  586]    objective_loss 5.569549    LR 0.000250    
+2022-07-16 07:01:22,617 - Epoch: [92][  300/  586]    objective_loss 5.568783    LR 0.000250    
+2022-07-16 07:02:08,858 - Epoch: [92][  350/  586]    objective_loss 5.567959    LR 0.000250    
+2022-07-16 07:02:53,166 - Epoch: [92][  400/  586]    objective_loss 5.568128    LR 0.000250    
+2022-07-16 07:03:39,422 - Epoch: [92][  450/  586]    objective_loss 5.567952    LR 0.000250    
+2022-07-16 07:04:23,787 - Epoch: [92][  500/  586]    objective_loss 5.567805    LR 0.000250    
+2022-07-16 07:05:10,077 - Epoch: [92][  550/  586]    objective_loss 5.567311    LR 0.000250    
+2022-07-16 07:05:41,882 - Epoch: [92][  586/  586]    objective_loss 5.567535    LR 0.000250    
+2022-07-16 07:05:41,935 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 07:05:42,176 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 07:06:30,399 - Epoch: [93][   50/  586]    objective_loss 5.567841    LR 0.000250    
+2022-07-16 07:07:14,571 - Epoch: [93][  100/  586]    objective_loss 5.569123    LR 0.000250    
+2022-07-16 07:08:00,466 - Epoch: [93][  150/  586]    objective_loss 5.567800    LR 0.000250    
+2022-07-16 07:08:45,059 - Epoch: [93][  200/  586]    objective_loss 5.567927    LR 0.000250    
+2022-07-16 07:09:30,759 - Epoch: [93][  250/  586]    objective_loss 5.567826    LR 0.000250    
+2022-07-16 07:10:15,868 - Epoch: [93][  300/  586]    objective_loss 5.567885    LR 0.000250    
+2022-07-16 07:11:00,718 - Epoch: [93][  350/  586]    objective_loss 5.567773    LR 0.000250    
+2022-07-16 07:11:46,723 - Epoch: [93][  400/  586]    objective_loss 5.567705    LR 0.000250    
+2022-07-16 07:12:31,342 - Epoch: [93][  450/  586]    objective_loss 5.568248    LR 0.000250    
+2022-07-16 07:13:17,651 - Epoch: [93][  500/  586]    objective_loss 5.568166    LR 0.000250    
+2022-07-16 07:14:01,822 - Epoch: [93][  550/  586]    objective_loss 5.567838    LR 0.000250    
+2022-07-16 07:14:34,242 - Epoch: [93][  586/  586]    objective_loss 5.567392    LR 0.000250    
+2022-07-16 07:14:34,295 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 07:14:34,529 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 07:15:22,609 - Epoch: [94][   50/  586]    objective_loss 5.565993    LR 0.000250    
+2022-07-16 07:16:06,795 - Epoch: [94][  100/  586]    objective_loss 5.568759    LR 0.000250    
+2022-07-16 07:16:52,978 - Epoch: [94][  150/  586]    objective_loss 5.566824    LR 0.000250    
+2022-07-16 07:17:37,168 - Epoch: [94][  200/  586]    objective_loss 5.565845    LR 0.000250    
+2022-07-16 07:18:23,097 - Epoch: [94][  250/  586]    objective_loss 5.566698    LR 0.000250    
+2022-07-16 07:19:08,313 - Epoch: [94][  300/  586]    objective_loss 5.566432    LR 0.000250    
+2022-07-16 07:19:53,421 - Epoch: [94][  350/  586]    objective_loss 5.566808    LR 0.000250    
+2022-07-16 07:20:39,536 - Epoch: [94][  400/  586]    objective_loss 5.566574    LR 0.000250    
+2022-07-16 07:21:24,161 - Epoch: [94][  450/  586]    objective_loss 5.566023    LR 0.000250    
+2022-07-16 07:22:10,138 - Epoch: [94][  500/  586]    objective_loss 5.565673    LR 0.000250    
+2022-07-16 07:22:54,524 - Epoch: [94][  550/  586]    objective_loss 5.565846    LR 0.000250    
+2022-07-16 07:23:27,152 - Epoch: [94][  586/  586]    objective_loss 5.565855    LR 0.000250    
+2022-07-16 07:23:27,210 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 07:23:27,448 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 07:24:15,719 - Epoch: [95][   50/  586]    objective_loss 5.566951    LR 0.000250    
+2022-07-16 07:24:59,753 - Epoch: [95][  100/  586]    objective_loss 5.568278    LR 0.000250    
+2022-07-16 07:25:45,584 - Epoch: [95][  150/  586]    objective_loss 5.568092    LR 0.000250    
+2022-07-16 07:26:29,786 - Epoch: [95][  200/  586]    objective_loss 5.566934    LR 0.000250    
+2022-07-16 07:27:15,650 - Epoch: [95][  250/  586]    objective_loss 5.566567    LR 0.000250    
+2022-07-16 07:28:00,039 - Epoch: [95][  300/  586]    objective_loss 5.565891    LR 0.000250    
+2022-07-16 07:28:45,703 - Epoch: [95][  350/  586]    objective_loss 5.565685    LR 0.000250    
+2022-07-16 07:29:30,455 - Epoch: [95][  400/  586]    objective_loss 5.565522    LR 0.000250    
+2022-07-16 07:30:16,273 - Epoch: [95][  450/  586]    objective_loss 5.565636    LR 0.000250    
+2022-07-16 07:31:01,179 - Epoch: [95][  500/  586]    objective_loss 5.565622    LR 0.000250    
+2022-07-16 07:31:47,387 - Epoch: [95][  550/  586]    objective_loss 5.565698    LR 0.000250    
+2022-07-16 07:32:19,597 - Epoch: [95][  586/  586]    objective_loss 5.565736    LR 0.000250    
+2022-07-16 07:32:19,653 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 07:32:19,894 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 07:33:08,419 - Epoch: [96][   50/  586]    objective_loss 5.564842    LR 0.000250    
+2022-07-16 07:33:52,718 - Epoch: [96][  100/  586]    objective_loss 5.566269    LR 0.000250    
+2022-07-16 07:34:39,043 - Epoch: [96][  150/  586]    objective_loss 5.566037    LR 0.000250    
+2022-07-16 07:35:23,476 - Epoch: [96][  200/  586]    objective_loss 5.566407    LR 0.000250    
+2022-07-16 07:36:09,511 - Epoch: [96][  250/  586]    objective_loss 5.565630    LR 0.000250    
+2022-07-16 07:36:53,974 - Epoch: [96][  300/  586]    objective_loss 5.565427    LR 0.000250    
+2022-07-16 07:37:40,295 - Epoch: [96][  350/  586]    objective_loss 5.565133    LR 0.000250    
+2022-07-16 07:38:24,585 - Epoch: [96][  400/  586]    objective_loss 5.565103    LR 0.000250    
+2022-07-16 07:39:10,512 - Epoch: [96][  450/  586]    objective_loss 5.565578    LR 0.000250    
+2022-07-16 07:39:55,050 - Epoch: [96][  500/  586]    objective_loss 5.565426    LR 0.000250    
+2022-07-16 07:40:41,375 - Epoch: [96][  550/  586]    objective_loss 5.565630    LR 0.000250    
+2022-07-16 07:41:13,249 - Epoch: [96][  586/  586]    objective_loss 5.565322    LR 0.000250    
+2022-07-16 07:41:13,303 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 07:41:13,537 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 07:42:02,040 - Epoch: [97][   50/  586]    objective_loss 5.564050    LR 0.000250    
+2022-07-16 07:42:46,792 - Epoch: [97][  100/  586]    objective_loss 5.565431    LR 0.000250    
+2022-07-16 07:43:33,269 - Epoch: [97][  150/  586]    objective_loss 5.564689    LR 0.000250    
+2022-07-16 07:44:18,006 - Epoch: [97][  200/  586]    objective_loss 5.563987    LR 0.000250    
+2022-07-16 07:45:04,431 - Epoch: [97][  250/  586]    objective_loss 5.563308    LR 0.000250    
+2022-07-16 07:45:48,935 - Epoch: [97][  300/  586]    objective_loss 5.564352    LR 0.000250    
+2022-07-16 07:46:35,279 - Epoch: [97][  350/  586]    objective_loss 5.564746    LR 0.000250    
+2022-07-16 07:47:19,814 - Epoch: [97][  400/  586]    objective_loss 5.565136    LR 0.000250    
+2022-07-16 07:48:06,215 - Epoch: [97][  450/  586]    objective_loss 5.565183    LR 0.000250    
+2022-07-16 07:48:50,672 - Epoch: [97][  500/  586]    objective_loss 5.565813    LR 0.000250    
+2022-07-16 07:49:37,065 - Epoch: [97][  550/  586]    objective_loss 5.565621    LR 0.000250    
+2022-07-16 07:50:08,940 - Epoch: [97][  586/  586]    objective_loss 5.565376    LR 0.000250    
+2022-07-16 07:50:08,994 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 07:50:09,237 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 07:50:57,790 - Epoch: [98][   50/  586]    objective_loss 5.564394    LR 0.000250    
+2022-07-16 07:51:42,042 - Epoch: [98][  100/  586]    objective_loss 5.564109    LR 0.000250    
+2022-07-16 07:52:28,138 - Epoch: [98][  150/  586]    objective_loss 5.564762    LR 0.000250    
+2022-07-16 07:53:12,377 - Epoch: [98][  200/  586]    objective_loss 5.565252    LR 0.000250    
+2022-07-16 07:53:58,356 - Epoch: [98][  250/  586]    objective_loss 5.564981    LR 0.000250    
+2022-07-16 07:54:42,529 - Epoch: [98][  300/  586]    objective_loss 5.564681    LR 0.000250    
+2022-07-16 07:55:28,888 - Epoch: [98][  350/  586]    objective_loss 5.564915    LR 0.000250    
+2022-07-16 07:56:13,415 - Epoch: [98][  400/  586]    objective_loss 5.564948    LR 0.000250    
+2022-07-16 07:56:59,866 - Epoch: [98][  450/  586]    objective_loss 5.564734    LR 0.000250    
+2022-07-16 07:57:44,380 - Epoch: [98][  500/  586]    objective_loss 5.565016    LR 0.000250    
+2022-07-16 07:58:30,784 - Epoch: [98][  550/  586]    objective_loss 5.564927    LR 0.000250    
+2022-07-16 07:59:02,812 - Epoch: [98][  586/  586]    objective_loss 5.565041    LR 0.000250    
+2022-07-16 07:59:02,865 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 07:59:03,106 - Training epoch: 299999 samples (512 per mini-batch)
+2022-07-16 07:59:51,298 - Epoch: [99][   50/  586]    objective_loss 5.561671    LR 0.000250    
+2022-07-16 08:00:35,675 - Epoch: [99][  100/  586]    objective_loss 5.565445    LR 0.000250    
+2022-07-16 08:01:21,918 - Epoch: [99][  150/  586]    objective_loss 5.566080    LR 0.000250    
+2022-07-16 08:02:06,481 - Epoch: [99][  200/  586]    objective_loss 5.566333    LR 0.000250    
+2022-07-16 08:02:52,053 - Epoch: [99][  250/  586]    objective_loss 5.565981    LR 0.000250    
+2022-07-16 08:03:37,101 - Epoch: [99][  300/  586]    objective_loss 5.565538    LR 0.000250    
+2022-07-16 08:04:22,148 - Epoch: [99][  350/  586]    objective_loss 5.565479    LR 0.000250    
+2022-07-16 08:05:07,235 - Epoch: [99][  400/  586]    objective_loss 5.565707    LR 0.000250    
+2022-07-16 08:05:52,209 - Epoch: [99][  450/  586]    objective_loss 5.565378    LR 0.000250    
+2022-07-16 08:06:37,314 - Epoch: [99][  500/  586]    objective_loss 5.565183    LR 0.000250    
+2022-07-16 08:07:22,065 - Epoch: [99][  550/  586]    objective_loss 5.565088    LR 0.000250    
+2022-07-16 08:07:54,393 - Epoch: [99][  586/  586]    objective_loss 5.564687    LR 0.000250    
+2022-07-16 08:07:54,446 - Saving checkpoint to: jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-07-16 08:07:54,679 - Training time: 14:49:10.502282
