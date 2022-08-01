@@ -319,17 +319,6 @@ class ASLClassifier(nn.Module):
         self.feature_extractor = apputils.load_lean_checkpoint(self.feature_extractor, load_model_path, model_device=device)
         ai8x.update_model(self.feature_extractor)
         
-        # freeze the weights except for last conv and fc
-        # ct = 0
-        # for child in self.feature_extractor.children():
-        #     ct += 1
-        #     if ct < 8:
-        #         for param in child.parameters():
-        #             param.requires_grad = False
-        # for param in self.feature_extractor.parameters():
-        #     param.requires_grad = False
-            
-        # retrain the last layer to detect a bounding box and classes
         self.feature_extractor.fc2 = ai8x.FusedLinearReLU(128, 64, bias=True, **kwargs)
         self.feature_extractor.fc3 = ai8x.Linear(64, 29, bias=True, wide=True, **kwargs)
 

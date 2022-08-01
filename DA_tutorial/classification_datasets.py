@@ -190,51 +190,8 @@ class ClassificationDataset(Dataset):
         #print(paths)
         #plt.show()
 
-    # def viz_mispredict(self,wrong_samples,wrong_preds,actual_preds,img_names):
-    #     wrong_samples,wrong_preds,actual_preds = wrong_samples.to("cpu"), wrong_preds.to("cpu"),actual_preds.to("cpu")
-        
-    #     # import matplotlib
-    #     # matplotlib.use('TkAgg')
-    #     obj_classes = list(self.classes)
-    #     num_samples = len(wrong_samples)
-    #     num_rows = int(np.floor(np.sqrt(num_samples)))
 
-    #     if num_rows > 0:
-    #         num_cols = num_samples // num_rows
-    #     else:
-    #         return
-    #     print("num wrong:",num_samples, " num rows:",num_rows, " num cols:",num_cols)
-
-    #     fig,ax_array = plt.subplots(num_rows,num_cols,figsize=(30,30))
-    #     fig.subplots_adjust(hspace=1.5)
-    #     for i in range(num_rows):
-    #         for j in range(num_cols):
-    #             idx = i*num_rows+j
-    #             sample = wrong_samples[idx]
-    #             wrong_pred = wrong_preds[idx]
-    #             actual_pred = actual_preds[idx]
-    #             # Undo normalization
-    #             sample = (sample.permute(1, 2, 0)+1)/2
-    #             #text = "L: " + obj_classes[actual_pred.item()]  + " P:",obj_classes[wrong_pred.item()]#", i=" +str(idxs[idx].item())
-    #             text = img_names[idx]
-                
-    #             # for normal forward pass use this line
-    #             #ax_array[i,j].imshow(imgs[idx].permute(1, 2, 0))
-
-    #             # for quantized forward pass use this line
-    #             #print(imgs[idx].size(),torch.min(imgs[idx]))
-    #             try:
-    #                 if(ax_array.ndim > 1):
-    #                     ax_array[i,j].imshow(sample)
-    #                     ax_array[i,j].set_title(text,color="white")
-    #                     ax_array[i,j].set_xticks([])
-    #                     ax_array[i,j].set_yticks([])
-    #             except:
-    #                 print("exception")
-    #                 print(ax_array.ndim)
-    #                 print(sample)
-    #                 return
-    #     plt.savefig("incorrect.png")
+# ===========================================================================================================
 
 
 '''
@@ -502,12 +459,7 @@ class DomainAdaptationPairDataset(Dataset):
 
                 if model != None:
                     text = "GT :" + obj_classes[labels[idx]]  + " P: ",obj_classes[preds[idx].argmax()]#", i=" +str(idxs[idx].item())
-                
-                # for normal forward pass use this line
-                #ax_array[i,j].imshow(imgs[idx].permute(1, 2, 0))
-
-                # for quantized forward pass use this line
-                #print(imgs[idx].size(),torch.min(imgs[idx]))
+              
                 if idx % 2 == 0:
                     ax_array[i,j].imshow((imgs1[idx // 2].permute(1, 2, 0)+1)/2)
                 else:
@@ -519,6 +471,9 @@ class DomainAdaptationPairDataset(Dataset):
         plt.savefig('plot.png')
         #print(paths)
         #plt.show()
+
+
+# ===========================================================================================================
 
 
 '''
@@ -662,54 +617,6 @@ class EvenSampler(Sampler):
 
 # =========================== functions to create the dataset ===============================
 
-''' cats and dogs'''
-def cats_and_dogs_get_datasets(data, load_train=True, load_test=True,apply_transforms=True):
-    (data_dir, args) = data
-
-    train_dataset = None
-    test_dataset = None
-
-    # transforms for training
-    if load_train and apply_transforms:
-        train_transform = transforms.Compose([
-            transforms.Resize((128,128)),
-            transforms.ColorJitter(brightness=(0.65,1.35),saturation=(0.65,1.35),contrast=(0.65,1.35)),
-            transforms.RandomAffine(degrees=20,translate=(0.25,0.25)),
-            transforms.RandomHorizontalFlip(),
-            transforms.RandomVerticalFlip(),
-            #transforms.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 3)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
-
-    # no data augmentation
-    elif load_train and not apply_transforms:
-        train_transform = transforms.Compose([
-            transforms.Resize((128,128)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        train_dataset = ClassificationDataset(os.path.join(data_dir,"train"),train_transform)
-
-    else:
-        train_dataset = None
-
-    # transforms for test, validation --> convert to a valid tensor
-    if load_test:
-        test_transform = transforms.Compose([
-            #transforms.ToPILImage(),
-            transforms.Resize((128,128)),
-            transforms.ToTensor(),
-            ai8x.normalize(args=args)
-        ])
-        test_dataset = ClassificationDataset(os.path.join(data_dir,"test"),test_transform)
-
-    else:
-        test_dataset = None
-    
-    return train_dataset, test_dataset
-
 
 ''' pairs for domain discriminator '''
 def pairs_get_datasets(data,conf,pair_factor):
@@ -721,13 +628,6 @@ def pairs_get_datasets(data,conf,pair_factor):
 
     train_transform = transforms.Compose([
         transforms.Resize((128,128)),
-        #transforms.ToPILImage(),
-        #transforms.ColorJitter(brightness=(0.85,1.15),saturation=(0.75,1.25),contrast=(0.75,1.25),hue=(-0.4,0.4)),
-        #transforms.RandomGrayscale(0.15),
-        #transforms.RandomAffine(degrees=10,translate=(0.27,0.27)),
-        #transforms.RandomHorizontalFlip(),
-        #transforms.RandomVerticalFlip(),
-        #transforms.GaussianBlur(kernel_size=(3, 3), sigma=(0.1, 1.5)),
         transforms.ToTensor(),
         ai8x.normalize(args=args)
     ])
@@ -794,13 +694,6 @@ def pairs_get_datasets_c(data,conf,pair_factor):
 
     train_transform = transforms.Compose([
         transforms.Resize((128,128)),
-        #transforms.ToPILImage(),
-        #transforms.ColorJitter(brightness=(0.85,1.15),saturation=(0.75,1.25),contrast=(0.75,1.25),hue=(-0.4,0.4)),
-        #transforms.RandomGrayscale(0.15),
-        #transforms.RandomAffine(degrees=10,translate=(0.27,0.27)),
-        #transforms.RandomHorizontalFlip(),
-        #transforms.RandomVerticalFlip(),
-        #transforms.GaussianBlur(kernel_size=(3, 3), sigma=(0.1, 1.5)),
         transforms.ToTensor(),
         ai8x.normalize(args=args)
     ])
@@ -863,23 +756,22 @@ def pairs_get_datasets_c(data,conf,pair_factor):
 
 
 ''' get the office5 dataset '''
-def office5_get_datasets(data, load_train=True, load_val=True, load_test=True, validation_split=0.1, fix_aug=None, deterministic=None):
+def office5_get_datasets(data, conf, load_train=True, load_val=True, load_test=True):
     (data_dir, args) = data
 
     train_dataset = None
     val_dataset = None
     test_dataset = None
-    seed = fix_aug
+    seed = conf.aug_seed
+    
     # transforms for training
     if load_train:
         train_transform = transforms.Compose([
-            transforms.Resize((128,128)),
-            #transforms.ToPILImage(),
+            transforms.Resize((conf.dimensions[1],conf.dimensions[2])),
             transforms.ColorJitter(brightness=(0.85,1.15),saturation=(0.75,1.25),contrast=(0.75,1.25),hue=(-0.4,0.4)),
             transforms.RandomGrayscale(0.15),
             transforms.RandomAffine(degrees=10,translate=(0.27,0.27)),
             transforms.RandomHorizontalFlip(),
-            #transforms.RandomVerticalFlip(),
             transforms.GaussianBlur(kernel_size=(3, 3), sigma=(0.1, 1.5)),
             transforms.ToTensor(),
             ai8x.normalize(args=args)
@@ -889,21 +781,20 @@ def office5_get_datasets(data, load_train=True, load_val=True, load_test=True, v
         # create a validation set with no augmentations
         if load_val:
             val_transform = transforms.Compose([
-                #transforms.ToPILImage(),
-                transforms.Resize((128,128)),
+                transforms.Resize((conf.dimensions[1],conf.dimensions[2])),
                 transforms.ToTensor(),
                 ai8x.normalize(args=args)
             ])
 
             # split the training and val sets randomly
             indices = torch.randperm(len(train_dataset))
-            val_size = int(len(train_dataset)*validation_split)
+            val_size = int(len(train_dataset)*conf.validation_split)
 
             # if aug not fixed then will be different each execution
-            if not deterministic:
-                if fix_aug != None:
-                    random.seed(fix_aug) 
-                    torch.manual_seed(fix_aug)
+            if not conf.deterministic:
+                if conf.aug_seed != None:
+                    random.seed(conf.aug_seed) 
+                    torch.manual_seed(conf.aug_seed)
                 else:
                     seed = np.random.randint(2147483647)
                     random.seed(seed) 
