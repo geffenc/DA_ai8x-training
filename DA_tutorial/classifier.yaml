@@ -1,0 +1,94 @@
+#arch: officeclassifier_qat
+arch: officeclassifier_qat
+dataset: office
+
+layers:
+- out_offset: 0x1000 # L0: 3x128x128 --> 8x128x128
+  processors: 0x0000000000000007
+  operation: conv2d
+  kernel_size: 3x3
+  pad: 1
+  activate: ReLU
+  data_format: HWC
+  streaming: true
+- pad: 1 # L1: 8x128x128 --> 8x128x128
+  operation: conv2d
+  kernel_size: 3x3
+  activate: ReLU
+  out_offset: 0x2000
+  processors: 0x00000000000ff000
+  streaming: true
+- max_pool: 2 # L2: 8x128x128 --> 16x64x64
+  pool_stride: 2
+  pad: 1
+  operation: conv2d
+  kernel_size: 3x3
+  activate: ReLU
+  out_offset: 0x0000
+  processors: 0x00000000000ff000
+  streaming: true
+- pad: 1 # L3: 16x64x64 --> 16x64x64
+  operation: conv2d
+  kernel_size: 3x3
+  activate: ReLU
+  out_offset: 0x4000
+  processors: 0xffff000000000000
+- max_pool: 2 # L4: 16x64x64 --> 32x32x32
+  pool_stride: 2
+  pad: 1
+  operation: conv2d
+  kernel_size: 3x3
+  activate: ReLU
+  out_offset: 0x0000
+  processors: 0x000000000000ffff
+- pad: 1 # L5: 32x32x32 --> 32x32x32
+  operation: conv2d
+  kernel_size: 3x3
+  activate: ReLU
+  out_offset: 0x4000
+  processors: 0x00000000ffffffff
+- pad: 1 # L6: 32x32x32 --> 64x16x16
+  max_pool: 2
+  pool_stride: 2
+  operation: conv2d
+  kernel_size: 3x3
+  activate: ReLU
+  out_offset: 0x0000
+  processors: 0x00000000ffffffff
+- pad: 1 # L7: 64x16x16 --> 64x16x16
+  operation: conv2d
+  kernel_size: 3x3
+  activate: ReLU
+  out_offset: 0x4000
+  processors: 0xffffffffffffffff
+- pad: 1 # L8: 64x16x16 --> 64x8x8
+  max_pool: 2
+  pool_stride: 2
+  operation: conv2d
+  kernel_size: 3x3
+  activate: ReLU
+  out_offset: 0x0000
+  processors: 0xffffffffffffffff
+- pad: 1 # L9: 64x8x8 --> 64x4x4
+  max_pool: 2
+  pool_stride: 2
+  operation: conv2d
+  kernel_size: 3x3
+  activate: ReLU
+  out_offset: 0x4000
+  processors: 0xffffffffffffffff
+- op: mlp # L10: 64x4x4 --> 1024x1 --> 128x1
+  activate: ReLU
+  flatten: true
+  out_offset: 0x0000
+  processors: 0xffffffffffffffff
+- op: mlp # L11: 128x1 --> 64x1
+  activate: ReLU
+  flatten: true
+  out_offset: 0x4000
+  processors: 0xffffffffffffffff
+- op: mlp # L12: 64x1 --> 5x1
+  out_offset: 0x1000
+  flatten: true
+  output_width: 32
+  processors: 0xffffffffffffffff

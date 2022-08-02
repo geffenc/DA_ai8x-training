@@ -240,7 +240,7 @@ class OfficeClassifier(nn.Module):
             
         # retrain the last layer to detect a bounding box and classes
         self.feature_extractor.fc2 = ai8x.FusedLinearReLU(128, 64, bias=True, **kwargs)
-        self.feature_extractor.fc3 = ai8x.Linear(64, 5, bias=True, wide=True, **kwargs)
+        self.feature_extractor.fc3 = ai8x.Linear(64, 6, bias=True, wide=True, **kwargs)
 
         self.do1 = torch.nn.Dropout(p=0.25)
             
