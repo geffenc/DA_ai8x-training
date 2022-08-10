@@ -240,7 +240,7 @@ class OfficeClassifier(nn.Module):
             
         # retrain the last layer to detect a bounding box and classes
         self.feature_extractor.fc2 = ai8x.FusedLinearReLU(128, 64, bias=True, **kwargs)
-        self.feature_extractor.fc3 = ai8x.Linear(64, 6, bias=True, wide=True, **kwargs)
+        self.feature_extractor.fc3 = ai8x.Linear(64, 5, bias=True, wide=True, **kwargs)
 
         self.do1 = torch.nn.Dropout(p=0.25)
             
@@ -306,7 +306,7 @@ class OfficeDCD(nn.Module):
 # ===========================================================================================================
 
 
-''' model for fine-tuning classifier backbone for office5 '''
+''' model for fine-tuning classifier backbone for ASL '''
 class ASLClassifier(nn.Module):
     def __init__(self, num_classes=2,num_channels=3,dimensions=(128,128),bias=True,device='cpu',**kwargs):
         super().__init__()

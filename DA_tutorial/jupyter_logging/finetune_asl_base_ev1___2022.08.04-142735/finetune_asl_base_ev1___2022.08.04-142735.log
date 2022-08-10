@@ -1,0 +1,1449 @@
+2022-08-04 14:27:35,324 - Log file for this run: /home/geffencooper/Model_Development/DA_ai8x-training/DA_tutorial/jupyter_logging/finetune_asl_base_ev1___2022.08.04-142735/finetune_asl_base_ev1___2022.08.04-142735.log
+2022-08-04 14:27:35,324 - Number of CPUs: 16
+2022-08-04 14:27:35,354 - Number of GPUs: 1
+2022-08-04 14:27:35,354 - CUDA version: 10.2
+2022-08-04 14:27:35,354 - CUDNN version: 7605
+2022-08-04 14:27:35,354 - Kernel: 5.4.0-122-generic
+2022-08-04 14:27:35,354 - Python: 3.8.11 (default, Jun 14 2022, 10:01:20) 
+[GCC 9.4.0]
+2022-08-04 14:27:35,354 - pip freeze: {'absl-py': '1.2.0', 'appdirs': '1.4.4', 'argon2-cffi': '21.3.0', 'argon2-cffi-bindings': '21.2.0', 'asttokens': '2.0.5', 'atomicwrites': '1.4.1', 'attrs': '21.4.0', 'audioread': '2.1.9', 'backcall': '0.2.0', 'beautifulsoup4': '4.11.1', 'bleach': '5.0.1', 'bqplot': '0.11.5', 'cachetools': '5.2.0', 'certifi': '2022.6.15', 'cffi': '1.15.1', 'charset-normalizer': '2.1.0', 'cloudpickle': '2.1.0', 'cycler': '0.11.0', 'debugpy': '1.6.2', 'decorator': '5.1.1', 'defusedxml': '0.7.1', 'distiller': '0.4.0rc0', 'entrypoints': '0.4', 'executing': '0.9.1', 'fastjsonschema': '2.16.1', 'fonttools': '4.34.4', 'google-auth': '2.9.1', 'google-auth-oauthlib': '0.4.6', 'graphviz': '0.10.1', 'grpcio': '1.47.0', 'gym': '0.12.5', 'h5py': '3.7.0', 'idna': '3.3', 'importlib-metadata': '4.12.0', 'importlib-resources': '5.9.0', 'ipykernel': '6.15.1', 'ipython': '8.4.0', 'ipython-genutils': '0.2.0', 'ipywidgets': '7.4.2', 'jedi': '0.18.1', 'jinja2': '3.1.2', 'joblib': '1.1.0', 'jsonpatch': '1.32', 'jsonpointer': '2.3', 'jsonschema': '4.7.2', 'jupyter': '1.0.0', 'jupyter-client': '7.3.4', 'jupyter-console': '6.4.4', 'jupyter-core': '4.11.1', 'jupyterlab-pygments': '0.2.2', 'kiwisolver': '1.4.4', 'librosa': '0.9.2', 'llvmlite': '0.32.1', 'markdown': '3.4.1', 'markupsafe': '2.1.1', 'matplotlib': '3.5.2', 'matplotlib-inline': '0.1.3', 'mistune': '0.8.4', 'more-itertools': '8.13.0', 'munch': '2.5.0', 'nbclient': '0.6.6', 'nbconvert': '6.5.0', 'nbformat': '5.4.0', 'nest-asyncio': '1.5.5', 'notebook': '6.4.12', 'numba': '0.49.1', 'numpy': '1.22.4', 'oauthlib': '3.2.0', 'opencv-python': '4.6.0.66', 'packaging': '21.3', 'pandas': '1.4.3', 'pandocfilters': '1.5.0', 'parso': '0.8.3', 'pexpect': '4.8.0', 'pickleshare': '0.7.5', 'pillow': '9.2.0', 'pip': '22.2', 'pluggy': '0.13.1', 'pooch': '1.6.0', 'pretrainedmodels': '0.7.4', 'prometheus-client': '0.14.1', 'prompt-toolkit': '3.0.30', 'protobuf': '3.20.1', 'psutil': '5.9.1', 'ptyprocess': '0.7.0', 'pure-eval': '0.2.2', 'py': '1.11.0', 'pyasn1': '0.4.8', 'pyasn1-modules': '0.2.8', 'pycparser': '2.21', 'pydot': '1.4.1', 'pyglet': '1.5.26', 'pygments': '2.12.0', 'pyparsing': '3.0.9', 'pyrsistent': '0.18.1', 'pytest': '4.6.11', 'python-dateutil': '2.8.2', 'pytsmod': '0.3.5', 'pytz': '2022.1', 'pyyaml': '6.0', 'pyzmq': '23.2.0', 'qgrid': '1.1.1', 'qtconsole': '5.3.1', 'qtpy': '2.1.0', 'requests': '2.28.1', 'requests-oauthlib': '1.3.1', 'resampy': '0.3.1', 'rsa': '4.9', 'scikit-learn': '0.23.2', 'scipy': '1.8.1', 'send2trash': '1.8.0', 'setuptools': '63.2.0', 'shap': '0.41.0', 'six': '1.16.0', 'slicer': '0.0.7', 'soundfile': '0.10.3.post1', 'soupsieve': '2.3.2.post1', 'stack-data': '0.3.0', 'tabulate': '0.8.3', 'tensorboard': '2.9.0', 'tensorboard-data-server': '0.6.1', 'tensorboard-plugin-wit': '1.8.1', 'terminado': '0.15.0', 'threadpoolctl': '3.1.0', 'tinycss2': '1.1.1', 'tk': '0.1.0', 'torch': '1.8.1', 'torchfile': '0.1.0', 'torchnet': '0.0.4', 'torchvision': '0.9.1', 'tornado': '6.2', 'tqdm': '4.33.0', 'traitlets': '5.3.0', 'traittypes': '0.2.1', 'typing-extensions': '4.3.0', 'urllib3': '1.26.11', 'visdom': '0.1.8.9', 'wcwidth': '0.2.5', 'webencodings': '0.5.1', 'websocket-client': '1.3.3', 'werkzeug': '2.2.0', 'wheel': '0.37.1', 'widgetsnbextension': '3.4.2', 'xlsxwriter': '3.0.3', 'zipp': '3.8.1'}
+2022-08-04 14:27:35,355 - Command line: /home/geffencooper/Model_Development/DA_ai8x-training/venv/lib/python3.8/site-packages/ipykernel_launcher.py --ip=127.0.0.1 --stdin=9008 --control=9006 --hb=9005 --Session.signature_scheme="hmac-sha256" --Session.key=b"74ec4cbe-676c-465c-979c-80ee7a5cc034" --shell=9007 --transport="tcp" --iopub=9009 --f=/home/geffencooper/.local/share/jupyter/runtime/kernel-v2-1908346UMzjHzc07Xt.json
+2022-08-04 14:27:35,356 - dataset_name:asl
+dataset_fn=<function asl_get_datasets at 0x7f46fe826d30>
+num_classes=29
+model_name=aslclassifier
+dimensions=(3, 128, 128)
+batch_size=64
+validation_split=0.1
+lr=0.001000
+num_epochs=12
+qat_policy={'start_epoch': 4, 'weight_bits': 8}
+2022-08-04 14:27:42,203 - Dataset sizes:
+	training=70470
+	validation=7830
+	test=8700
+2022-08-04 14:27:42,204 - Augmentations:Compose(
+    Resize(size=(128, 128), interpolation=bilinear)
+    ColorJitter(brightness=(0.85, 1.15), contrast=(0.75, 1.25), saturation=(0.75, 1.25), hue=(-0.4, 0.4))
+    RandomGrayscale(p=0.15)
+    RandomAffine(degrees=[-5.0, 5.0], translate=(0.1, 0.1))
+    GaussianBlur(kernel_size=(3, 3), sigma=(0.1, 1.5))
+    ToTensor()
+    <ai8x.normalize object at 0x7f46fe8348b0>
+)
+Augmentation Seed:1550770206
+2022-08-04 14:27:57,389 - => loading checkpoint jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-08-04 14:27:57,395 - => Checkpoint contents:
++----------------------+-------------+---------------------------+
+| Key                  | Type        | Value                     |
+|----------------------+-------------+---------------------------|
+| arch                 | str         | classifierbackbonenet_qat |
+| compression_sched    | dict        |                           |
+| epoch                | int         | 99                        |
+| extras               | dict        |                           |
+| optimizer_state_dict | dict        |                           |
+| optimizer_type       | type        | Adam                      |
+| state_dict           | OrderedDict |                           |
++----------------------+-------------+---------------------------+
+
+2022-08-04 14:27:57,395 - => Checkpoint['extras'] contents:
++-------+--------+---------+
+| Key   | Type   |   Value |
+|-------+--------+---------|
+| epoch | int    |      99 |
++-------+--------+---------+
+
+2022-08-04 14:27:57,396 - Loaded compression schedule from checkpoint (epoch 99)
+2022-08-04 14:27:57,401 - => loaded 'state_dict' from checkpoint 'jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar'
+2022-08-04 14:27:57,414 - model: ASLClassifier(
+  (feature_extractor): ClassifierBackbone(
+    (conv1): FusedConv2dReLU(
+      (activate): ReLU(inplace=True)
+      (op): Conv2d(3, 8, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (calc_out_shift): OutputShift()
+      (calc_weight_scale): WeightScale()
+      (scale): Scaler()
+      (calc_out_scale): OutputScale()
+      (quantize_weight): Quantize()
+      (quantize_bias): Quantize()
+      (clamp_weight): Clamp()
+      (clamp_bias): Clamp()
+      (quantize): Quantize()
+      (clamp): Clamp()
+      (quantize_pool): Empty()
+      (clamp_pool): Empty()
+    )
+    (conv2): FusedConv2dReLU(
+      (activate): ReLU(inplace=True)
+      (op): Conv2d(8, 8, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (calc_out_shift): OutputShift()
+      (calc_weight_scale): WeightScale()
+      (scale): Scaler()
+      (calc_out_scale): OutputScale()
+      (quantize_weight): Quantize()
+      (quantize_bias): Quantize()
+      (clamp_weight): Clamp()
+      (clamp_bias): Clamp()
+      (quantize): Quantize()
+      (clamp): Clamp()
+      (quantize_pool): Empty()
+      (clamp_pool): Empty()
+    )
+    (conv3): FusedMaxPoolConv2dReLU(
+      (activate): ReLU(inplace=True)
+      (pool): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+      (op): Conv2d(8, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (calc_out_shift): OutputShift()
+      (calc_weight_scale): WeightScale()
+      (scale): Scaler()
+      (calc_out_scale): OutputScale()
+      (quantize_weight): Quantize()
+      (quantize_bias): Quantize()
+      (clamp_weight): Clamp()
+      (clamp_bias): Clamp()
+      (quantize): Quantize()
+      (clamp): Clamp()
+      (quantize_pool): Empty()
+      (clamp_pool): Empty()
+    )
+    (conv4): FusedConv2dBNReLU(
+      (activate): ReLU(inplace=True)
+      (op): Conv2d(16, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (bn): None
+      (calc_out_shift): OutputShift()
+      (calc_weight_scale): WeightScale()
+      (scale): Scaler()
+      (calc_out_scale): OutputScale()
+      (quantize_weight): Quantize()
+      (quantize_bias): Quantize()
+      (clamp_weight): Clamp()
+      (clamp_bias): Clamp()
+      (quantize): Quantize()
+      (clamp): Clamp()
+      (quantize_pool): Empty()
+      (clamp_pool): Empty()
+    )
+    (conv5): FusedMaxPoolConv2dBNReLU(
+      (activate): ReLU(inplace=True)
+      (pool): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+      (op): Conv2d(16, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (bn): None
+      (calc_out_shift): OutputShift()
+      (calc_weight_scale): WeightScale()
+      (scale): Scaler()
+      (calc_out_scale): OutputScale()
+      (quantize_weight): Quantize()
+      (quantize_bias): Quantize()
+      (clamp_weight): Clamp()
+      (clamp_bias): Clamp()
+      (quantize): Quantize()
+      (clamp): Clamp()
+      (quantize_pool): Empty()
+      (clamp_pool): Empty()
+    )
+    (conv6): FusedConv2dBNReLU(
+      (activate): ReLU(inplace=True)
+      (op): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (bn): None
+      (calc_out_shift): OutputShift()
+      (calc_weight_scale): WeightScale()
+      (scale): Scaler()
+      (calc_out_scale): OutputScale()
+      (quantize_weight): Quantize()
+      (quantize_bias): Quantize()
+      (clamp_weight): Clamp()
+      (clamp_bias): Clamp()
+      (quantize): Quantize()
+      (clamp): Clamp()
+      (quantize_pool): Empty()
+      (clamp_pool): Empty()
+    )
+    (conv7): FusedMaxPoolConv2dBNReLU(
+      (activate): ReLU(inplace=True)
+      (pool): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+      (op): Conv2d(32, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (bn): None
+      (calc_out_shift): OutputShift()
+      (calc_weight_scale): WeightScale()
+      (scale): Scaler()
+      (calc_out_scale): OutputScale()
+      (quantize_weight): Quantize()
+      (quantize_bias): Quantize()
+      (clamp_weight): Clamp()
+      (clamp_bias): Clamp()
+      (quantize): Quantize()
+      (clamp): Clamp()
+      (quantize_pool): Empty()
+      (clamp_pool): Empty()
+    )
+    (conv8): FusedConv2dBNReLU(
+      (activate): ReLU(inplace=True)
+      (op): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (bn): None
+      (calc_out_shift): OutputShift()
+      (calc_weight_scale): WeightScale()
+      (scale): Scaler()
+      (calc_out_scale): OutputScale()
+      (quantize_weight): Quantize()
+      (quantize_bias): Quantize()
+      (clamp_weight): Clamp()
+      (clamp_bias): Clamp()
+      (quantize): Quantize()
+      (clamp): Clamp()
+      (quantize_pool): Empty()
+      (clamp_pool): Empty()
+    )
+    (conv9): FusedMaxPoolConv2dBNReLU(
+      (activate): ReLU(inplace=True)
+      (pool): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+      (op): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (bn): None
+      (calc_out_shift): OutputShift()
+      (calc_weight_scale): WeightScale()
+      (scale): Scaler()
+      (calc_out_scale): OutputScale()
+      (quantize_weight): Quantize()
+      (quantize_bias): Quantize()
+      (clamp_weight): Clamp()
+      (clamp_bias): Clamp()
+      (quantize): Quantize()
+      (clamp): Clamp()
+      (quantize_pool): Empty()
+      (clamp_pool): Empty()
+    )
+    (conv10): FusedMaxPoolConv2dBNReLU(
+      (activate): ReLU(inplace=True)
+      (pool): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+      (op): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (bn): None
+      (calc_out_shift): OutputShift()
+      (calc_weight_scale): WeightScale()
+      (scale): Scaler()
+      (calc_out_scale): OutputScale()
+      (quantize_weight): Quantize()
+      (quantize_bias): Quantize()
+      (clamp_weight): Clamp()
+      (clamp_bias): Clamp()
+      (quantize): Quantize()
+      (clamp): Clamp()
+      (quantize_pool): Empty()
+      (clamp_pool): Empty()
+    )
+    (fc1): FusedLinearReLU(
+      (activate): ReLU(inplace=True)
+      (op): Linear(in_features=1024, out_features=128, bias=True)
+      (calc_out_shift): OutputShift()
+      (calc_weight_scale): WeightScale()
+      (scale): Scaler()
+      (calc_out_scale): OutputScale()
+      (quantize_weight): Quantize()
+      (quantize_bias): Quantize()
+      (clamp_weight): Clamp()
+      (clamp_bias): Clamp()
+      (quantize): Quantize()
+      (clamp): Clamp()
+      (quantize_pool): Empty()
+      (clamp_pool): Empty()
+    )
+    (do1): Dropout(p=0.5, inplace=False)
+    (fc2): FusedLinearReLU(
+      (activate): ReLU(inplace=True)
+      (op): Linear(in_features=128, out_features=64, bias=True)
+      (calc_out_shift): OutputShiftSqueeze()
+      (calc_weight_scale): One()
+      (scale): Scaler()
+      (calc_out_scale): OutputScale()
+      (quantize_weight): Empty()
+      (quantize_bias): Empty()
+      (clamp_weight): Empty()
+      (clamp_bias): Empty()
+      (quantize): Empty()
+      (clamp): Clamp()
+      (quantize_pool): Empty()
+      (clamp_pool): Empty()
+    )
+    (fc3): Linear(
+      (activate): Empty()
+      (op): Linear(in_features=64, out_features=29, bias=True)
+      (calc_out_shift): OutputShiftSqueeze()
+      (calc_weight_scale): One()
+      (scale): Scaler()
+      (calc_out_scale): OutputScale()
+      (quantize_weight): Empty()
+      (quantize_bias): Empty()
+      (clamp_weight): Empty()
+      (clamp_bias): Empty()
+      (quantize): Empty()
+      (clamp): Clamp()
+      (quantize_pool): Empty()
+      (clamp_pool): Empty()
+    )
+  )
+  (do1): Dropout(p=0.5, inplace=False)
+)
+2022-08-04 14:27:59,134 - Number of Model Params: 288773
+2022-08-04 14:28:04,208 - Optimizer Type: <class 'torch.optim.adam.Adam'>
+2022-08-04 14:28:04,210 - lr_schedule:base: [0.001] milestones: Counter({4: 1, 8: 1, 20: 1, 100: 1}) gamma: 0.75
+2022-08-04 14:28:10,736 - Training epoch: 70470 samples (64 per mini-batch)
+2022-08-04 14:28:23,043 - Epoch: [0][  200/ 1102]    objective_loss 3.315153                                        LR 0.001000    
+2022-08-04 14:28:35,096 - Epoch: [0][  400/ 1102]    objective_loss 3.029361                                        LR 0.001000    
+2022-08-04 14:28:46,902 - Epoch: [0][  600/ 1102]    objective_loss 2.731041                                        LR 0.001000    
+2022-08-04 14:28:58,807 - Epoch: [0][  800/ 1102]    objective_loss 2.456729                                        LR 0.001000    
+2022-08-04 14:29:10,520 - Epoch: [0][ 1000/ 1102]    objective_loss 2.224454                                        LR 0.001000    
+2022-08-04 14:29:16,569 - Epoch: [0][ 1102/ 1102]    objective_loss 2.123399    Top1 70.000000    Top5 95.714286    LR 0.001000    
+2022-08-04 14:29:16,595 - --- validate (epoch=0)-----------
+2022-08-04 14:29:16,595 - 7830 samples (64 per mini-batch)
+2022-08-04 14:29:19,314 - Epoch: [0][  123/  123]    Loss 0.716433    Top1 77.049808    Top5 99.450830    
+2022-08-04 14:29:19,340 - ==> Top1: 77.050    Top5: 99.451    Loss: 0.716
+
+2022-08-04 14:29:19,342 - ==> Confusion:
+[[203  26   0   0  28   0   0   0   0   1   0   0   8   1   0   0   0   0
+    1   0   0   0   0   0   3   0   0   0   0]
+ [  0 261   0   0   2   0   0   0   1   0   3   0   4   0   0   0   0   1
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0 297   0   0   0   0   0   0   0   0   0   0   0   1   1   0   0
+    1   0   0   0   0   0   0   0   0   0   0]
+ [  0   2   0 267   0   0   0   0   4   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   3   0   0   0   0   0]
+ [ 42  82   0   7 103   0   0   0  11   0   0   0  31   1   0   0   0   1
+    0   0   0   0   0   1   0   0   0   0   0]
+ [  0   0   0   0   0 270   0   0   2   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0 203  57   0   7   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   4 250   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   1   0   2   0   0   0   0 246   8   0   0   0   0   0   0   0   0
+    0   0   0   1   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   3   0   2 252   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0 200   0   0   0   0   0   0   1
+    0   0   1  12  53   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0 255   0   0   0   0   0   0
+    0   1   0   0   0   0   0   0   0   0   0]
+ [  3   0   0   0   1   0   0   0   0   1   0   0  59 234   0   0   0   0
+    0   0   0   0   1   0   0   0   0   0   1]
+ [  0   0   0   0   0   0   0   0   1  11   0   0   5 240   0   0   0   0
+    0   0   0   0   0   1   1   0   0   0   0]
+ [  0   0   0   0   1   7   0   0   0   0   0   0   0   0 266   0   0   0
+    3   0   0   0   0   0   0   0   2   0   0]
+ [  0   0   0   0   0   0   1   2   0   0   0   0   0   0   0  71 195   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0  11 258   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   1   1   0   0   0   0   0   0 182
+    0   0  79  12   0   0   0   0   0   0   0]
+ [ 53   0   0   0   1   0   0   0   0   0   0   1   9  13  61   0   0   0
+   99  14   0   0   0   8  10   0   0   1   0]
+ [  1   0   0   0   0   0   0   0   0   0   0  13   0   0   0   0   0   0
+    0 216   0   0   0   0   1   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   9   0   0   0   0   0   0 140
+    0   0  98  16   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0 179   0   0   0   0   0   0   8
+    0   0   3  85  26   0   0   0   0   0   0]
+ [  0   1   0   0   0   1   0   0   0   0  94   0   0   0   0   0   0   0
+    0   0   0   9 193   0   0   0   0   0   0]
+ [  1   1   0   0   0   0   0   0   0   0   0  10   0   0   0   0   0  51
+    0   2   3   0   0 217   0   2   0   0   1]
+ [  0   0   0   0   0   0   1   0   0   9   0   0   0   1   0   0   0   0
+    0   1   0   0   0   0 269   0   0   0   4]
+ [  0   0   1   0   0   0   0   0   0   0   0  12   0   0   0   0   0   1
+    1  11   0   0   0   0   0 222   0   0   0]
+ [  0   0   0   0   0   0   1   0   0   0   0   0   0   0   0   1   0   0
+    0   0   0   0   0   1   0   0 250   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   2
+    0   0   0   0   0   0   0   0   0 248   0]
+ [  0   0   0   0   0   0   1   0   0   9   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0 253]]
+
+2022-08-04 14:29:20,177 - ==> Best [Top1: 77.050   Top5: 99.451  on epoch: 0]
+2022-08-04 14:29:20,191 - Saving checkpoint to: jupyter_logging/finetune_asl_base_ev1___2022.08.04-142735/aslclassifier_checkpoint.pth.tar
+2022-08-04 14:29:20,204 - Training epoch: 70470 samples (64 per mini-batch)
+2022-08-04 14:29:31,915 - Epoch: [1][  200/ 1102]    objective_loss 0.946210                                        LR 0.001000    
+2022-08-04 14:29:43,363 - Epoch: [1][  400/ 1102]    objective_loss 0.884288                                        LR 0.001000    
+2022-08-04 14:29:54,829 - Epoch: [1][  600/ 1102]    objective_loss 0.820545                                        LR 0.001000    
+2022-08-04 14:30:06,307 - Epoch: [1][  800/ 1102]    objective_loss 0.770317                                        LR 0.001000    
+2022-08-04 14:30:17,810 - Epoch: [1][ 1000/ 1102]    objective_loss 0.728181                                        LR 0.001000    
+2022-08-04 14:30:23,620 - Epoch: [1][ 1102/ 1102]    objective_loss 0.711101    Top1 74.285714    Top5 98.571429    LR 0.001000    
+2022-08-04 14:30:23,646 - --- validate (epoch=1)-----------
+2022-08-04 14:30:23,647 - 7830 samples (64 per mini-batch)
+2022-08-04 14:30:26,155 - Epoch: [1][  123/  123]    Loss 0.279476    Top1 89.463602    Top5 99.961686    
+2022-08-04 14:30:26,179 - ==> Top1: 89.464    Top5: 99.962    Loss: 0.279
+
+2022-08-04 14:30:26,181 - ==> Confusion:
+[[227   0   0   0  38   0   0   0   0   0   0   0   0   0   0   0   0   0
+    1   5   0   0   0   0   0   0   0   0   0]
+ [  0 267   0   0   0   0   0   0   5   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  1   0 298   0   0   0   0   0   0   0   0   0   0   0   1   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0 270   0   0   0   0   6   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  1  34   0   0 240   0   0   0   4   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0 272   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0 241  26   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0 254   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0 258   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   6   2   2 247   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0 251   0   0   0   0   0   0   0
+    0   0   0   1  15   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0 256   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   1   0   0   0   0   0   0   0 269  30   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   1   1   0   0  48 208   0   0   0   0
+    0   0   0   0   0   0   0   0   1   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0 279   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 266   2   0
+    0   0   0   0   0   0   0   0   1   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   6 263   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   6
+    0   0 267   2   0   0   0   0   0   0   0]
+ [ 11   0   0   0   0   0   0   0   0   0   0   0   2   1   0   0   0   0
+  253   0   0   0   0   2   0   0   1   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    1 227   0   0   0   0   3   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   1
+    0   0 244  18   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0 205   0   0   0   0   0   0   0
+    0   0   2  90   4   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0  16   0   0   0   0   0   0   0
+    0   0   0   1 281   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0  34
+    2   0   6   0   0 243   0   3   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0 285   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   2   0   0   0   1   0 245   0   0   0]
+ [  1   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0 252   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0 250   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0 263]]
+
+2022-08-04 14:30:26,981 - ==> Best [Top1: 89.464   Top5: 99.962  on epoch: 1]
+2022-08-04 14:30:26,981 - Saving checkpoint to: jupyter_logging/finetune_asl_base_ev1___2022.08.04-142735/aslclassifier_checkpoint.pth.tar
+2022-08-04 14:30:27,024 - Training epoch: 70470 samples (64 per mini-batch)
+2022-08-04 14:30:38,834 - Epoch: [2][  200/ 1102]    objective_loss 0.494871                                        LR 0.001000    
+2022-08-04 14:30:50,347 - Epoch: [2][  400/ 1102]    objective_loss 0.465384                                        LR 0.001000    
+2022-08-04 14:31:01,873 - Epoch: [2][  600/ 1102]    objective_loss 0.442889                                        LR 0.001000    
+2022-08-04 14:31:13,420 - Epoch: [2][  800/ 1102]    objective_loss 0.427794                                        LR 0.001000    
+2022-08-04 14:31:24,952 - Epoch: [2][ 1000/ 1102]    objective_loss 0.410128                                        LR 0.001000    
+2022-08-04 14:31:30,827 - Epoch: [2][ 1102/ 1102]    objective_loss 0.404473    Top1 90.000000    Top5 100.000000    LR 0.001000    
+2022-08-04 14:31:30,852 - --- validate (epoch=2)-----------
+2022-08-04 14:31:30,853 - 7830 samples (64 per mini-batch)
+2022-08-04 14:31:33,342 - Epoch: [2][  123/  123]    Loss 0.149389    Top1 94.022989    Top5 99.936143    
+2022-08-04 14:31:33,368 - ==> Top1: 94.023    Top5: 99.936    Loss: 0.149
+
+2022-08-04 14:31:33,370 - ==> Confusion:
+[[265   0   0   0   6   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0 272   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0 299   0   0   1   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0 275   0   0   0   0   1   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  1   2   0   0 276   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0 272   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0 266   0   0   1   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0 254   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   1   0   0   1   0   0   0 256   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0 257   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0 261   0   0   0   0   0   0   0
+    0   0   0   6   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0 256   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   1   0   0   0   0   0   0   0 299   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0  71 188   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   1   2   0   0   1   0   0   0   0   1 274   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 269   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 269   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 274
+    0   0   0   1   0   0   0   0   0   0   0]
+ [  3   0   0   0   3   0   0   0   0   0   0   0   0   0   0   0   0   0
+  263   0   0   0   0   1   0   0   0   0   0]
+ [  1   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0 230   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 258
+    0   0   2   3   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0  67   0   0   0   0   0   0   1
+    0   0   1 232   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0  19   0   0   0   0   0   0   0
+    0   0   0   1 278   0   0   0   0   0   0]
+ [  1   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   8
+    1   0   0   0   0 278   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0 285   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   1   0   0   0   0   0   0
+    0   0   0   0   0   0   0 247   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   1   0   0   0   0   0
+    0   0   0   0   0   0   0   0 252   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0 250   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0 263]]
+
+2022-08-04 14:31:34,122 - ==> Best [Top1: 94.023   Top5: 99.936  on epoch: 2]
+2022-08-04 14:31:34,128 - Saving checkpoint to: jupyter_logging/finetune_asl_base_ev1___2022.08.04-142735/aslclassifier_checkpoint.pth.tar
+2022-08-04 14:31:34,157 - Training epoch: 70470 samples (64 per mini-batch)
+2022-08-04 14:31:45,744 - Epoch: [3][  200/ 1102]    objective_loss 0.320200                                        LR 0.001000    
+2022-08-04 14:31:57,158 - Epoch: [3][  400/ 1102]    objective_loss 0.314169                                        LR 0.001000    
+2022-08-04 14:32:08,540 - Epoch: [3][  600/ 1102]    objective_loss 0.312121                                        LR 0.001000    
+2022-08-04 14:32:19,892 - Epoch: [3][  800/ 1102]    objective_loss 0.307248                                        LR 0.001000    
+2022-08-04 14:32:31,245 - Epoch: [3][ 1000/ 1102]    objective_loss 0.300506                                        LR 0.001000    
+2022-08-04 14:32:37,018 - Epoch: [3][ 1102/ 1102]    objective_loss 0.297461    Top1 94.285714    Top5 100.000000    LR 0.001000    
+2022-08-04 14:32:37,047 - --- validate (epoch=3)-----------
+2022-08-04 14:32:37,048 - 7830 samples (64 per mini-batch)
+2022-08-04 14:32:39,502 - Epoch: [3][  123/  123]    Loss 0.109256    Top1 95.734355    Top5 99.974457    
+2022-08-04 14:32:39,529 - ==> Top1: 95.734    Top5: 99.974    Loss: 0.109
+
+2022-08-04 14:32:39,531 - ==> Confusion:
+[[267   2   0   0   1   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   1   0   0   0]
+ [  0 271   0   0   0   0   0   0   0   0   1   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0 300   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0 271   0   0   0   0   5   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   3   0   0 276   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0 272   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0 267   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   1 252   0   0   0   0   0   0   0   1   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   1   0   0   0 257   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   2 255   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0 267   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0 255   0   0   0   0   0   0
+    0   0   0   0   0   0   0   1   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0 298   2   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0  16 243   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0 279   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 269   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 269   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0  96
+    0   0 176   3   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   1   0   0   0
+  269   0   0   0   0   0   0   0   0   0   0]
+ [  3   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0 228   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   2
+    0   0 229  32   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0  63   0   0   0   0   0   0   0
+    0   0   0 237   1   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   4   0   0   0   0   0   0   0
+    0   0   0   0 294   0   0   0   0   0   0]
+ [  1   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    4   0   0   0   0 282   0   1   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   4   0   0   0   0 281   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0 248   0   0   0]
+ [  1   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0 252   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0 250   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   1   0   0   0   0   0   0 262]]
+
+2022-08-04 14:32:40,362 - ==> Best [Top1: 95.734   Top5: 99.974  on epoch: 3]
+2022-08-04 14:32:40,374 - Saving checkpoint to: jupyter_logging/finetune_asl_base_ev1___2022.08.04-142735/aslclassifier_checkpoint.pth.tar
+2022-08-04 14:32:40,416 - Training epoch: 70470 samples (64 per mini-batch)
+2022-08-04 14:32:52,085 - Epoch: [4][  200/ 1102]    objective_loss 0.961188                                        LR 0.000750    
+2022-08-04 14:33:03,539 - Epoch: [4][  400/ 1102]    objective_loss 0.849289                                        LR 0.000750    
+2022-08-04 14:33:15,042 - Epoch: [4][  600/ 1102]    objective_loss 0.772746                                        LR 0.000750    
+2022-08-04 14:33:26,554 - Epoch: [4][  800/ 1102]    objective_loss 0.714281                                        LR 0.000750    
+2022-08-04 14:33:38,075 - Epoch: [4][ 1000/ 1102]    objective_loss 0.789319                                        LR 0.000750    
+2022-08-04 14:33:43,866 - Epoch: [4][ 1102/ 1102]    objective_loss 0.819666    Top1 94.285714    Top5 100.000000    LR 0.000750    
+2022-08-04 14:33:43,895 - --- validate (epoch=4)-----------
+2022-08-04 14:33:43,896 - 7830 samples (64 per mini-batch)
+2022-08-04 14:33:46,387 - Epoch: [4][  123/  123]    Loss 0.896755    Top1 96.819923    Top5 99.987229    
+2022-08-04 14:33:46,419 - ==> Top1: 96.820    Top5: 99.987    Loss: 0.897
+
+2022-08-04 14:33:46,421 - ==> Confusion:
+[[271   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0 272   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0 300   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0 276   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0 279   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0 272   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0 267   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   1 253   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0 258   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0 257   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0 267   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0 256   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0 293   7   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   6 253   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0 279   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 269   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 269   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 275
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+  270   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0 231   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 224
+    0   0  36   3   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   3   0   0   0   0   0   0   0
+    0   0   0 297   1   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   1   0   0   0   0   0   0   0
+    0   0   0   0 297   0   0   0   0   0   0]
+ [  1   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0 286   0   1   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0 285   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0 248   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   1   0   0   0   0   0
+    0   0   0   0   0   0   0   0 252   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0 250   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0 263]]
+
+2022-08-04 14:33:47,259 - ==> Best [Top1: 96.820   Top5: 99.987  on epoch: 4]
+2022-08-04 14:33:47,270 - Saving checkpoint to: jupyter_logging/finetune_asl_base_ev1___2022.08.04-142735/aslclassifier_qat_checkpoint.pth.tar
+2022-08-04 14:33:47,283 - Training epoch: 70470 samples (64 per mini-batch)
+2022-08-04 14:33:58,992 - Epoch: [5][  200/ 1102]    objective_loss 1.027175                                        LR 0.000750    
+2022-08-04 14:34:10,687 - Epoch: [5][  400/ 1102]    objective_loss 0.976997                                        LR 0.000750    
+2022-08-04 14:34:22,124 - Epoch: [5][  600/ 1102]    objective_loss 0.931539                                        LR 0.000750    
+2022-08-04 14:34:33,671 - Epoch: [5][  800/ 1102]    objective_loss 0.894398                                        LR 0.000750    
+2022-08-04 14:34:45,236 - Epoch: [5][ 1000/ 1102]    objective_loss 0.859282                                        LR 0.000750    
+2022-08-04 14:34:51,070 - Epoch: [5][ 1102/ 1102]    objective_loss 0.842711    Top1 88.571429    Top5 100.000000    LR 0.000750    
+2022-08-04 14:34:51,099 - --- validate (epoch=5)-----------
+2022-08-04 14:34:51,100 - 7830 samples (64 per mini-batch)
+2022-08-04 14:34:53,541 - Epoch: [5][  123/  123]    Loss 0.451800    Top1 96.309068    Top5 99.987229    
+2022-08-04 14:34:53,566 - ==> Top1: 96.309    Top5: 99.987    Loss: 0.452
+
+2022-08-04 14:34:53,568 - ==> Confusion:
+[[269   0   0   0   0   0   0   0   0   0   0   0   2   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0 271   0   0   0   0   0   0   0   0   1   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0 300   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0 276   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  1   0   0   0 277   0   0   0   0   0   0   0   0   0   0   0   0   0
+    1   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0 272   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0 267   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   1 253   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0 258   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0 257   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0 267   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0 256   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0 296   4   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0  14 245   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0 279   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   1   0   0   0   0   0   0   0 268   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 269   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 275
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+  270   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0 231   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 254
+    0   0   8   1   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   4   0   0   0   0   0   0   0
+    0   0   0 297   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0 298   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   2
+    0   0   0   0   0 286   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0 285   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   1   0 247   0   0   0]
+ [  1   0   0   0   0   0   0   1   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0 251   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0 250   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0 263]]
+
+2022-08-04 14:34:54,315 - ==> Best [Top1: 96.820   Top5: 99.987  on epoch: 4]
+2022-08-04 14:34:54,326 - Saving checkpoint to: jupyter_logging/finetune_asl_base_ev1___2022.08.04-142735/aslclassifier_qat_checkpoint.pth.tar
+2022-08-04 14:34:54,347 - Training epoch: 70470 samples (64 per mini-batch)
+2022-08-04 14:35:06,443 - Epoch: [6][  200/ 1102]    objective_loss 0.637442                                        LR 0.000750    
+2022-08-04 14:35:18,020 - Epoch: [6][  400/ 1102]    objective_loss 0.625749                                        LR 0.000750    
+2022-08-04 14:35:29,612 - Epoch: [6][  600/ 1102]    objective_loss 0.606350                                        LR 0.000750    
+2022-08-04 14:35:41,120 - Epoch: [6][  800/ 1102]    objective_loss 0.586930                                        LR 0.000750    
+2022-08-04 14:35:52,645 - Epoch: [6][ 1000/ 1102]    objective_loss 0.570450                                        LR 0.000750    
+2022-08-04 14:35:58,511 - Epoch: [6][ 1102/ 1102]    objective_loss 0.560864    Top1 90.000000    Top5 100.000000    LR 0.000750    
+2022-08-04 14:35:58,542 - --- validate (epoch=6)-----------
+2022-08-04 14:35:58,543 - 7830 samples (64 per mini-batch)
+2022-08-04 14:36:01,039 - Epoch: [6][  123/  123]    Loss 0.274780    Top1 97.816092    Top5 99.936143    
+2022-08-04 14:36:01,066 - ==> Top1: 97.816    Top5: 99.936    Loss: 0.275
+
+2022-08-04 14:36:01,068 - ==> Confusion:
+[[269   2   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0 271   0   0   1   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0 300   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0 276   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   5   0   0 274   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   1   0   0   0 270   0   0   0   0   0   0   0   1   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0 267   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0 253   0   0   0   0   0   0   0   0   1   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0 258   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0 257   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0 267   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0 256   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0 300   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0  13 246   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0 279   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 269   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 269   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 271
+    0   0   4   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+  263   0   0   0   0   4   0   3   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   4   0   0   0   0   0   0
+    0 227   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 116
+    0   0 147   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   4   0   0   0   0   0   0   0
+    0   0   0 297   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   1 297   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   1   0   0   0   0   0   1
+    0   0   0   0   0 286   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0 285   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0 248   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   1 252   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   8   0
+    0   0   0   0   0   0   0   0   0 242   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0 263]]
+
+2022-08-04 14:36:01,918 - ==> Best [Top1: 97.816   Top5: 99.936  on epoch: 6]
+2022-08-04 14:36:01,929 - Saving checkpoint to: jupyter_logging/finetune_asl_base_ev1___2022.08.04-142735/aslclassifier_qat_checkpoint.pth.tar
+2022-08-04 14:36:01,952 - Training epoch: 70470 samples (64 per mini-batch)
+2022-08-04 14:36:13,793 - Epoch: [7][  200/ 1102]    objective_loss 0.461023                                        LR 0.000750    
+2022-08-04 14:36:25,367 - Epoch: [7][  400/ 1102]    objective_loss 0.445741                                        LR 0.000750    
+2022-08-04 14:36:36,980 - Epoch: [7][  600/ 1102]    objective_loss 0.435143                                        LR 0.000750    
+2022-08-04 14:36:48,590 - Epoch: [7][  800/ 1102]    objective_loss 0.423104                                        LR 0.000750    
+2022-08-04 14:37:00,152 - Epoch: [7][ 1000/ 1102]    objective_loss 0.414507                                        LR 0.000750    
+2022-08-04 14:37:06,028 - Epoch: [7][ 1102/ 1102]    objective_loss 0.408512    Top1 97.142857    Top5 100.000000    LR 0.000750    
+2022-08-04 14:37:06,051 - --- validate (epoch=7)-----------
+2022-08-04 14:37:06,052 - 7830 samples (64 per mini-batch)
+2022-08-04 14:37:08,534 - Epoch: [7][  123/  123]    Loss 0.178420    Top1 98.212005    Top5 99.987229    
+2022-08-04 14:37:08,560 - ==> Top1: 98.212    Top5: 99.987    Loss: 0.178
+
+2022-08-04 14:37:08,562 - ==> Confusion:
+[[271   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0 271   0   0   1   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0 300   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0 276   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   1 277   0   0   0   1   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0 272   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0 266   1   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0 254   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0 258   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0 257   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0 267   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0 256   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0 278  22   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0 259   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   1 278   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 268   0   0
+    0   0   0   0   0   0   0   0   1   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 269   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 180
+    0   0  95   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   1   0   0   0   0
+  268   0   0   0   0   1   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0 231   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   8
+    0   0 254   1   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   1   0   0   0   0   0   0   0
+    0   0   0 297   3   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0 298   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    1   0   0   0   0 287   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0 285   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0 248   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   1   0   0   0   0   0
+    0   0   0   0   0   0   0   0 252   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0 250   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0 263]]
+
+2022-08-04 14:37:09,382 - ==> Best [Top1: 98.212   Top5: 99.987  on epoch: 7]
+2022-08-04 14:37:09,393 - Saving checkpoint to: jupyter_logging/finetune_asl_base_ev1___2022.08.04-142735/aslclassifier_qat_checkpoint.pth.tar
+2022-08-04 14:37:09,420 - Training epoch: 70470 samples (64 per mini-batch)
+2022-08-04 14:37:21,125 - Epoch: [8][  200/ 1102]    objective_loss 0.343594                                        LR 0.000563    
+2022-08-04 14:37:32,564 - Epoch: [8][  400/ 1102]    objective_loss 0.337085                                        LR 0.000563    
+2022-08-04 14:37:44,030 - Epoch: [8][  600/ 1102]    objective_loss 0.327926                                        LR 0.000563    
+2022-08-04 14:37:55,586 - Epoch: [8][  800/ 1102]    objective_loss 0.325234                                        LR 0.000563    
+2022-08-04 14:38:07,034 - Epoch: [8][ 1000/ 1102]    objective_loss 0.321414                                        LR 0.000563    
+2022-08-04 14:38:12,766 - Epoch: [8][ 1102/ 1102]    objective_loss 0.318800    Top1 98.571429    Top5 100.000000    LR 0.000563    
+2022-08-04 14:38:12,792 - --- validate (epoch=8)-----------
+2022-08-04 14:38:12,793 - 7830 samples (64 per mini-batch)
+2022-08-04 14:38:15,269 - Epoch: [8][  123/  123]    Loss 0.130645    Top1 99.323116    Top5 99.987229    
+2022-08-04 14:38:15,294 - ==> Top1: 99.323    Top5: 99.987    Loss: 0.131
+
+2022-08-04 14:38:15,295 - ==> Confusion:
+[[271   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0 271   0   0   1   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0 300   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0 276   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   3   0   0 275   0   0   0   0   0   0   0   1   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0 272   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0 267   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0 254   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0 258   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0 257   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0 267   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0 256   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0 293   7   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   1 258   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   1 278   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 269   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 269   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 264
+    0   0  11   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+  270   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0 231   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0  21
+    0   0 242   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   5   0   0   0   0   0   0   0
+    0   0   0 295   1   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0 298   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    1   0   0   0   0 287   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0 285   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0 248   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0 253   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0 250   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0 263]]
+
+2022-08-04 14:38:16,123 - ==> Best [Top1: 99.323   Top5: 99.987  on epoch: 8]
+2022-08-04 14:38:16,134 - Saving checkpoint to: jupyter_logging/finetune_asl_base_ev1___2022.08.04-142735/aslclassifier_qat_checkpoint.pth.tar
+2022-08-04 14:38:16,156 - Training epoch: 70470 samples (64 per mini-batch)
+2022-08-04 14:38:28,013 - Epoch: [9][  200/ 1102]    objective_loss 0.778053                                        LR 0.000563    
+2022-08-04 14:38:39,545 - Epoch: [9][  400/ 1102]    objective_loss 0.816626                                        LR 0.000563    
+2022-08-04 14:38:51,133 - Epoch: [9][  600/ 1102]    objective_loss 0.813528                                        LR 0.000563    
+2022-08-04 14:39:02,672 - Epoch: [9][  800/ 1102]    objective_loss 0.801966                                        LR 0.000563    
+2022-08-04 14:39:14,226 - Epoch: [9][ 1000/ 1102]    objective_loss 0.789350                                        LR 0.000563    
+2022-08-04 14:39:20,128 - Epoch: [9][ 1102/ 1102]    objective_loss 0.780894    Top1 98.571429    Top5 100.000000    LR 0.000563    
+2022-08-04 14:39:20,166 - --- validate (epoch=9)-----------
+2022-08-04 14:39:20,167 - 7830 samples (64 per mini-batch)
+2022-08-04 14:39:22,624 - Epoch: [9][  123/  123]    Loss 0.509372    Top1 99.540230    Top5 100.000000    
+2022-08-04 14:39:22,651 - ==> Top1: 99.540    Top5: 100.000    Loss: 0.509
+
+2022-08-04 14:39:22,653 - ==> Confusion:
+[[271   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0 272   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0 300   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0 276   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0 279   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0 272   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0 267   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0 254   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0 258   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0 257   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0 267   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0 256   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0 299   1   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   3 256   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   1 278   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 269   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 269   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 270
+    0   0   5   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+  270   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0 231   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0  24
+    0   0 238   1   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   1   0   0   0   0   0   0   0
+    0   0   0 300   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0 298   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0 288   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0 285   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0 248   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0 253   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0 250   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0 263]]
+
+2022-08-04 14:39:23,388 - ==> Best [Top1: 99.540   Top5: 100.000  on epoch: 9]
+2022-08-04 14:39:23,399 - Saving checkpoint to: jupyter_logging/finetune_asl_base_ev1___2022.08.04-142735/aslclassifier_qat_checkpoint.pth.tar
+2022-08-04 14:39:23,422 - Training epoch: 70470 samples (64 per mini-batch)
+2022-08-04 14:39:35,036 - Epoch: [10][  200/ 1102]    objective_loss 0.682246                                        LR 0.000563    
+2022-08-04 14:39:46,518 - Epoch: [10][  400/ 1102]    objective_loss 0.670922                                        LR 0.000563    
+2022-08-04 14:39:57,954 - Epoch: [10][  600/ 1102]    objective_loss 0.657663                                        LR 0.000563    
+2022-08-04 14:40:09,340 - Epoch: [10][  800/ 1102]    objective_loss 0.645480                                        LR 0.000563    
+2022-08-04 14:40:20,754 - Epoch: [10][ 1000/ 1102]    objective_loss 0.631835                                        LR 0.000563    
+2022-08-04 14:40:26,517 - Epoch: [10][ 1102/ 1102]    objective_loss 0.625549    Top1 100.000000    Top5 100.000000    LR 0.000563    
+2022-08-04 14:40:26,541 - --- validate (epoch=10)-----------
+2022-08-04 14:40:26,542 - 7830 samples (64 per mini-batch)
+2022-08-04 14:40:28,973 - Epoch: [10][  123/  123]    Loss 0.370298    Top1 99.591315    Top5 100.000000    
+2022-08-04 14:40:29,002 - ==> Top1: 99.591    Top5: 100.000    Loss: 0.370
+
+2022-08-04 14:40:29,004 - ==> Confusion:
+[[271   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0 271   0   0   1   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0 300   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0 275   0   0   0   0   1   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0 279   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0 272   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0 267   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0 254   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0 258   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0 257   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0 267   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0 256   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0 299   1   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   4 255   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0 279   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 269   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 269   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 263
+    0   0  12   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+  270   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0 231   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   8
+    0   0 253   2   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   3   0   0   0   0   0   0   0
+    0   0   0 298   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0 298   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0 288   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0 285   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0 248   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0 253   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0 250   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0 263]]
+
+2022-08-04 14:40:29,873 - ==> Best [Top1: 99.591   Top5: 100.000  on epoch: 10]
+2022-08-04 14:40:29,884 - Saving checkpoint to: jupyter_logging/finetune_asl_base_ev1___2022.08.04-142735/aslclassifier_qat_checkpoint.pth.tar
+2022-08-04 14:40:29,911 - Training epoch: 70470 samples (64 per mini-batch)
+2022-08-04 14:40:41,615 - Epoch: [11][  200/ 1102]    objective_loss 0.558401                                        LR 0.000563    
+2022-08-04 14:40:53,094 - Epoch: [11][  400/ 1102]    objective_loss 0.549814                                        LR 0.000563    
+2022-08-04 14:41:04,574 - Epoch: [11][  600/ 1102]    objective_loss 0.539496                                        LR 0.000563    
+2022-08-04 14:41:16,011 - Epoch: [11][  800/ 1102]    objective_loss 0.529362                                        LR 0.000563    
+2022-08-04 14:41:27,543 - Epoch: [11][ 1000/ 1102]    objective_loss 0.521000                                        LR 0.000563    
+2022-08-04 14:41:33,341 - Epoch: [11][ 1102/ 1102]    objective_loss 0.516358    Top1 97.142857    Top5 100.000000    LR 0.000563    
+2022-08-04 14:41:33,366 - --- validate (epoch=11)-----------
+2022-08-04 14:41:33,367 - 7830 samples (64 per mini-batch)
+2022-08-04 14:41:35,790 - Epoch: [11][  123/  123]    Loss 0.281165    Top1 99.591315    Top5 99.987229    
+2022-08-04 14:41:35,817 - ==> Top1: 99.591    Top5: 99.987    Loss: 0.281
+
+2022-08-04 14:41:35,819 - ==> Confusion:
+[[271   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0 272   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0 300   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0 276   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   1   0   0 278   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0 272   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0 267   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0 254   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0 258   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0 257   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0 267   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0 256   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0 300   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   5 254   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0 279   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 269   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 269   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 272
+    0   0   3   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+  266   0   0   0   0   4   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0 231   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0  11
+    0   0 252   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   2   0   0   0   0   0   0   0
+    0   0   0 294   5   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0 298   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0 288   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0 285   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0 248   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   1   0   0   0   0   0
+    0   0   0   0   0   0   0   0 252   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0 250   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0 263]]
+
+2022-08-04 14:41:36,551 - ==> Best [Top1: 99.591   Top5: 100.000  on epoch: 10]
+2022-08-04 14:41:36,563 - Saving checkpoint to: jupyter_logging/finetune_asl_base_ev1___2022.08.04-142735/aslclassifier_qat_checkpoint.pth.tar
+2022-08-04 14:41:36,583 - Training time: 0:13:25.847046
+2022-08-04 14:43:30,023 - => loading checkpoint jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-08-04 14:43:30,030 - => Checkpoint contents:
++----------------------+-------------+---------------------------+
+| Key                  | Type        | Value                     |
+|----------------------+-------------+---------------------------|
+| arch                 | str         | classifierbackbonenet_qat |
+| compression_sched    | dict        |                           |
+| epoch                | int         | 99                        |
+| extras               | dict        |                           |
+| optimizer_state_dict | dict        |                           |
+| optimizer_type       | type        | Adam                      |
+| state_dict           | OrderedDict |                           |
++----------------------+-------------+---------------------------+
+
+2022-08-04 14:43:30,030 - => Checkpoint['extras'] contents:
++-------+--------+---------+
+| Key   | Type   |   Value |
+|-------+--------+---------|
+| epoch | int    |      99 |
++-------+--------+---------+
+
+2022-08-04 14:43:30,031 - Loaded compression schedule from checkpoint (epoch 99)
+2022-08-04 14:43:30,036 - => loaded 'state_dict' from checkpoint 'jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar'
+2022-08-04 14:43:30,060 - => loading checkpoint jupyter_logging/finetune_asl_base_ev1___2022.08.04-142735/aslclassifier_qat_best.pth.tar
+2022-08-04 14:43:30,064 - => Checkpoint contents:
++----------------------+-------------+-------------------+
+| Key                  | Type        | Value             |
+|----------------------+-------------+-------------------|
+| arch                 | str         | aslclassifier_qat |
+| compression_sched    | dict        |                   |
+| epoch                | int         | 10                |
+| extras               | dict        |                   |
+| optimizer_state_dict | dict        |                   |
+| optimizer_type       | type        | Adam              |
+| state_dict           | OrderedDict |                   |
++----------------------+-------------+-------------------+
+
+2022-08-04 14:43:30,065 - => Checkpoint['extras'] contents:
++--------------+--------+---------+
+| Key          | Type   |   Value |
+|--------------+--------+---------|
+| best_epoch   | int    | 10      |
+| best_top1    | float  | 99.5913 |
+| current_top1 | float  | 99.5913 |
++--------------+--------+---------+
+
+2022-08-04 14:43:30,066 - Loaded compression schedule from checkpoint (epoch 10)
+2022-08-04 14:43:30,088 - => loaded 'state_dict' from checkpoint 'jupyter_logging/finetune_asl_base_ev1___2022.08.04-142735/aslclassifier_qat_best.pth.tar'
+2022-08-04 14:43:30,099 - 8700 samples (64 per mini-batch)
+2022-08-04 14:43:33,077 - Test: [  136/  136]    Loss 0.370772    Top1 99.482759    Top5 100.000000    
+2022-08-04 14:43:33,108 - ==> Top1: 99.483    Top5: 100.000    Loss: 0.371
+
+2022-08-04 14:43:33,111 - ==> Confusion:
+[[299   0   0   0   0   0   0   0   0   0   0   0   1   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0 300   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0 300   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0 300   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0 300   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0 299   0   0   0   0   0   0   0   0   1   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0 300   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0 300   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0 300   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0 300   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0 300   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0 300   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0 299   1   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   3 297   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0 300   0   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 300   0   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 300   0
+    0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 283
+    0   0  17   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+  300   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0 300   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0  11
+    0   0 287   2   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   5   0   0   0   0   0   0   0
+    0   0   0 294   1   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0 300   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   3
+    0   0   0   0   0 297   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0 300   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0 300   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0 300   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0 300   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0 300]]
+
+2022-08-04 14:43:33,111 - ==> Test Set [Top1: 99.483   Top5: 100.000  on test set]
+2022-08-04 14:43:54,983 - => loading checkpoint jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-08-04 14:43:54,989 - => Checkpoint contents:
++----------------------+-------------+---------------------------+
+| Key                  | Type        | Value                     |
+|----------------------+-------------+---------------------------|
+| arch                 | str         | classifierbackbonenet_qat |
+| compression_sched    | dict        |                           |
+| epoch                | int         | 99                        |
+| extras               | dict        |                           |
+| optimizer_state_dict | dict        |                           |
+| optimizer_type       | type        | Adam                      |
+| state_dict           | OrderedDict |                           |
++----------------------+-------------+---------------------------+
+
+2022-08-04 14:43:54,989 - => Checkpoint['extras'] contents:
++-------+--------+---------+
+| Key   | Type   |   Value |
+|-------+--------+---------|
+| epoch | int    |      99 |
++-------+--------+---------+
+
+2022-08-04 14:43:54,990 - Loaded compression schedule from checkpoint (epoch 99)
+2022-08-04 14:43:54,995 - => loaded 'state_dict' from checkpoint 'jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar'
+2022-08-04 14:43:55,019 - => loading checkpoint jupyter_logging/finetune_asl_base_ev1___2022.08.04-142735/aslclassifier_qat_best.pth.tar
+2022-08-04 14:43:55,024 - => Checkpoint contents:
++----------------------+-------------+-------------------+
+| Key                  | Type        | Value             |
+|----------------------+-------------+-------------------|
+| arch                 | str         | aslclassifier_qat |
+| compression_sched    | dict        |                   |
+| epoch                | int         | 10                |
+| extras               | dict        |                   |
+| optimizer_state_dict | dict        |                   |
+| optimizer_type       | type        | Adam              |
+| state_dict           | OrderedDict |                   |
++----------------------+-------------+-------------------+
+
+2022-08-04 14:43:55,024 - => Checkpoint['extras'] contents:
++--------------+--------+---------+
+| Key          | Type   |   Value |
+|--------------+--------+---------|
+| best_epoch   | int    | 10      |
+| best_top1    | float  | 99.5913 |
+| current_top1 | float  | 99.5913 |
++--------------+--------+---------+
+
+2022-08-04 14:43:55,025 - Loaded compression schedule from checkpoint (epoch 10)
+2022-08-04 14:43:55,047 - => loaded 'state_dict' from checkpoint 'jupyter_logging/finetune_asl_base_ev1___2022.08.04-142735/aslclassifier_qat_best.pth.tar'
+2022-08-04 14:43:55,058 - 324 samples (64 per mini-batch)
+2022-08-04 14:43:55,248 - Test: [    6/    6]    Loss 1.291169    Top1 67.187500    Top5 88.541667    
+2022-08-04 14:43:55,331 - ==> Top1: 64.198    Top5: 88.889    Loss: 1.409
+
+2022-08-04 14:43:55,333 - ==> Confusion:
+[[ 4  0  0  0  0  1  0  0  1  0  0  1  1  1  0  0  0  0  0  1  0  0  1  0
+   1  0  0  0  0]
+ [ 0  7  0  0  0  0  0  0  0  0  0  0  2  2  0  0  0  0  0  0  0  0  0  0
+   0  0  0  0  0]
+ [ 0  0  1  0  0  0  0  0  0  0  0  0  0  1  3  0  0  0  0  0  0  0  0  2
+   0  0  4  0  0]
+ [ 0  0  0  7  0  0  0  0  6  0  1  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0  0  0  0]
+ [ 5  0  0  0  1  0  0  0  0  0  0  0  0  0  0  0  0  0  4  0  0  0  0  0
+   0  0  0  0  0]
+ [ 0  0  0  0  0 11  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  8  0  0  0  0  0  0  0  2  0  0  0  0  0  0  0  0
+   0  0  0  0  0]
+ [ 0  0  0  0  0  0  0 10  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0 10  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0 10  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  9  0  0  0  0  0  0  0  0  0  0  0  2  0
+   0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  7  0  0  0  0  0  0  0  0  0  2  0  0
+   0  1  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  3  8  0  0  0  0  0  0  0  0  0  0
+   0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0 11  0  0  0  0  0  0  0  0  0  0
+   0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  1 10  0  0  0  0  0  0  0  0  0
+   0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  9  0  0  0  0  0  0  0  0
+   1  0  0  0  1]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1 10  0  0  0  0  0  0  0
+   0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  2  0  0  0  0  0  0  5  0  0  5  0  0  0
+   0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  6  0  0  0  0  5
+   0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  0 11  0  0  0  1
+   0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  2  6  3  0
+   0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  4  0  0  0  0  0  0  0  0  0  0  5  3  0
+   0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0 12  0
+   0  0  0  0  0]
+ [ 1  0  0  0  1  0  0  0  0  0  0  3  0  0  0  0  0  0  0  2  1  1  0  2
+   0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+  11  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  4  0  0  0  0  0  0  0  0  0  1  0  0
+   0  7  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  0
+   0  0  9  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  2  0  0  0  0  0  0  0
+   0  0  0  7  1]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  2  0  0  0
+   0  0  0  0 11]]
+
+2022-08-04 14:43:55,333 - ==> Test Set [Top1: 64.198   Top5: 88.889  on test set]
+2022-08-04 14:44:14,205 - => loading checkpoint jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-08-04 14:44:14,212 - => Checkpoint contents:
++----------------------+-------------+---------------------------+
+| Key                  | Type        | Value                     |
+|----------------------+-------------+---------------------------|
+| arch                 | str         | classifierbackbonenet_qat |
+| compression_sched    | dict        |                           |
+| epoch                | int         | 99                        |
+| extras               | dict        |                           |
+| optimizer_state_dict | dict        |                           |
+| optimizer_type       | type        | Adam                      |
+| state_dict           | OrderedDict |                           |
++----------------------+-------------+---------------------------+
+
+2022-08-04 14:44:14,212 - => Checkpoint['extras'] contents:
++-------+--------+---------+
+| Key   | Type   |   Value |
+|-------+--------+---------|
+| epoch | int    |      99 |
++-------+--------+---------+
+
+2022-08-04 14:44:14,213 - Loaded compression schedule from checkpoint (epoch 99)
+2022-08-04 14:44:14,218 - => loaded 'state_dict' from checkpoint 'jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar'
+2022-08-04 14:44:14,254 - => loading checkpoint jupyter_logging/finetune_asl_base_ev1___2022.08.04-142735/aslclassifier_qat_best.pth.tar
+2022-08-04 14:44:14,259 - => Checkpoint contents:
++----------------------+-------------+-------------------+
+| Key                  | Type        | Value             |
+|----------------------+-------------+-------------------|
+| arch                 | str         | aslclassifier_qat |
+| compression_sched    | dict        |                   |
+| epoch                | int         | 10                |
+| extras               | dict        |                   |
+| optimizer_state_dict | dict        |                   |
+| optimizer_type       | type        | Adam              |
+| state_dict           | OrderedDict |                   |
++----------------------+-------------+-------------------+
+
+2022-08-04 14:44:14,260 - => Checkpoint['extras'] contents:
++--------------+--------+---------+
+| Key          | Type   |   Value |
+|--------------+--------+---------|
+| best_epoch   | int    | 10      |
+| best_top1    | float  | 99.5913 |
+| current_top1 | float  | 99.5913 |
++--------------+--------+---------+
+
+2022-08-04 14:44:14,260 - Loaded compression schedule from checkpoint (epoch 10)
+2022-08-04 14:44:14,280 - => loaded 'state_dict' from checkpoint 'jupyter_logging/finetune_asl_base_ev1___2022.08.04-142735/aslclassifier_qat_best.pth.tar'

@@ -1,0 +1,308 @@
+2022-08-04 13:59:16,961 - Log file for this run: /home/geffencooper/Model_Development/DA_ai8x-training/DA_tutorial/jupyter_logging/office_dcd_train___2022.08.04-135916/office_dcd_train___2022.08.04-135916.log
+2022-08-04 13:59:16,961 - Number of CPUs: 16
+2022-08-04 13:59:16,997 - Number of GPUs: 1
+2022-08-04 13:59:16,997 - CUDA version: 10.2
+2022-08-04 13:59:16,997 - CUDNN version: 7605
+2022-08-04 13:59:16,997 - Kernel: 5.4.0-122-generic
+2022-08-04 13:59:16,997 - Python: 3.8.11 (default, Jun 14 2022, 10:01:20) 
+[GCC 9.4.0]
+2022-08-04 13:59:16,997 - pip freeze: {'absl-py': '1.2.0', 'appdirs': '1.4.4', 'argon2-cffi': '21.3.0', 'argon2-cffi-bindings': '21.2.0', 'asttokens': '2.0.5', 'atomicwrites': '1.4.1', 'attrs': '21.4.0', 'audioread': '2.1.9', 'backcall': '0.2.0', 'beautifulsoup4': '4.11.1', 'bleach': '5.0.1', 'bqplot': '0.11.5', 'cachetools': '5.2.0', 'certifi': '2022.6.15', 'cffi': '1.15.1', 'charset-normalizer': '2.1.0', 'cloudpickle': '2.1.0', 'cycler': '0.11.0', 'debugpy': '1.6.2', 'decorator': '5.1.1', 'defusedxml': '0.7.1', 'distiller': '0.4.0rc0', 'entrypoints': '0.4', 'executing': '0.9.1', 'fastjsonschema': '2.16.1', 'fonttools': '4.34.4', 'google-auth': '2.9.1', 'google-auth-oauthlib': '0.4.6', 'graphviz': '0.10.1', 'grpcio': '1.47.0', 'gym': '0.12.5', 'h5py': '3.7.0', 'idna': '3.3', 'importlib-metadata': '4.12.0', 'importlib-resources': '5.9.0', 'ipykernel': '6.15.1', 'ipython': '8.4.0', 'ipython-genutils': '0.2.0', 'ipywidgets': '7.4.2', 'jedi': '0.18.1', 'jinja2': '3.1.2', 'joblib': '1.1.0', 'jsonpatch': '1.32', 'jsonpointer': '2.3', 'jsonschema': '4.7.2', 'jupyter': '1.0.0', 'jupyter-client': '7.3.4', 'jupyter-console': '6.4.4', 'jupyter-core': '4.11.1', 'jupyterlab-pygments': '0.2.2', 'kiwisolver': '1.4.4', 'librosa': '0.9.2', 'llvmlite': '0.32.1', 'markdown': '3.4.1', 'markupsafe': '2.1.1', 'matplotlib': '3.5.2', 'matplotlib-inline': '0.1.3', 'mistune': '0.8.4', 'more-itertools': '8.13.0', 'munch': '2.5.0', 'nbclient': '0.6.6', 'nbconvert': '6.5.0', 'nbformat': '5.4.0', 'nest-asyncio': '1.5.5', 'notebook': '6.4.12', 'numba': '0.49.1', 'numpy': '1.22.4', 'oauthlib': '3.2.0', 'opencv-python': '4.6.0.66', 'packaging': '21.3', 'pandas': '1.4.3', 'pandocfilters': '1.5.0', 'parso': '0.8.3', 'pexpect': '4.8.0', 'pickleshare': '0.7.5', 'pillow': '9.2.0', 'pip': '22.2', 'pluggy': '0.13.1', 'pooch': '1.6.0', 'pretrainedmodels': '0.7.4', 'prometheus-client': '0.14.1', 'prompt-toolkit': '3.0.30', 'protobuf': '3.20.1', 'psutil': '5.9.1', 'ptyprocess': '0.7.0', 'pure-eval': '0.2.2', 'py': '1.11.0', 'pyasn1': '0.4.8', 'pyasn1-modules': '0.2.8', 'pycparser': '2.21', 'pydot': '1.4.1', 'pyglet': '1.5.26', 'pygments': '2.12.0', 'pyparsing': '3.0.9', 'pyrsistent': '0.18.1', 'pytest': '4.6.11', 'python-dateutil': '2.8.2', 'pytsmod': '0.3.5', 'pytz': '2022.1', 'pyyaml': '6.0', 'pyzmq': '23.2.0', 'qgrid': '1.1.1', 'qtconsole': '5.3.1', 'qtpy': '2.1.0', 'requests': '2.28.1', 'requests-oauthlib': '1.3.1', 'resampy': '0.3.1', 'rsa': '4.9', 'scikit-learn': '0.23.2', 'scipy': '1.8.1', 'send2trash': '1.8.0', 'setuptools': '63.2.0', 'shap': '0.41.0', 'six': '1.16.0', 'slicer': '0.0.7', 'soundfile': '0.10.3.post1', 'soupsieve': '2.3.2.post1', 'stack-data': '0.3.0', 'tabulate': '0.8.3', 'tensorboard': '2.9.0', 'tensorboard-data-server': '0.6.1', 'tensorboard-plugin-wit': '1.8.1', 'terminado': '0.15.0', 'threadpoolctl': '3.1.0', 'tinycss2': '1.1.1', 'tk': '0.1.0', 'torch': '1.8.1', 'torchfile': '0.1.0', 'torchnet': '0.0.4', 'torchvision': '0.9.1', 'tornado': '6.2', 'tqdm': '4.33.0', 'traitlets': '5.3.0', 'traittypes': '0.2.1', 'typing-extensions': '4.3.0', 'urllib3': '1.26.11', 'visdom': '0.1.8.9', 'wcwidth': '0.2.5', 'webencodings': '0.5.1', 'websocket-client': '1.3.3', 'werkzeug': '2.2.0', 'wheel': '0.37.1', 'widgetsnbextension': '3.4.2', 'xlsxwriter': '3.0.3', 'zipp': '3.8.1'}
+2022-08-04 13:59:16,997 - Command line: /home/geffencooper/Model_Development/DA_ai8x-training/venv/lib/python3.8/site-packages/ipykernel_launcher.py --ip=127.0.0.1 --stdin=9013 --control=9011 --hb=9010 --Session.signature_scheme="hmac-sha256" --Session.key=b"bc551c4c-7488-4dc0-bb85-5612a19c8535" --shell=9012 --transport="tcp" --iopub=9014 --f=/home/geffencooper/.local/share/jupyter/runtime/kernel-v2-154127ylPRQeqJeil1.json
+2022-08-04 13:59:16,998 - dataset_name:pairs
+dataset_fn=<function pairs_get_datasets at 0x7f9c7016dd30>
+num_classes=4
+model_name=officedcdnet
+dimensions=(1, 128)
+batch_size=64
+validation_split=0.1
+lr=0.002000
+num_epochs=12
+qat_policy={'start_epoch': 4, 'weight_bits': 8}
+2022-08-04 13:59:21,460 - Dataset sizes:
+	training=12628
+	validation=2860
+2022-08-04 13:59:21,460 - Augmentations:Compose(
+    Resize(size=(128, 128), interpolation=bilinear)
+    ToTensor()
+    <ai8x.normalize object at 0x7f9d35772ca0>
+)
+
+2022-08-04 13:59:29,848 - model: OfficeDCD(
+  (fc1): FusedLinearReLU(
+    (activate): ReLU(inplace=True)
+    (op): Linear(in_features=128, out_features=64, bias=True)
+    (calc_out_shift): OutputShiftSqueeze()
+    (calc_weight_scale): One()
+    (scale): Scaler()
+    (calc_out_scale): OutputScale()
+    (quantize_weight): Empty()
+    (quantize_bias): Empty()
+    (clamp_weight): Empty()
+    (clamp_bias): Empty()
+    (quantize): Empty()
+    (clamp): Clamp()
+    (quantize_pool): Empty()
+    (clamp_pool): Empty()
+  )
+  (fc2): Linear(
+    (activate): Empty()
+    (op): Linear(in_features=64, out_features=4, bias=True)
+    (calc_out_shift): OutputShiftSqueeze()
+    (calc_weight_scale): One()
+    (scale): Scaler()
+    (calc_out_scale): OutputScale()
+    (quantize_weight): Empty()
+    (quantize_bias): Empty()
+    (clamp_weight): Empty()
+    (clamp_bias): Empty()
+    (quantize): Empty()
+    (clamp): Clamp()
+    (quantize_pool): Empty()
+    (clamp_pool): Empty()
+  )
+  (do): Dropout(p=0.2, inplace=False)
+)
+2022-08-04 13:59:31,521 - Number of Model Params: 8516
+2022-08-04 13:59:34,886 - Optimizer Type: <class 'torch.optim.adam.Adam'>
+2022-08-04 13:59:34,895 - lr_schedule:base: [0.002] milestones: Counter({4: 1, 8: 1, 35: 1, 100: 1}) gamma: 0.2
+2022-08-04 13:59:40,133 - => loading checkpoint jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar
+2022-08-04 13:59:40,140 - => Checkpoint contents:
++----------------------+-------------+---------------------------+
+| Key                  | Type        | Value                     |
+|----------------------+-------------+---------------------------|
+| arch                 | str         | classifierbackbonenet_qat |
+| compression_sched    | dict        |                           |
+| epoch                | int         | 99                        |
+| extras               | dict        |                           |
+| optimizer_state_dict | dict        |                           |
+| optimizer_type       | type        | Adam                      |
+| state_dict           | OrderedDict |                           |
++----------------------+-------------+---------------------------+
+
+2022-08-04 13:59:40,141 - => Checkpoint['extras'] contents:
++-------+--------+---------+
+| Key   | Type   |   Value |
+|-------+--------+---------|
+| epoch | int    |      99 |
++-------+--------+---------+
+
+2022-08-04 13:59:40,141 - Loaded compression schedule from checkpoint (epoch 99)
+2022-08-04 13:59:40,146 - => loaded 'state_dict' from checkpoint 'jupyter_logging/SSL___2022.07.15-171757/classifierbackbonenet_qat_checkpoint.pth.tar'
+2022-08-04 13:59:40,170 - => loading checkpoint jupyter_logging/finetune_office5_base_ev1___2022.08.04-123848/office5classifier_qat_best.pth.tar
+2022-08-04 13:59:40,175 - => Checkpoint contents:
++----------------------+-------------+-----------------------+
+| Key                  | Type        | Value                 |
+|----------------------+-------------+-----------------------|
+| arch                 | str         | office5classifier_qat |
+| compression_sched    | dict        |                       |
+| epoch                | int         | 56                    |
+| extras               | dict        |                       |
+| optimizer_state_dict | dict        |                       |
+| optimizer_type       | type        | Adam                  |
+| state_dict           | OrderedDict |                       |
++----------------------+-------------+-----------------------+
+
+2022-08-04 13:59:40,175 - => Checkpoint['extras'] contents:
++--------------+--------+---------+
+| Key          | Type   |   Value |
+|--------------+--------+---------|
+| best_epoch   | int    | 56      |
+| best_top1    | float  | 93.0233 |
+| current_top1 | float  | 93.0233 |
++--------------+--------+---------+
+
+2022-08-04 13:59:40,176 - Loaded compression schedule from checkpoint (epoch 56)
+2022-08-04 13:59:40,183 - => loaded 'state_dict' from checkpoint 'jupyter_logging/finetune_office5_base_ev1___2022.08.04-123848/office5classifier_qat_best.pth.tar'
+2022-08-04 13:59:45,186 - Training epoch: 12628 samples (64 per mini-batch)
+2022-08-04 13:59:51,280 - Epoch: [0][  100/  198]    objective_loss 1.022789                                        LR 0.002000    
+2022-08-04 13:59:56,528 - Epoch: [0][  198/  198]    objective_loss 0.898961    Top1 84.523810    LR 0.002000    
+2022-08-04 13:59:56,558 - --- validate (epoch=0)-----------
+2022-08-04 13:59:56,559 - 2860 samples (64 per mini-batch)
+2022-08-04 13:59:59,632 - Epoch: [0][   45/   45]    Loss 0.679770    Top1 76.083916    
+2022-08-04 13:59:59,661 - ==> Top1: 76.084    Loss: 0.680
+
+2022-08-04 13:59:59,662 - ==> Confusion:
+[[650  18  34  13]
+ [124 437  42 112]
+ [ 18  14 666  17]
+ [ 11 140 141 423]]
+
+2022-08-04 13:59:59,725 - ==> Best [Top1: 76.084 on epoch: 0]
+2022-08-04 13:59:59,733 - Saving checkpoint to: jupyter_logging/office_dcd_train___2022.08.04-135916/officedcdnet_checkpoint.pth.tar
+2022-08-04 13:59:59,736 - Training epoch: 12628 samples (64 per mini-batch)
+2022-08-04 14:00:05,540 - Epoch: [1][  100/  198]    objective_loss 0.679000                                        LR 0.002000    
+2022-08-04 14:00:10,817 - Epoch: [1][  198/  198]    objective_loss 0.648162    Top1 73.809524    LR 0.002000    
+2022-08-04 14:00:10,846 - --- validate (epoch=1)-----------
+2022-08-04 14:00:10,847 - 2860 samples (64 per mini-batch)
+2022-08-04 14:00:13,805 - Epoch: [1][   45/   45]    Loss 0.614930    Top1 76.643357    
+2022-08-04 14:00:13,840 - ==> Top1: 76.643    Loss: 0.615
+
+2022-08-04 14:00:13,841 - ==> Confusion:
+[[650  18  34  13]
+ [123 403   3 186]
+ [ 26  16 611  62]
+ [  6 101  80 528]]
+
+2022-08-04 14:00:13,906 - ==> Best [Top1: 76.643 on epoch: 1]
+2022-08-04 14:00:13,914 - Saving checkpoint to: jupyter_logging/office_dcd_train___2022.08.04-135916/officedcdnet_checkpoint.pth.tar
+2022-08-04 14:00:13,917 - Training epoch: 12628 samples (64 per mini-batch)
+2022-08-04 14:00:19,681 - Epoch: [2][  100/  198]    objective_loss 0.570919                                        LR 0.002000    
+2022-08-04 14:00:25,047 - Epoch: [2][  198/  198]    objective_loss 0.560189    Top1 73.809524    LR 0.002000    
+2022-08-04 14:00:25,077 - --- validate (epoch=2)-----------
+2022-08-04 14:00:25,078 - 2860 samples (64 per mini-batch)
+2022-08-04 14:00:28,008 - Epoch: [2][   45/   45]    Loss 0.563960    Top1 78.426573    
+2022-08-04 14:00:28,037 - ==> Top1: 78.427    Loss: 0.564
+
+2022-08-04 14:00:28,038 - ==> Confusion:
+[[661   7  34  13]
+ [ 99 421  28 167]
+ [ 28  13 646  28]
+ [  5 122  73 515]]
+
+2022-08-04 14:00:28,101 - ==> Best [Top1: 78.427 on epoch: 2]
+2022-08-04 14:00:28,109 - Saving checkpoint to: jupyter_logging/office_dcd_train___2022.08.04-135916/officedcdnet_checkpoint.pth.tar
+2022-08-04 14:00:28,112 - Training epoch: 12628 samples (64 per mini-batch)
+2022-08-04 14:00:34,169 - Epoch: [3][  100/  198]    objective_loss 0.506347                                        LR 0.002000    
+2022-08-04 14:00:39,608 - Epoch: [3][  198/  198]    objective_loss 0.499087    Top1 85.714286    LR 0.002000    
+2022-08-04 14:00:39,637 - --- validate (epoch=3)-----------
+2022-08-04 14:00:39,638 - 2860 samples (64 per mini-batch)
+2022-08-04 14:00:42,553 - Epoch: [3][   45/   45]    Loss 0.554690    Top1 77.902098    
+2022-08-04 14:00:42,582 - ==> Top1: 77.902    Loss: 0.555
+
+2022-08-04 14:00:42,583 - ==> Confusion:
+[[640   0  56  19]
+ [ 95 417   7 196]
+ [ 18   8 638  51]
+ [  1  98  83 533]]
+
+2022-08-04 14:00:42,644 - ==> Best [Top1: 78.427 on epoch: 2]
+2022-08-04 14:00:42,651 - Saving checkpoint to: jupyter_logging/office_dcd_train___2022.08.04-135916/officedcdnet_checkpoint.pth.tar
+2022-08-04 14:00:42,660 - Training epoch: 12628 samples (64 per mini-batch)
+2022-08-04 14:00:48,443 - Epoch: [4][  100/  198]    objective_loss 0.641019                                        LR 0.000400    
+2022-08-04 14:00:53,804 - Epoch: [4][  198/  198]    objective_loss 0.731394    Top1 73.809524    LR 0.000400    
+2022-08-04 14:00:53,837 - --- validate (epoch=4)-----------
+2022-08-04 14:00:53,837 - 2860 samples (64 per mini-batch)
+2022-08-04 14:00:56,773 - Epoch: [4][   45/   45]    Loss 0.822792    Top1 76.503497    
+2022-08-04 14:00:56,810 - ==> Top1: 76.503    Loss: 0.823
+
+2022-08-04 14:00:56,811 - ==> Confusion:
+[[654   3  43  15]
+ [119 382   7 207]
+ [ 21   8 629  57]
+ [  7  92  92 524]]
+
+2022-08-04 14:00:56,961 - ==> Best [Top1: 76.503 on epoch: 4]
+2022-08-04 14:00:56,968 - Saving checkpoint to: jupyter_logging/office_dcd_train___2022.08.04-135916/officedcdnet_qat_checkpoint.pth.tar
+2022-08-04 14:00:56,971 - Training epoch: 12628 samples (64 per mini-batch)
+2022-08-04 14:01:02,897 - Epoch: [5][  100/  198]    objective_loss 0.799243                                        LR 0.000400    
+2022-08-04 14:01:08,462 - Epoch: [5][  198/  198]    objective_loss 0.783844    Top1 82.142857    LR 0.000400    
+2022-08-04 14:01:08,491 - --- validate (epoch=5)-----------
+2022-08-04 14:01:08,492 - 2860 samples (64 per mini-batch)
+2022-08-04 14:01:11,398 - Epoch: [5][   45/   45]    Loss 0.777759    Top1 76.958042    
+2022-08-04 14:01:11,429 - ==> Top1: 76.958    Loss: 0.778
+
+2022-08-04 14:01:11,429 - ==> Confusion:
+[[654   7  41  13]
+ [122 384   4 205]
+ [ 21   9 657  28]
+ [  7 102 100 506]]
+
+2022-08-04 14:01:11,492 - ==> Best [Top1: 76.958 on epoch: 5]
+2022-08-04 14:01:11,499 - Saving checkpoint to: jupyter_logging/office_dcd_train___2022.08.04-135916/officedcdnet_qat_checkpoint.pth.tar
+2022-08-04 14:01:11,502 - Training epoch: 12628 samples (64 per mini-batch)
+2022-08-04 14:01:17,386 - Epoch: [6][  100/  198]    objective_loss 0.753143                                        LR 0.000400    
+2022-08-04 14:01:22,604 - Epoch: [6][  198/  198]    objective_loss 0.744107    Top1 83.333333    LR 0.000400    
+2022-08-04 14:01:22,633 - --- validate (epoch=6)-----------
+2022-08-04 14:01:22,634 - 2860 samples (64 per mini-batch)
+2022-08-04 14:01:25,558 - Epoch: [6][   45/   45]    Loss 0.740989    Top1 77.062937    
+2022-08-04 14:01:25,587 - ==> Top1: 77.063    Loss: 0.741
+
+2022-08-04 14:01:25,588 - ==> Confusion:
+[[654   8  40  13]
+ [122 382   4 207]
+ [ 22   8 659  26]
+ [  8  96 102 509]]
+
+2022-08-04 14:01:25,652 - ==> Best [Top1: 77.063 on epoch: 6]
+2022-08-04 14:01:25,660 - Saving checkpoint to: jupyter_logging/office_dcd_train___2022.08.04-135916/officedcdnet_qat_checkpoint.pth.tar
+2022-08-04 14:01:25,663 - Training epoch: 12628 samples (64 per mini-batch)
+2022-08-04 14:01:31,627 - Epoch: [7][  100/  198]    objective_loss 0.717483                                        LR 0.000400    
+2022-08-04 14:01:37,126 - Epoch: [7][  198/  198]    objective_loss 0.710707    Top1 83.333333    LR 0.000400    
+2022-08-04 14:01:37,156 - --- validate (epoch=7)-----------
+2022-08-04 14:01:37,156 - 2860 samples (64 per mini-batch)
+2022-08-04 14:01:40,189 - Epoch: [7][   45/   45]    Loss 0.710832    Top1 77.062937    
+2022-08-04 14:01:40,218 - ==> Top1: 77.063    Loss: 0.711
+
+2022-08-04 14:01:40,218 - ==> Confusion:
+[[654   8  40  13]
+ [119 384   7 205]
+ [ 21   9 655  30]
+ [  7 101  96 511]]
+
+2022-08-04 14:01:40,270 - ==> Best [Top1: 77.063 on epoch: 7]
+2022-08-04 14:01:40,277 - Saving checkpoint to: jupyter_logging/office_dcd_train___2022.08.04-135916/officedcdnet_qat_checkpoint.pth.tar
+2022-08-04 14:01:40,280 - Training epoch: 12628 samples (64 per mini-batch)
+2022-08-04 14:01:46,080 - Epoch: [8][  100/  198]    objective_loss 0.686428                                        LR 0.000080    
+2022-08-04 14:01:51,448 - Epoch: [8][  198/  198]    objective_loss 0.691888    Top1 83.333333    LR 0.000080    
+2022-08-04 14:01:51,477 - --- validate (epoch=8)-----------
+2022-08-04 14:01:51,477 - 2860 samples (64 per mini-batch)
+2022-08-04 14:01:54,471 - Epoch: [8][   45/   45]    Loss 0.707961    Top1 76.888112    
+2022-08-04 14:01:54,502 - ==> Top1: 76.888    Loss: 0.708
+
+2022-08-04 14:01:54,503 - ==> Confusion:
+[[649  13  40  13]
+ [122 382   4 207]
+ [ 22   9 648  36]
+ [  7  92  95 521]]
+
+2022-08-04 14:01:54,566 - ==> Best [Top1: 77.063 on epoch: 7]
+2022-08-04 14:01:54,574 - Saving checkpoint to: jupyter_logging/office_dcd_train___2022.08.04-135916/officedcdnet_qat_checkpoint.pth.tar
+2022-08-04 14:01:54,577 - Training epoch: 12628 samples (64 per mini-batch)
+2022-08-04 14:02:00,356 - Epoch: [9][  100/  198]    objective_loss 0.684743                                        LR 0.000080    
+2022-08-04 14:02:05,771 - Epoch: [9][  198/  198]    objective_loss 0.685841    Top1 75.000000    LR 0.000080    
+2022-08-04 14:02:05,801 - --- validate (epoch=9)-----------
+2022-08-04 14:02:05,801 - 2860 samples (64 per mini-batch)
+2022-08-04 14:02:08,823 - Epoch: [9][   45/   45]    Loss 0.703062    Top1 76.888112    
+2022-08-04 14:02:08,852 - ==> Top1: 76.888    Loss: 0.703
+
+2022-08-04 14:02:08,853 - ==> Confusion:
+[[655   9  38  13]
+ [122 382   4 207]
+ [ 22   9 654  30]
+ [  7 102  97 509]]
+
+2022-08-04 14:02:08,915 - ==> Best [Top1: 77.063 on epoch: 7]
+2022-08-04 14:02:08,922 - Saving checkpoint to: jupyter_logging/office_dcd_train___2022.08.04-135916/officedcdnet_qat_checkpoint.pth.tar
+2022-08-04 14:02:08,925 - Training epoch: 12628 samples (64 per mini-batch)
+2022-08-04 14:02:14,828 - Epoch: [10][  100/  198]    objective_loss 0.679040                                        LR 0.000080    
+2022-08-04 14:02:20,309 - Epoch: [10][  198/  198]    objective_loss 0.679472    Top1 75.000000    LR 0.000080    
+2022-08-04 14:02:20,338 - --- validate (epoch=10)-----------
+2022-08-04 14:02:20,339 - 2860 samples (64 per mini-batch)
+2022-08-04 14:02:23,389 - Epoch: [10][   45/   45]    Loss 0.697336    Top1 77.202797    
+2022-08-04 14:02:23,418 - ==> Top1: 77.203    Loss: 0.697
+
+2022-08-04 14:02:23,419 - ==> Confusion:
+[[655   8  39  13]
+ [122 384   4 205]
+ [ 22  10 654  29]
+ [  7  95  98 515]]
+
+2022-08-04 14:02:23,484 - ==> Best [Top1: 77.203 on epoch: 10]
+2022-08-04 14:02:23,492 - Saving checkpoint to: jupyter_logging/office_dcd_train___2022.08.04-135916/officedcdnet_qat_checkpoint.pth.tar
+2022-08-04 14:02:23,495 - Training epoch: 12628 samples (64 per mini-batch)
+2022-08-04 14:02:29,304 - Epoch: [11][  100/  198]    objective_loss 0.674598                                        LR 0.000080    
+2022-08-04 14:02:34,647 - Epoch: [11][  198/  198]    objective_loss 0.673461    Top1 79.761905    LR 0.000080    
+2022-08-04 14:02:34,678 - --- validate (epoch=11)-----------
+2022-08-04 14:02:34,678 - 2860 samples (64 per mini-batch)
+2022-08-04 14:02:37,622 - Epoch: [11][   45/   45]    Loss 0.691827    Top1 77.202797    
+2022-08-04 14:02:37,651 - ==> Top1: 77.203    Loss: 0.692
+
+2022-08-04 14:02:37,652 - ==> Confusion:
+[[654   9  39  13]
+ [122 382   4 207]
+ [ 21   9 655  30]
+ [  7  93  98 517]]
+
+2022-08-04 14:02:37,704 - ==> Best [Top1: 77.203 on epoch: 11]
+2022-08-04 14:02:37,710 - Saving checkpoint to: jupyter_logging/office_dcd_train___2022.08.04-135916/officedcdnet_qat_checkpoint.pth.tar
+2022-08-04 14:02:37,714 - Training time: 0:02:52.527773
